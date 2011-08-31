@@ -25,6 +25,24 @@ Jeweler::Tasks.new do |gem|
 end
 Jeweler::RubygemsDotOrgTasks.new
 
+#
+# XXX: Rake does not provide a way to remove a task
+#
+Rake::TaskManager.class_eval do
+  def remove_task(task_name)
+    @tasks.delete(task_name.to_s)
+  end
+end
+
+def remove_task(task_name)
+  Rake.application.remove_task(task_name)
+end
+
+# We don't want to release to rubygems
+remove_task :release
+desc "Build gemspec, commit, and then git/tag push."
+task :release => ['gemspec:release', 'git:release' ]
+
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
