@@ -1,18 +1,33 @@
-require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
 require 'test/unit'
-require 'shoulda'
+require File.expand_path('../../config/bootstrap', __FILE__)
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'librato-services'
+class PapertrailServices::TestCase < Test::Unit::TestCase
+  def test_default
+  end
 
-class Test::Unit::TestCase
+  def service(klass, event_or_data, data, payload=nil)
+    event = nil
+    if event_or_data.is_a?(Symbol)
+      event = event_or_data
+    else
+      payload = data
+      data    = event_or_data
+      event   = :logs
+    end
+
+    service = klass.new(event, data, payload)
+    service.http = Faraday.new do |b|
+      b.adapter :test, @stubs
+    end
+    service
+  end
+
+  def basic_auth(user, pass)
+    "Basic " + ["#{user}:#{pass}"].pack("m*").strip
+  end
+
+  def payload
+    PapertrailServices::Helpers::LogsHelpers.sample_payload
+  end
 end
+
