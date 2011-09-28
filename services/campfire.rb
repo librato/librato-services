@@ -3,26 +3,27 @@ class Service::Campfire < Service
   attr_writer :campfire
 
   def receive_validate(errors)
-    [:token, :room].each do |k|
+    [:subdomain, :token, :room].each do |k|
       errors.add(k, "Is required") if settings[k].to_s.empty?
     end
   end
 
   def receive_alert
+    # XXX: should run receive_validate()
     raise_config_error 'Missing campfire token' if settings[:token].to_s.empty?
 
     unless room = find_room
       raise_error 'No such campfire room'
     end
 
-    message = %{"#{payload[:saved_search][:name]}" search found #{pluralize(payload[:events].length, 'match')} — #{payload[:saved_search][:html_search_url]}}
-    paste = payload[:events].collect { |event| syslog_format(event) }.join("\n")
+    message = %{Alert ID #{payload[:alert][:id]} fired!}
+    paste = %{Payload: #{payload.inspect}}
 
-    play_sound = settings[:play_sound].to_i == 1
+    #play_sound = settings[:play_sound].to_i == 1
 
     room.speak message
     room.paste paste
-    room.play "rimshot" if play_sound && room.respond_to?(:play)
+    #room.play "rimshot" if play_sound && room.respond_to?(:play)
   rescue Faraday::Error::ConnectionFailed
     raise_error "Connection refused — invalid campfire subdomain."
   end

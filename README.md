@@ -32,6 +32,26 @@ payload.
 Tests should accompany all services and are located in the [services/][]
 directory.
 
+Payload
+-------
+
+```
+'payload' : {
+        'alert' : {
+                'name' : 'Alert name or nil',
+                'id' : 12345,
+        },
+        'metric' : {
+                 'name' : 'Name of the metric that tripped alert',
+                 'type' : 'gauge' or 'counter',
+        },
+        'measurement' : {
+                 'value' : 4.5 (value that caused exception),
+                 'source' : 'source name',
+        }
+}
+```
+
 
 Sample Service
 --------------

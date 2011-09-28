@@ -10,18 +10,29 @@ module Librato
       end
 
       def self.service(svc)
-        post "/#{svc.hook_name}/:event" do
+        post "/services/#{svc.hook_name}/:event.:format" do
+          halt 400 unless params[:format].to_s == "json"
           begin
-            settings = HashWithIndifferentAccess.new(json_decode(params[:settings]))
-            payload  = HashWithIndifferentAccess.new(json_decode(params[:payload]))
+            body = json_decode(request.body.read)
 
-            if svc.receive(:logs, settings, payload)
+            payload = {
+              :alert => body['alert'],
+              :metric => body['metric'],
+              :measurement => body['measurement'],
+              :trigger_time => body['trigger_time']
+            }
+
+            settings = HashWithIndifferentAccess.new(body['settings'])
+            payload = HashWithIndifferentAccess.new(payload)
+
+            if svc.receive(:alert, settings, payload)
               status 200
               ''
             else
               status 404
               status "#{svc.hook_name} Service could not process request"
             end
+
           rescue Service::ConfigurationError => e
             status 400
             e.message

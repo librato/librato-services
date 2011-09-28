@@ -8,6 +8,7 @@ module Librato
 
         event_method = "receive_#{event}".to_sym
         if svc.respond_to?(event_method)
+          # XXX: Need a timeout!
           #Timeout.timeout(TIMEOUT, TimeoutError) do
           svc.send(event_method, *args)
           #end
@@ -33,7 +34,7 @@ module Librato
 
       def self.inherited(svc)
         Librato::Services::Service.services[svc.hook_name] = svc
-        #Librato::Services::App.service(svc)
+        Librato::Services::App.service(svc)
         super
       end
 
@@ -117,25 +118,30 @@ module Librato
         @helper.sample_payload
       end
 
+      def raise_config_error(msg = "Invalid configuration")
+        raise ConfigurationError, msg
+      end
+
       def raise_error(msg = "Service Error")
         raise ServiceError, msg
       end
 
       # Gets the path to the SSL Certificate Authority certs.  These were taken
       # from: http://curl.haxx.se/ca/cacert.pem
-      def ca_file
-        @ca_file ||= File.expand_path('../../../config/cacert.pem', __FILE__)
-      end
+      #def ca_file
+      #  @ca_file ||= File.expand_path('../../../config/cacert.pem', __FILE__)
+      #end
 
       class TimeoutError < StandardError; end
       class ServiceError < StandardError; end
+      class ConfigurationError < StandardError; end
     end
   end
 end
 
 ::Service = Librato::Services::Service
 
-Dir[File.expand_path('../../../services/**/*.rb', __FILE__)].each { |service|
+Dir[File.join(File.dirname(__FILE__), '../../services/*.rb')].each { |service|
   load service
 }
 

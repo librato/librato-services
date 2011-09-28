@@ -1,6 +1,7 @@
 
 $:.unshift File.join(File.dirname(__FILE__), 'librato-services')
 
+require 'app'
 require 'service'
 
 module Librato
