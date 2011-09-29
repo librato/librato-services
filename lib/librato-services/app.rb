@@ -2,7 +2,7 @@ module Librato
   module Services
     class App < Sinatra::Base
       configure do
-        if ENV['HOPTOAD_API_KEY'].present?
+        if ENV['HOPTOAD_API_KEY']
           HoptoadNotifier.configure do |config|
             config.api_key = ENV['HOPTOAD_API_KEY']
           end
@@ -69,7 +69,7 @@ module Librato
           $stderr.puts "Error: #{e.class}: #{e.message}"
           $stderr.puts "\t#{e.backtrace.join("\n\t")}"
 
-          if ENV['HOPTOAD_API_KEY'].present?
+          if ENV['HOPTOAD_API_KEY']
             HoptoadNotifier.notify(e)
           end
         end
