@@ -9,6 +9,16 @@ module Librato
         end
       end
 
+      helpers do
+        include Librato::Services::Authentication
+      end
+
+      before do
+        if ENV["LIBRATO_SERVICES_CREDS"]
+          authenticate
+        end
+      end
+
       def self.service(svc)
         post "/services/#{svc.hook_name}/:event.:format" do
           halt 400 unless params[:format].to_s == "json"
