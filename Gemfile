@@ -20,6 +20,8 @@ gem 'tinder', '~> 1.7'
 #
 gem 'always_verify_ssl_certificates', '~> 0.3.0'
 
+gem 'unicorn'
+
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
