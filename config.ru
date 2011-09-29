@@ -11,5 +11,7 @@ Bundler.require
 #   use Rack::CommonLogger, logger
 # end
 
-require "lib/librato-services"
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
+require "librato-services"
+
 run Librato::Services::App
