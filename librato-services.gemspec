@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = %q{2011-09-07}
+  s.date = %q{2011-09-29}
   s.description = %q{Provides service notifications for alerts}
   s.email = %q{mike@librato.com}
   s.extra_rdoc_files = [
@@ -21,11 +21,15 @@ Gem::Specification.new do |s|
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
+    "Procfile",
     "README.md",
     "Rakefile",
     "VERSION",
+    "config.ru",
+    "config/unicorn.rb",
     "lib/librato-services.rb",
     "lib/librato-services/app.rb",
+    "lib/librato-services/authentication.rb",
     "lib/librato-services/helpers/logs_helpers.rb",
     "lib/librato-services/service.rb",
     "librato-services.gemspec",
@@ -50,38 +54,50 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<sinatra>, [">= 0"])
+      s.add_runtime_dependency(%q<sinatra>, ["~> 1.2.6"])
       s.add_runtime_dependency(%q<faraday>, [">= 0"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 2.3"])
       s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<hoptoad_notifier>, [">= 0"])
       s.add_runtime_dependency(%q<mail>, ["~> 2.2"])
-      s.add_runtime_dependency(%q<tinder>, ["~> 1.4"])
+      s.add_runtime_dependency(%q<tinder>, ["~> 1.7"])
+      s.add_runtime_dependency(%q<always_verify_ssl_certificates>, ["~> 0.3.0"])
+      s.add_runtime_dependency(%q<unicorn>, [">= 0"])
+      s.add_development_dependency(%q<thin>, ["~> 1.2.11"])
+      s.add_development_dependency(%q<shotgun>, ["~> 0.8"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
     else
-      s.add_dependency(%q<sinatra>, [">= 0"])
+      s.add_dependency(%q<sinatra>, ["~> 1.2.6"])
       s.add_dependency(%q<faraday>, [">= 0"])
       s.add_dependency(%q<activesupport>, ["~> 2.3"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
       s.add_dependency(%q<mail>, ["~> 2.2"])
-      s.add_dependency(%q<tinder>, ["~> 1.4"])
+      s.add_dependency(%q<tinder>, ["~> 1.7"])
+      s.add_dependency(%q<always_verify_ssl_certificates>, ["~> 0.3.0"])
+      s.add_dependency(%q<unicorn>, [">= 0"])
+      s.add_dependency(%q<thin>, ["~> 1.2.11"])
+      s.add_dependency(%q<shotgun>, ["~> 0.8"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_dependency(%q<rcov>, [">= 0"])
     end
   else
-    s.add_dependency(%q<sinatra>, [">= 0"])
+    s.add_dependency(%q<sinatra>, ["~> 1.2.6"])
     s.add_dependency(%q<faraday>, [">= 0"])
     s.add_dependency(%q<activesupport>, ["~> 2.3"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
     s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
     s.add_dependency(%q<mail>, ["~> 2.2"])
-    s.add_dependency(%q<tinder>, ["~> 1.4"])
+    s.add_dependency(%q<tinder>, ["~> 1.7"])
+    s.add_dependency(%q<always_verify_ssl_certificates>, ["~> 0.3.0"])
+    s.add_dependency(%q<unicorn>, [">= 0"])
+    s.add_dependency(%q<thin>, ["~> 1.2.11"])
+    s.add_dependency(%q<shotgun>, ["~> 0.8"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
