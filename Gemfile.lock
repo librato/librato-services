@@ -12,7 +12,6 @@ GEM
   specs:
     activesupport (2.3.14)
     addressable (2.2.6)
-    always_verify_ssl_certificates (0.3.0)
     builder (3.0.0)
     daemons (1.1.4)
     eventmachine (0.12.10)
@@ -82,7 +81,6 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (~> 2.3)
-  always_verify_ssl_certificates (~> 0.3.0)
   bundler (~> 1.0.0)
   faraday!
   hoptoad_notifier

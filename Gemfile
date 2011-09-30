@@ -18,7 +18,7 @@ gem 'tinder', '~> 1.7'
 
 # Ensure everyone plays nice with SSL
 #
-gem 'always_verify_ssl_certificates', '~> 0.3.0'
+#gem 'always_verify_ssl_certificates', '~> 0.3.0'
 
 gem 'unicorn'
 
