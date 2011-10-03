@@ -102,6 +102,19 @@ module Librato
                   end
       end
 
+      def erb(template, target_binding)
+        ERB.new(template, nil, '-').result(target_binding)
+      end
+
+      def h(text)
+        ERB::Util.h(text)
+      end
+
+      def unindent(string)
+        indentation = string[/\A\s*/]
+        string.strip.gsub(/^#{indentation}/, "") + "\n"
+      end
+
       def smtp_settings
         {
           :address              => ENV['SMTP_SERVER'],

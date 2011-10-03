@@ -2,15 +2,20 @@
 class Service::Campfire < Service
   attr_writer :campfire
 
-  def receive_validate(errors)
+  def receive_validate(errors = {})
+    success = true
     [:subdomain, :token, :room].each do |k|
-      errors.add(k, "Is required") if settings[k].to_s.empty?
+      if settings[k].to_s.empty?
+        errors[k] = "Is required"
+        success = false
+      end
     end
+    success
   end
 
   def receive_alert
     # XXX: should run receive_validate()
-    raise_config_error 'Missing campfire token' if settings[:token].to_s.empty?
+    raise_config_error unless receive_validate({})
 
     unless room = find_room
       raise_error 'No such campfire room'

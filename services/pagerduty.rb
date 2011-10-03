@@ -4,12 +4,19 @@
 #  https://github.com/librato/papertrail_pagerduty_webhook
 class Service::Pagerduty < Service
   def receive_validate(errors)
+    success = false
     [:service_key, :event_type, :description].each do |k|
-      errors.add(k, "Is required") unless settings[k]
+      if settings[k].to_s.empty?
+        errors[k] = "Is required"
+        success = false
+      end
     end
+    success
   end
 
   def receive_logs
+    raise_config_error unless receive_validate({})
+
     body = {
       :service_key => settings[:service_key],
       :event_type => settings[:event_type],
