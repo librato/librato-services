@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{librato-services}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = %q{2011-09-29}
+  s.date = %q{2011-10-02}
   s.description = %q{Provides service notifications for alerts}
   s.email = %q{mike@librato.com}
   s.extra_rdoc_files = [
@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
     "lib/librato-services/service.rb",
     "librato-services.gemspec",
     "services/campfire.rb",
+    "services/mail.rb",
     "services/pagerduty.rb",
     "test/campfire_test.rb",
     "test/helper.rb",
@@ -42,7 +43,6 @@ Gem::Specification.new do |s|
     "test/pagerduty_test.rb",
     "test/silverline_test.rb",
     "test/test_librato-services.rb",
-    "wip_services/mail.rb",
     "wip_services/silverline.rb"
   ]
   s.homepage = %q{http://github.com/librato/librato-services}
@@ -62,7 +62,6 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<hoptoad_notifier>, [">= 0"])
       s.add_runtime_dependency(%q<mail>, ["~> 2.2"])
       s.add_runtime_dependency(%q<tinder>, ["~> 1.7"])
-      s.add_runtime_dependency(%q<always_verify_ssl_certificates>, ["~> 0.3.0"])
       s.add_runtime_dependency(%q<unicorn>, [">= 0"])
       s.add_development_dependency(%q<thin>, ["~> 1.2.11"])
       s.add_development_dependency(%q<shotgun>, ["~> 0.8"])
@@ -78,7 +77,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
       s.add_dependency(%q<mail>, ["~> 2.2"])
       s.add_dependency(%q<tinder>, ["~> 1.7"])
-      s.add_dependency(%q<always_verify_ssl_certificates>, ["~> 0.3.0"])
       s.add_dependency(%q<unicorn>, [">= 0"])
       s.add_dependency(%q<thin>, ["~> 1.2.11"])
       s.add_dependency(%q<shotgun>, ["~> 0.8"])
@@ -95,7 +93,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
     s.add_dependency(%q<mail>, ["~> 2.2"])
     s.add_dependency(%q<tinder>, ["~> 1.7"])
-    s.add_dependency(%q<always_verify_ssl_certificates>, ["~> 0.3.0"])
     s.add_dependency(%q<unicorn>, [">= 0"])
     s.add_dependency(%q<thin>, ["~> 1.2.11"])
     s.add_dependency(%q<shotgun>, ["~> 0.8"])
