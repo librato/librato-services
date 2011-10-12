@@ -2,8 +2,7 @@ source "http://rubygems.org"
 
 gem 'sinatra', '~> 1.2.6'
 
-# XXX: Need > 0.7.4, switch back to gem when 0.7.5 is released
-gem 'faraday', :git => 'https://github.com/technoweenie/faraday.git'
+gem 'faraday', '~> 0.7.5'
 
 gem 'activesupport', '~> 2.3', :require => 'active_support'
 gem 'yajl-ruby', :require => [ 'yajl', 'yajl/json_gem' ]
