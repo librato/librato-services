@@ -87,19 +87,18 @@ module Librato
       def faraday_options
         options = {
           :timeout => 6,
-          :ssl => {
-            :ca_file => ca_file,
-            :verify_depth => 5
-          }
         }
       end
 
       def http(options = {})
         @http ||= begin
-                    Faraday.new(faraday_options.merge(options)) do |b|
+          Faraday.new(faraday_options.merge(options)) do |b|
+            b.request :url_encoded
+            b.request :json
+
             b.adapter :net_http
           end
-                  end
+        end
       end
 
       def erb(template, target_binding)

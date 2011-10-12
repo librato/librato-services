@@ -26,6 +26,8 @@ class Service::Pagerduty < Service
 
     body[:incident_key] = settings[:incident_key] if settings[:incident_key]
 
-    http_post "https://events.pagerduty.com/generic/2010-04-15/create_event.json", json_encode(body)
+    url = "https://events.pagerduty.com/generic/2010-04-15/create_event.json"
+
+    http_post url, body, 'Content-Type' => 'application/json'
   end
 end
