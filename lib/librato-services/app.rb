@@ -25,6 +25,8 @@ module Librato
           begin
             body = json_decode(request.body.read)
 
+            halt 400 unless body
+
             payload = {
               :alert => body['alert'],
               :metric => body['metric'],
