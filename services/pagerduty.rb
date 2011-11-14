@@ -14,7 +14,7 @@ class Service::Pagerduty < Service
     success
   end
 
-  def receive_logs
+  def receive_alert
     raise_config_error unless receive_validate({})
 
     body = {
