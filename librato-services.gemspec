@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{librato-services}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = %q{2011-10-12}
+  s.date = %q{2011-11-15}
   s.description = %q{Provides service notifications for alerts}
   s.email = %q{mike@librato.com}
   s.extra_rdoc_files = [
@@ -26,12 +26,14 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "config.ru",
+    "config/newrelic.yml",
     "config/unicorn.rb",
+    "config/unicorn_new.rb",
     "dot.rvmrc",
     "lib/librato-services.rb",
     "lib/librato-services/app.rb",
     "lib/librato-services/authentication.rb",
-    "lib/librato-services/helpers/logs_helpers.rb",
+    "lib/librato-services/helpers/alert_helpers.rb",
     "lib/librato-services/service.rb",
     "librato-services.gemspec",
     "services/campfire.rb",
@@ -42,9 +44,7 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/mail_test.rb",
     "test/pagerduty_test.rb",
-    "test/silverline_test.rb",
-    "test/test_librato-services.rb",
-    "wip_services/silverline.rb"
+    "test/webhook_test.rb"
   ]
   s.homepage = %q{http://github.com/librato/librato-services}
   s.licenses = ["MIT"]
