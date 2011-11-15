@@ -6,6 +6,9 @@ class Service::Mail < Service
     if settings[:addresses].to_s.empty?
       errors[:addresses] = "Is required"
       false
+    elsif settings[:addresses].class != String
+      errors[:addresses] = "Must be a comma-separated string"
+      false
     else
       true
     end
