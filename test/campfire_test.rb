@@ -1,6 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 
-class CampfireTest < PapertrailServices::TestCase
+class CampfireTest < Librato::Services::TestCase
   class MockCampfire
     class Room
       attr_reader :name, :lines, :pastes
@@ -34,10 +34,10 @@ class CampfireTest < PapertrailServices::TestCase
     end
   end
 
-  def test_logs
-    svc = service(:logs, {"token" => "t", "subdomain" => "s", "room" => "r"}.with_indifferent_access, payload)
+  def test_alerts
+    svc = service(:alert, {"token" => "t", "subdomain" => "s", "room" => "r"}.with_indifferent_access, payload)
     svc.campfire = MockCampfire.new
-    svc.receive_logs
+    svc.receive_alert
 
     assert_equal 1, svc.campfire.rooms.size
     assert_equal 'r', svc.campfire.rooms.first.name

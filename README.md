@@ -56,17 +56,17 @@ Payload
 Sample Service
 --------------
 
-Here's a simple service that posts the name of the source that
-triggered an alert to an external service.
+Here's a simple service that posts the measurement value that
+triggered the alert.
 
 ```ruby
 class Service::Sample < Service
   def receive_alert
-    source = payload[:measurement][:source]
+    value = payload[:measurement][:value]
 
     http_post 'https://sample-service.com/post.json' do |req|
       req.body = {
-        settings[:name] => source
+        settings[:name] => value
       }
     end
   end

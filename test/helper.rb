@@ -1,7 +1,14 @@
-require 'test/unit'
-require File.expand_path('../../config/bootstrap', __FILE__)
+require 'rubygems'
+require 'bundler'
 
-class PapertrailServices::TestCase < Test::Unit::TestCase
+Bundler.require
+
+$:.unshift(File.join(File.dirname(__FILE__), '../lib'))
+require 'librato-services'
+
+require 'test/unit'
+
+class Librato::Services::TestCase < Test::Unit::TestCase
   def test_default
   end
 
@@ -12,7 +19,7 @@ class PapertrailServices::TestCase < Test::Unit::TestCase
     else
       payload = data
       data    = event_or_data
-      event   = :logs
+      event   = :alert
     end
 
     service = klass.new(event, data, payload)
@@ -27,7 +34,7 @@ class PapertrailServices::TestCase < Test::Unit::TestCase
   end
 
   def payload
-    PapertrailServices::Helpers::LogsHelpers.sample_payload
+    Librato::Services::Helpers::AlertHelpers.sample_payload
   end
 end
 

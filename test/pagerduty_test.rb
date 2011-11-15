@@ -1,18 +1,39 @@
 require File.expand_path('../helper', __FILE__)
 
-class PagerdutyTest < PapertrailServices::TestCase
+class PagerdutyTest < Librato::Services::TestCase
   def setup
     @stubs = Faraday::Adapter::Test::Stubs.new
   end
 
-  def test_logs
-    svc = service(:logs, { :service_key => 'k', :event_type => 't' }, payload)
+  def test_validations
+    params = {:service_key => 'k', :event_type => 't', :description => 'd'}
+
+    0.upto(params.keys.length - 1) do |i|
+      opts = {}
+      0.upto(i) do |j|
+        opts[params.keys[j]] = params[params.keys[j]]
+      end
+      svc = service(:alert, opts, payload)
+      errors = {}
+      ret = svc.receive_validate(errors)
+      success = i == params.keys.length - 1
+      assert_equal(success, ret, "opts not complete: #{opts}")
+      assert_equal(0, errors.length) if success
+    end
+  end
+
+  def test_alerts
+    svc = service(:alert, {
+                    :service_key => 'k',
+                    :event_type => 't',
+                    :description => 'd'
+                  }, payload)
 
     @stubs.post '/generic/2010-04-15/create_event.json' do |env|
       [200, {}, '']
     end
 
-    svc.receive_logs
+    svc.receive_alert
   end
 
   def service(*args)

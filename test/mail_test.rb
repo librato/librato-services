@@ -1,20 +1,39 @@
 require File.expand_path('../helper', __FILE__)
 
-class MailTest < PapertrailServices::TestCase
+class MailTest < Librato::Services::TestCase
   def setup
 
   end
 
-  def test_logs
-    svc = service(:logs, { :addresses => 'eric@sevenscale.com' }, payload)
+  def test_validations
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    errors = {}
+    assert(svc.receive_validate(errors))
+    assert_equal(0, errors.length)
+
+    svc = service(:alert, {}, payload)
+    errors = {}
+    assert(!svc.receive_validate(errors))
+    assert_equal(1, errors.length)
+    assert(errors[:addresses])
+
+    svc = service(:alert, { :addresses => ['fred@barn.com'] }, payload)
+    errors = {}
+    assert(!svc.receive_validate(errors))
+    assert_equal(1, errors.length)
+    assert(errors[:addresses])
+  end
+
+  def test_alert
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
 
     svc.mail_message.perform_deliveries = false
 
-    svc.receive_logs
+    svc.receive_alert
   end
 
   def test_mail_message
-    svc = service(:logs, { :addresses => 'eric@sevenscale.com' }, payload)
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
 
     message = svc.mail_message
 
@@ -22,7 +41,7 @@ class MailTest < PapertrailServices::TestCase
   end
 
   def test_html
-    svc = service(:logs, { }, payload)
+    svc = service(:alert, { }, payload)
 
     html = svc.html_email
 
@@ -30,7 +49,7 @@ class MailTest < PapertrailServices::TestCase
   end
 
   def test_text
-    svc = service(:logs, { }, payload)
+    svc = service(:alert, { }, payload)
 
     text = svc.text_email
 

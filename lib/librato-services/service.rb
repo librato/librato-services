@@ -1,3 +1,5 @@
+require 'helpers/alert_helpers'
+
 module Librato
   module Services
     class Service
@@ -44,13 +46,13 @@ module Librato
       attr_writer :http
 
       def initialize(event = :alert, settings = {}, payload = nil)
-        # helper_name = "#{event.to_s.capitalize}Helpers"
-        # if LibratoServices::Helpers.const_defined?(helper_name)
-        #   @helper = LibratoServices::Helpers.const_get(helper_name)
-        #   extend @helper
-        # else
-        #   raise ArgumentError, "Invalid event: #{event.inspect}"
-        # end
+        helper_name = "#{event.to_s.capitalize}Helpers"
+        if Librato::Services::Helpers.const_defined?(helper_name)
+          @helper = Librato::Services::Helpers.const_get(helper_name)
+          extend @helper
+        else
+          raise ArgumentError, "Invalid event: #{event.inspect}"
+        end
 
         @event    = event
         @settings = settings

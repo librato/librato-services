@@ -33,8 +33,6 @@ class Service::Campfire < Service
     raise_error "Connection refused — invalid campfire subdomain."
   end
 
-private
-
   def campfire_hostname
     settings[:subdomain].to_s[/^(.+)(\.campfirenow\.com)?$/, 1]
   end
