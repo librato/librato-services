@@ -1,24 +1,29 @@
 Librato Services
 ================
 
-Service hooks for [Librato Metrics][https://metrics.librato.com].
+Service hooks for [Librato Metrics](https://metrics.librato.com).
 
 Service Lifecycle
 -----------------
 
-1. When a metric measurement is posted to the API that exceeds a
+1. When a request to create a service is received by the API, the
+   API calls the method `receive_validate` for the appropriate
+   service class.
+1. The service `receive_validate` method should validate the settings
+   parameters. This method should return false with a set of invalid
+   parameters if the settings are not correct for the service type.
+1. Later, when a metric measurement is posted to the API that exceeds a
    configured alert threshold, the API records the exception.
 1. A background job checks every minute for any alerts that have been
    triggered.
-2. If xany alerts have been triggered, the background job generates a
+1. If any alerts have been triggered, the background job generates a
    POST to
    `https://<services-server>/services/<service_name>/alert.json` with
    the post data:
    - `params[:settings]`: the options the user specified in the Service configuration
    - `params[:payload]`: the event data for the triggered alert
-3. A [sinatra][] app [lib/librato_services/app.rb][] decodes the request
+1. A [sinatra][] app [lib/librato_services/app.rb][] decodes the request
    and dispatches it to a registered service if it exists
-
 
 Writing a Service
 -----------------
@@ -35,6 +40,9 @@ directory.
 Payload
 -------
 
+A sample payload is available at
+[lib/librato-services/helpers/alert_helpers.rb] and listed below:
+
 ```
 'payload' : {
         'alert' : {
@@ -47,11 +55,9 @@ Payload
         },
         'measurement' : {
                  'value' : 4.5 (value that caused exception),
-                 'source' : 'source name',
         }
 }
 ```
-
 
 Sample Service
 --------------
@@ -61,6 +67,15 @@ triggered the alert.
 
 ```ruby
 class Service::Sample < Service
+  def receive_validate(errors = {})
+    if settings[:name].to_s.empty?
+      errors[:name] = "Is required"
+      return false
+    else
+      return true
+    end
+  end
+
   def receive_alert
     value = payload[:measurement][:value]
 
