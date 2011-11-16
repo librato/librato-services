@@ -10,10 +10,12 @@ module Librato
               :id => 12345
             },
             :metric => {
-              :name => "my_sample_alert"
+              :name => "my_sample_alert",
+              :type => "gauge"
             },
             :measurement => {
-              :value => 2345.9
+              :value => 2345.9,
+              :source => "r3.acme.com"
             },
             :trigger_time => 1321311840
           }.with_indifferent_access
