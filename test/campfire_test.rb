@@ -42,7 +42,7 @@ class CampfireTest < Librato::Services::TestCase
     assert_equal 1, svc.campfire.rooms.size
     assert_equal 'r', svc.campfire.rooms.first.name
     assert_equal 1, svc.campfire.rooms.first.lines.size # summary
-    assert_equal 1, svc.campfire.rooms.first.pastes.size # logs
+    #assert_equal 1, svc.campfire.rooms.first.pastes.size # logs
   end
 
   def service(*args)

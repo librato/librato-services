@@ -37,6 +37,10 @@ module Librato
         def pluralize(count, singular, plural = nil)
           "#{count || 0} " + ((count == 1 || count =~ /^1(\.0+)?$/) ? singular : (plural || singular.pluralize))
         end
+
+        def metric_link(type, name)
+          "https://#{ENV['METRICS_APP_URL']}/#{type}s/#{name}/edit"
+        end
       end
     end
   end
