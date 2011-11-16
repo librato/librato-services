@@ -21,13 +21,20 @@ class Service::Campfire < Service
       raise_error 'No such campfire room'
     end
 
-    message = %{Alert ID #{payload[:alert][:id]} fired!}
-    paste = %{Payload: #{payload.inspect}}
+    src = payload[:measurement][:source]
 
+    message = "Alert triggered at %s for '%s' with value %f%s: %s" %
+      [Time.at(payload[:trigger_time]).utc,
+       payload[:metric][:name],
+       payload[:measurement][:value],
+       src == "unassigned" ? "" : " from #{src}",
+       metric_link(payload[:metric][:type], payload[:metric][:name])]
+
+    #paste = %{Payload: #{payload.inspect}}
     #play_sound = settings[:play_sound].to_i == 1
 
     room.speak message
-    room.paste paste
+    #room.paste paste
     #room.play "rimshot" if play_sound && room.respond_to?(:play)
   rescue Faraday::Error::ConnectionFailed
     raise_error "Connection refused — invalid campfire subdomain."
