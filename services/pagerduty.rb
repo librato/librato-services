@@ -24,6 +24,9 @@ class Service::Pagerduty < Service
       :details => payload
     }
 
+    body[:details][:metric_link] = metric_link(payload[:metric][:type],
+                                               payload[:metric][:name])
+
     body[:incident_key] = settings[:incident_key] if settings[:incident_key]
 
     url = "https://events.pagerduty.com/generic/2010-04-15/create_event.json"

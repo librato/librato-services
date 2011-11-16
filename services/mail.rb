@@ -25,7 +25,7 @@ class Service::Mail < Service
       mail = ::Mail.new
       mail.from    'Librato Metrics <metrics@librato.com>'
       mail.to      settings[:addresses].split(/,/).map { |a| a.strip }
-      mail.subject %{[Librato Metrics] Alert #{payload[:alert][:id]} fired!}
+      mail.subject %{[Librato Metrics] Metric #{payload[:metric][:name]} has triggered an alert!}
 
       text = text_email
       html = html_email
@@ -70,8 +70,18 @@ class Service::Mail < Service
             <tr>
               <td valign="top" align="left" style="background-color: #FFFFFF;padding: 20px;font-family: Arial;font-size: 12px;line-height: 150%;color: #333333;">
                 <div id="content">
-                  <h2>Alert <%= h payload[:alert][:id] %> has fired</h2>
-                  Payload: <%= h payload.inspect %>
+                  <h2>Metric <%= h payload[:metric][:name] %> has triggered an alert!</h2>
+                  <ul>
+                    <li>Metric: <em><%= h payload[:metric][:name] %></em></li>
+                    <li>Value: <em><%= h payload[:measurement][:value] %></em></li>
+                    <% if payload[:measurement][:source] != 'unassigned' %>
+                      <li>Source: <em><%= h payload[:measurement][:source] %></em></li>
+                    <% end %>
+                    <li>Triggered at: <em><%= Time.at(payload[:trigger_time]).utc %></em></li>
+                  </ul>
+                  <p>
+                    Click <a href="<%= metric_link(payload[:metric][:type], payload[:metric][:name]) %>">this link</a> to view the metric.
+                  </p>
                 </div>
               </td>
             </tr>
@@ -90,9 +100,15 @@ EOF
 
   def text_email
     erb(unindent(<<-EOF), binding)
-      Alert <%= h payload[:alert][:id] %> has fired.
+      Metric <%= h payload[:metric][:name] %> has triggered an alert!
 
-      Payload: <%= payload.inspect %>
+      Value: <%= h payload[:measurement][:value] %>
+      <% if payload[:measurement][:source] != 'unassigned' %>
+      Source: <%= h payload[:measurement][:source] %>
+      <% end %>
+      Triggered at: <%= Time.at(payload[:trigger_time]).utc %>
+
+      View the metric here: <%= metric_link(payload[:metric][:type], payload[:metric][:name]) %>
 
       --
       Librato Metrics

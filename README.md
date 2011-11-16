@@ -55,6 +55,8 @@ A sample payload is available at
         },
         'measurement' : {
                  'value' : 4.5 (value that caused exception),
+                 'source' : 'r3.acme.com' (source that caused exception
+                                           or 'unassigned')
         }
 }
 ```
