@@ -1,11 +1,16 @@
 module Librato
   module Services
     class App < Sinatra::Base
-      configure do
+      configure :production do
         if ENV['HOPTOAD_API_KEY']
           HoptoadNotifier.configure do |config|
             config.api_key = ENV['HOPTOAD_API_KEY']
           end
+        end
+
+        if ENV['NEW_RELIC_APPNAME']
+          # Use New Relic RPM
+          require "newrelic_rpm"
         end
       end
 
