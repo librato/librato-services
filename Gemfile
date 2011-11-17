@@ -8,6 +8,7 @@ gem 'activesupport', '~> 2.3', :require => 'active_support'
 gem 'yajl-ruby', :require => [ 'yajl', 'yajl/json_gem' ]
 
 gem 'hoptoad_notifier'
+gem 'exceptional', '~> 2.0.32'
 
 # New Relic
 gem 'newrelic_rpm', '~> 3.3.0'
