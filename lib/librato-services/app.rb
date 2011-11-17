@@ -8,10 +8,34 @@ module Librato
           end
         end
 
+        if ENV['EXCEPTIONAL_API_KEY']
+          set :raise_errors, false
+
+          Exceptional.configure(ENV["EXCEPTIONAL_API_KEY"])
+          Exceptional::Remote.
+            startup_announce(::Exceptional::ApplicationEnvironment.to_hash('sinatra'))
+        end
+
+        error do
+          e = env['sinatra.error']
+
+          $stderr.puts "Error: #{e.class}: #{e.message}"
+          $stderr.puts "\t#{e.backtrace.join("\n\t")}"
+
+          if ENV['HOPTOAD_API_KEY']
+            HoptoadNotifier.notify(e)
+          elsif ENV['EXCEPTIONAL_API_KEY']
+            Exceptional::Catcher.handle_with_rack(e, request.env, request)
+          end
+        end
+
+
         if ENV['NEW_RELIC_APPNAME']
           # Use New Relic RPM
           require "newrelic_rpm"
         end
+
+
       end
 
       helpers do
@@ -53,10 +77,6 @@ module Librato
           rescue Service::ConfigurationError => e
             status 400
             e.message
-          rescue Object => e
-            report_exception(e)
-            status 500
-            'error'
           end
         end
 
@@ -78,6 +98,9 @@ module Librato
 
           if ENV['HOPTOAD_API_KEY']
             HoptoadNotifier.notify(e)
+          else
+            # Let exceptional catch this
+            raise e
           end
         end
       end

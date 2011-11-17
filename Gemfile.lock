@@ -6,6 +6,8 @@ GEM
     builder (3.0.0)
     daemons (1.1.4)
     eventmachine (0.12.10)
+    exceptional (2.0.32)
+      rack
     faraday (0.7.5)
       addressable (~> 2.2.6)
       multipart-post (~> 1.1.3)
@@ -81,6 +83,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 2.3)
   bundler (~> 1.0.0)
+  exceptional (~> 2.0.32)
   faraday (~> 0.7.5)
   hoptoad_notifier
   jeweler (~> 1.6.4)
