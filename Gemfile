@@ -9,6 +9,9 @@ gem 'yajl-ruby', :require => [ 'yajl', 'yajl/json_gem' ]
 
 gem 'hoptoad_notifier'
 
+# New Relic
+gem 'newrelic_rpm', '~> 3.3.0'
+
 # service: mail
 gem 'mail', '~> 2.2'
 
