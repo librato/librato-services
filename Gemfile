@@ -12,6 +12,9 @@ gem 'hoptoad_notifier'
 # New Relic
 gem 'newrelic_rpm', '~> 3.3.0'
 
+# Remote system logging
+gem 'remote_syslog_logger', '~> 1.0.3'
+
 # service: mail
 gem 'mail', '~> 2.2'
 
