@@ -50,8 +50,6 @@ module Librato
         if Librato::Services::Helpers.const_defined?(helper_name)
           @helper = Librato::Services::Helpers.const_get(helper_name)
           extend @helper
-        else
-          raise ArgumentError, "Invalid event: #{event.inspect}"
         end
 
         @event    = event
