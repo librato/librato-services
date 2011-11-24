@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{librato-services}
-  s.version = "0.2.2"
+  s.version = "0.2.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = %q{2011-11-16}
+  s.date = %q{2011-11-24}
   s.description = %q{Provides service notifications for alerts}
   s.email = %q{mike@librato.com}
   s.extra_rdoc_files = [
@@ -61,6 +61,9 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activesupport>, ["~> 2.3"])
       s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<hoptoad_notifier>, [">= 0"])
+      s.add_runtime_dependency(%q<exceptional>, ["~> 2.0.32"])
+      s.add_runtime_dependency(%q<newrelic_rpm>, ["~> 3.3.0"])
+      s.add_runtime_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_runtime_dependency(%q<mail>, ["~> 2.2"])
       s.add_runtime_dependency(%q<tinder>, ["~> 1.7"])
       s.add_runtime_dependency(%q<unicorn>, [">= 0"])
@@ -76,6 +79,9 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<activesupport>, ["~> 2.3"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
+      s.add_dependency(%q<exceptional>, ["~> 2.0.32"])
+      s.add_dependency(%q<newrelic_rpm>, ["~> 3.3.0"])
+      s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_dependency(%q<mail>, ["~> 2.2"])
       s.add_dependency(%q<tinder>, ["~> 1.7"])
       s.add_dependency(%q<unicorn>, [">= 0"])
@@ -92,6 +98,9 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activesupport>, ["~> 2.3"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
     s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
+    s.add_dependency(%q<exceptional>, ["~> 2.0.32"])
+    s.add_dependency(%q<newrelic_rpm>, ["~> 3.3.0"])
+    s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
     s.add_dependency(%q<mail>, ["~> 2.2"])
     s.add_dependency(%q<tinder>, ["~> 1.7"])
     s.add_dependency(%q<unicorn>, [">= 0"])
