@@ -48,3 +48,4 @@ pkg
 #*.rbc
 
 .rvmrc
+log/newrelic*
