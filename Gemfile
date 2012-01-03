@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'sinatra', '~> 1.2.6'
+gem 'sinatra', '~> 1.3.2'
 
 gem 'faraday', '~> 0.7.5'
 
