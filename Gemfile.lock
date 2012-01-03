@@ -79,6 +79,7 @@ GEM
       rack
       raindrops (~> 0.6)
     yajl-ruby (0.8.3)
+    yard (0.7.3)
 
 PLATFORMS
   ruby
@@ -102,3 +103,4 @@ DEPENDENCIES
   tinder (~> 1.7)
   unicorn
   yajl-ruby
+  yard
