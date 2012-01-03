@@ -28,6 +28,8 @@ gem 'tinder', '~> 1.7'
 
 gem 'unicorn'
 
+gem 'rake', '~>0.9.2.2'
+
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
