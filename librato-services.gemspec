@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "librato-services"
-  s.version = "0.2.4"
+  s.version = "0.2.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = "2012-01-03"
+  s.date = "2012-03-02"
   s.description = "Provides service notifications for alerts"
   s.email = "mike@librato.com"
   s.extra_rdoc_files = [
@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/librato/librato-services"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.12"
+  s.rubygems_version = "1.8.10"
   s.summary = "Provides service notifications for alerts"
 
   if s.respond_to? :specification_version then
@@ -60,8 +60,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<faraday>, ["~> 0.7.5"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 2.3"])
       s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
-      s.add_runtime_dependency(%q<hoptoad_notifier>, [">= 0"])
-      s.add_runtime_dependency(%q<exceptional>, ["~> 2.0.32"])
+      s.add_runtime_dependency(%q<airbrake>, ["~> 3.0.9"])
       s.add_runtime_dependency(%q<newrelic_rpm>, ["~> 3.3.0"])
       s.add_runtime_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_runtime_dependency(%q<mail>, ["~> 2.2"])
@@ -80,8 +79,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<faraday>, ["~> 0.7.5"])
       s.add_dependency(%q<activesupport>, ["~> 2.3"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
-      s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
-      s.add_dependency(%q<exceptional>, ["~> 2.0.32"])
+      s.add_dependency(%q<airbrake>, ["~> 3.0.9"])
       s.add_dependency(%q<newrelic_rpm>, ["~> 3.3.0"])
       s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_dependency(%q<mail>, ["~> 2.2"])
@@ -101,8 +99,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<faraday>, ["~> 0.7.5"])
     s.add_dependency(%q<activesupport>, ["~> 2.3"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
-    s.add_dependency(%q<hoptoad_notifier>, [">= 0"])
-    s.add_dependency(%q<exceptional>, ["~> 2.0.32"])
+    s.add_dependency(%q<airbrake>, ["~> 3.0.9"])
     s.add_dependency(%q<newrelic_rpm>, ["~> 3.3.0"])
     s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
     s.add_dependency(%q<mail>, ["~> 2.2"])
