@@ -18,6 +18,7 @@ if ENV["ERRBIT_API_KEY"]
   Airbrake.configure do |config|
     config.api_key = ENV['ERRBIT_API_KEY']
     config.host	   = ENV['ERRBIT_HOST']
+    config.environment_name = ENV['RACK_ENV']
     config.port	   = 443
     config.secure  = config.port == 443
   end
