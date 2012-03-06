@@ -22,6 +22,9 @@ pid File.join(base_dir, 'tmp/pids/unicorn.pid')
 # the symlink changes.
 working_directory base_dir
 
+stdout_path File.join(base_dir, 'log/unicorn.stdout.log')
+stderr_path File.join(base_dir, 'log/unicorn.stderr.log')
+
 ##
 # REE
 
