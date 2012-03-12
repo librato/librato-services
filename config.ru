@@ -1,7 +1,7 @@
 require "rubygems"
 require "bundler"
 
-Bundler.require
+Bundler.require :default, :app
 
 if ENV['REMOTE_SYSLOG_URI']
   uri = URI.parse(ENV['REMOTE_SYSLOG_URI'])
