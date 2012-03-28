@@ -18,7 +18,8 @@ class Service::Campfire < Service
     raise_config_error unless receive_validate({})
 
     unless room = find_room
-      raise_error 'No such campfire room'
+      puts "Warning: no such campfire room: #{settings[:room]}"
+      return
     end
 
     src = payload[:measurement][:source]
