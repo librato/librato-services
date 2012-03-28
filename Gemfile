@@ -7,11 +7,6 @@ gem 'faraday', '~> 0.7.5'
 gem 'activesupport', '~> 2.3', :require => 'active_support'
 gem 'yajl-ruby', :require => [ 'yajl', 'yajl/json_gem' ]
 
-gem 'airbrake', '~> 3.0.9'
-
-# New Relic
-gem 'newrelic_rpm', '~> 3.3.0'
-
 # Remote system logging
 gem 'remote_syslog_logger', '~> 1.0.3'
 
@@ -25,9 +20,16 @@ gem 'tinder', '~> 1.7'
 #
 #gem 'always_verify_ssl_certificates', '~> 0.3.0'
 
-gem 'unicorn'
-
 gem 'rake', '~>0.9.2.2'
+
+group :app do
+  gem 'airbrake', '~> 3.0.9'
+
+  # New Relic
+  gem 'newrelic_rpm', '~> 3.3.0'
+
+  gem 'unicorn'
+end
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
