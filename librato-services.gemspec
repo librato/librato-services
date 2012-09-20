@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = "2012-03-28"
+  s.date = "2012-09-20"
   s.description = "Provides service notifications for alerts"
   s.email = "mike@librato.com"
   s.extra_rdoc_files = [
@@ -37,11 +37,13 @@ Gem::Specification.new do |s|
     "lib/librato-services/service.rb",
     "librato-services.gemspec",
     "services/campfire.rb",
+    "services/hipchat.rb",
     "services/mail.rb",
     "services/pagerduty.rb",
     "services/webhook.rb",
     "test/campfire_test.rb",
     "test/helper.rb",
+    "test/hipchat_test.rb",
     "test/mail_test.rb",
     "test/pagerduty_test.rb",
     "test/webhook_test.rb"
@@ -58,7 +60,7 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<sinatra>, ["~> 1.2.7"])
       s.add_runtime_dependency(%q<faraday>, ["~> 0.7.5"])
-      s.add_runtime_dependency(%q<activesupport>, ["~> 2.3"])
+      s.add_runtime_dependency(%q<activesupport>, ["~> 3.2.8"])
       s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_runtime_dependency(%q<mail>, ["~> 2.2"])
@@ -74,7 +76,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<sinatra>, ["~> 1.2.7"])
       s.add_dependency(%q<faraday>, ["~> 0.7.5"])
-      s.add_dependency(%q<activesupport>, ["~> 2.3"])
+      s.add_dependency(%q<activesupport>, ["~> 3.2.8"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_dependency(%q<mail>, ["~> 2.2"])
@@ -91,7 +93,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<sinatra>, ["~> 1.2.7"])
     s.add_dependency(%q<faraday>, ["~> 0.7.5"])
-    s.add_dependency(%q<activesupport>, ["~> 2.3"])
+    s.add_dependency(%q<activesupport>, ["~> 3.2.8"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
     s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
     s.add_dependency(%q<mail>, ["~> 2.2"])
