@@ -12,14 +12,21 @@ class Service::Hipchat < Service
     [:auth_token, :from, :room_id, :notify].each do |k|
       errors[k] = "Is required" if settings[k].to_s.empty?
     end
-    if errors.empty?
-      status_code = validate_settings(settings)
-      if status_code == 401
-        errors[:auth_token] = "Invalid Auth Token"
-      elsif status_code == 404
-        errors[:room_id] = "Invalid Room Id"
-      end
-    end
+
+    #
+    # XXX: Validation is not explicitly triggered, so we don't
+    # want to send a test msg each time validation is checked.
+    # TODO: Make an explicit "test" action.
+    #
+
+    # if errors.empty?
+    #   status_code = validate_settings(settings)
+    #   if status_code == 401
+    #     errors[:auth_token] = "Invalid Auth Token"
+    #   elsif status_code == 404
+    #     errors[:room_id] = "Invalid Room Id"
+    #   end
+    # end
     errors.empty?
   end
 

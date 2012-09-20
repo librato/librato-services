@@ -35,30 +35,30 @@ class HipchatTest < Librato::Services::TestCase
     @settings.keys.each {|setting| assert_equal "Is required", errors[setting]}
   end
 
-  def test_receive_validate_invalid_auth_token
-    errors = {}
-    opts = {}
-    message = URI.escape("Test message from Librato Hipchat integration")
-    stub_message_call(@test_message, 401)
+  # def test_receive_validate_invalid_auth_token
+  #   errors = {}
+  #   opts = {}
+  #   message = URI.escape("Test message from Librato Hipchat integration")
+  #   stub_message_call(@test_message, 401)
 
-    service = service(:alert, @settings, payload)
-    result = service.receive_validate(errors)
+  #   service = service(:alert, @settings, payload)
+  #   result = service.receive_validate(errors)
 
-    assert !result
-    assert_equal "Invalid Auth Token", errors[:auth_token]
-  end
+  #   assert !result
+  #   assert_equal "Invalid Auth Token", errors[:auth_token]
+  # end
 
-  def test_receive_validate_invalid_room
-    errors = {}
-    opts = {}
-    stub_message_call(@test_message, 404)
+  # def test_receive_validate_invalid_room
+  #   errors = {}
+  #   opts = {}
+  #   stub_message_call(@test_message, 404)
 
-    service = service(:alert, @settings, payload)
-    result = service.receive_validate(errors)
+  #   service = service(:alert, @settings, payload)
+  #   result = service.receive_validate(errors)
 
-    assert !result
-    assert_equal "Invalid Room Id", errors[:room_id]
-  end
+  #   assert !result
+  #   assert_equal "Invalid Room Id", errors[:room_id]
+  # end
 
   def test_alert
     service = service(:alert, @settings, payload)
