@@ -33,12 +33,13 @@ class Service::Hipchat < Service
 
   def generate_message(payload)
     source = payload[:measurement][:source]
-    "Alert triggered at %s for '%s' with value %f%s: %s" %
+    link = metric_link(payload[:metric][:type], payload[:metric][:name])
+    "Alert triggered at %s for '%s' with value %f%s: <a href=\"%s\">%s</a>" %
       [Time.at(payload[:trigger_time]).utc,
        payload[:metric][:name],
        payload[:measurement][:value],
        source == "unassigned" ? "" : " from #{source}",
-       metric_link(payload[:metric][:type], payload[:metric][:name])]
+       link, link]
   end
 
   def send_message(settings, message)
