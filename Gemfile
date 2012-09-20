@@ -4,7 +4,7 @@ gem 'sinatra', '~> 1.2.7'
 
 gem 'faraday', '~> 0.7.5'
 
-gem 'activesupport', '~> 2.3', :require => 'active_support'
+gem 'activesupport', '~> 3.2.8', :require => 'active_support'
 gem 'yajl-ruby', :require => [ 'yajl', 'yajl/json_gem' ]
 
 # Remote system logging

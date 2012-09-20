@@ -39,7 +39,7 @@ module Librato
         end
 
         def metric_link(type, name)
-          "https://#{ENV['METRICS_APP_URL']}/#{type}s/#{name}"
+          "https://#{ENV['METRICS_APP_URL']}/metrics/#{name}"
         end
       end
     end
