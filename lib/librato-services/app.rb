@@ -56,7 +56,7 @@ module Librato
               ''
             else
               status 404
-              status "#{svc.hook_name} Service could not process request"
+              #status "#{svc.hook_name} Service could not process request"
             end
 
           rescue Service::ConfigurationError => e
