@@ -6,18 +6,18 @@ class MailTest < Librato::Services::TestCase
   end
 
   def test_validations
-    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, alert_payload)
     errors = {}
     assert(svc.receive_validate(errors))
     assert_equal(0, errors.length)
 
-    svc = service(:alert, {}, payload)
+    svc = service(:alert, {}, alert_payload)
     errors = {}
     assert(!svc.receive_validate(errors))
     assert_equal(1, errors.length)
     assert(errors[:addresses])
 
-    svc = service(:alert, { :addresses => ['fred@barn.com'] }, payload)
+    svc = service(:alert, { :addresses => ['fred@barn.com'] }, alert_payload)
     errors = {}
     assert(!svc.receive_validate(errors))
     assert_equal(1, errors.length)
@@ -25,7 +25,7 @@ class MailTest < Librato::Services::TestCase
   end
 
   def test_alert
-    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, alert_payload)
 
     svc.mail_message.perform_deliveries = false
 
@@ -33,7 +33,7 @@ class MailTest < Librato::Services::TestCase
   end
 
   def test_mail_message
-    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, alert_payload)
 
     message = svc.mail_message
 
@@ -41,7 +41,7 @@ class MailTest < Librato::Services::TestCase
   end
 
   def test_html
-    svc = service(:alert, { }, payload)
+    svc = service(:alert, { }, alert_payload)
 
     html = svc.html_email
 
@@ -49,7 +49,7 @@ class MailTest < Librato::Services::TestCase
   end
 
   def test_text
-    svc = service(:alert, { }, payload)
+    svc = service(:alert, { }, alert_payload)
 
     text = svc.text_email
 

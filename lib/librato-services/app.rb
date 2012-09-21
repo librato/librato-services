@@ -28,22 +28,35 @@ module Librato
 
             halt 400 unless body
 
-            payload = {
-              :alert => body['alert'],
-              :metric => body['metric'],
-              :measurement => body['measurement'],
-              :trigger_time => body['trigger_time']
-            }
+            event = params[:event].to_sym
+            halt 404 unless [:alert, :snapshot].include?(event)
+
+            if event == :alert
+              payload = {
+                :alert => body['alert'],
+                :metric => body['metric'],
+                :measurement => body['measurement'],
+                :trigger_time => body['trigger_time']
+              }
+            else
+              payload = {
+                :snapshot => {
+                  :entity_name => body['entity_name'],
+                  :entity_url => body['entity_url'],
+                  :image_url => body['image_url']
+                }
+              }
+            end
 
             settings = HashWithIndifferentAccess.new(body['settings'])
             payload = HashWithIndifferentAccess.new(payload)
 
-            if svc.receive(:alert, settings, payload)
+            if svc.receive(event, settings, payload)
               status 200
               ''
             else
               status 404
-              status "#{svc.hook_name} Service could not process request"
+              #status "#{svc.hook_name} Service could not process request"
             end
 
           rescue Service::ConfigurationError => e

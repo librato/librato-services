@@ -4,7 +4,7 @@ module Librato
   module Services
     module Helpers
       module AlertHelpers
-        def self.sample_payload
+        def self.sample_alert_payload
           {
             :alert => {
               :id => 12345

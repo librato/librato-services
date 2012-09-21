@@ -18,7 +18,7 @@ class HipchatTest < Librato::Services::TestCase
     errors = {}
     stub_message_call(@test_message, 200)
 
-    service = service(:alert, @settings, payload)
+    service = service(:alert, @settings, alert_payload)
     result = service.receive_validate(errors)
 
     assert result
@@ -28,7 +28,7 @@ class HipchatTest < Librato::Services::TestCase
   def test_receive_validate_missing_arguments
     errors = {}
     opts = {}
-    service = service(:alert, {}, payload)
+    service = service(:alert, {}, alert_payload)
     result = service.receive_validate(errors)
 
     assert !result
@@ -41,7 +41,7 @@ class HipchatTest < Librato::Services::TestCase
   #   message = URI.escape("Test message from Librato Hipchat integration")
   #   stub_message_call(@test_message, 401)
 
-  #   service = service(:alert, @settings, payload)
+  #   service = service(:alert, @settings, alert_payload)
   #   result = service.receive_validate(errors)
 
   #   assert !result
@@ -53,7 +53,7 @@ class HipchatTest < Librato::Services::TestCase
   #   opts = {}
   #   stub_message_call(@test_message, 404)
 
-  #   service = service(:alert, @settings, payload)
+  #   service = service(:alert, @settings, alert_payload)
   #   result = service.receive_validate(errors)
 
   #   assert !result
@@ -61,13 +61,23 @@ class HipchatTest < Librato::Services::TestCase
   # end
 
   def test_alert
-    service = service(:alert, @settings, payload)
+    service = service(:alert, @settings, alert_payload)
 
     stub_message_call(@test_message, 200)
-    alert_message = service.generate_message(payload)
+    alert_message = service.alert_message
     stub_message_call(alert_message, 200)
 
     service.receive_alert
+  end
+
+  def test_snapshot
+    service = service(:snapshot, @settings, snapshot_payload)
+
+    stub_message_call(@test_message, 200)
+    snapshot_message = service.snapshot_message
+    stub_message_call(snapshot_message, 200)
+
+    service.receive_snapshot
   end
 
   def service(*args)

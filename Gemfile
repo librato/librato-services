@@ -16,6 +16,9 @@ gem 'mail', '~> 2.2'
 # service :campfire
 gem 'tinder', '~> 1.7'
 
+# service :hipchat
+gem 'hipchat-api', '~> 1.0.4'
+
 # Ensure everyone plays nice with SSL
 #
 #gem 'always_verify_ssl_certificates', '~> 0.3.0'

@@ -35,13 +35,24 @@ class CampfireTest < Librato::Services::TestCase
   end
 
   def test_alerts
-    svc = service(:alert, {"token" => "t", "subdomain" => "s", "room" => "r"}.with_indifferent_access, payload)
+    svc = service(:alert, {"token" => "t", "subdomain" => "s", "room" => "r"}.with_indifferent_access, alert_payload)
     svc.campfire = MockCampfire.new
     svc.receive_alert
 
     assert_equal 1, svc.campfire.rooms.size
     assert_equal 'r', svc.campfire.rooms.first.name
     assert_equal 1, svc.campfire.rooms.first.lines.size # summary
+    #assert_equal 1, svc.campfire.rooms.first.pastes.size # logs
+  end
+
+  def test_snapshots
+    svc = service(:snapshot, {"token" => "t", "subdomain" => "s", "room" => "r"}.with_indifferent_access, snapshot_payload)
+    svc.campfire = MockCampfire.new
+    svc.receive_snapshot
+
+    assert_equal 1, svc.campfire.rooms.size
+    assert_equal 'r', svc.campfire.rooms.first.name
+    assert_equal 2, svc.campfire.rooms.first.lines.size # summary
     #assert_equal 1, svc.campfire.rooms.first.pastes.size # logs
   end
 

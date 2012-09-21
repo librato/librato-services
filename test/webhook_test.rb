@@ -6,18 +6,18 @@ class WebhookTest < Librato::Services::TestCase
   end
 
   def test_validations
-    svc = service(:alert, {:url => "http://foobar.com/push"}, payload)
+    svc = service(:alert, {:url => "http://foobar.com/push"}, alert_payload)
     errors = {}
     assert(svc.receive_validate(errors))
     assert_equal(0, errors.length)
 
-    svc = service(:alert, {}, payload)
+    svc = service(:alert, {}, alert_payload)
     errors = {}
     assert(!svc.receive_validate(errors))
     assert_equal(1, errors.length)
     assert(!errors[:url].nil?)
 
-    svc = service(:alert, {:url => "http://user@@foobar.com:/blah"}, payload)
+    svc = service(:alert, {:url => "http://user@@foobar.com:/blah"}, alert_payload)
     errors = {}
     assert(!svc.receive_validate(errors))
     assert_equal(1, errors.length)
@@ -27,7 +27,7 @@ class WebhookTest < Librato::Services::TestCase
   def test_alerts
     path = "/post_path.json"
     url = "http://localhost#{path}"
-    svc = service(:alert, { :url => url }, payload)
+    svc = service(:alert, { :url => url }, alert_payload)
 
     @stubs.post "#{path}" do |env|
       [200, {}, '']
