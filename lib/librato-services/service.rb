@@ -1,3 +1,9 @@
+
+
+Dir[File.join(File.dirname(__FILE__), 'helpers/*helpers*')].each { |helper|
+  require helper
+}
+
 require 'helpers/alert_helpers'
 
 module Librato

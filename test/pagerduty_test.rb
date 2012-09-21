@@ -13,7 +13,7 @@ class PagerdutyTest < Librato::Services::TestCase
       0.upto(i) do |j|
         opts[params.keys[j]] = params[params.keys[j]]
       end
-      svc = service(:alert, opts, payload)
+      svc = service(:alert, opts, alert_payload)
       errors = {}
       ret = svc.receive_validate(errors)
       success = i == params.keys.length - 1
@@ -27,7 +27,7 @@ class PagerdutyTest < Librato::Services::TestCase
                     :service_key => 'k',
                     :event_type => 't',
                     :description => 'd'
-                  }, payload)
+                  }, alert_payload)
 
     @stubs.post '/generic/2010-04-15/create_event.json' do |env|
       [200, {}, '']
