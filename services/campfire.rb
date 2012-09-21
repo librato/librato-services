@@ -13,14 +13,16 @@ class Service::Campfire < Service
     success
   end
 
-  def receive_alert
-    # XXX: should run receive_validate()
+  def receive_snapshot
     raise_config_error unless receive_validate({})
 
-    unless room = find_room
-      puts "Warning: no such campfire room: #{settings[:room]}"
-      return
-    end
+    speak_msgs(["%s: %s" % [payload[:snapshot][:entity_name],
+                            payload[:snapshot][:entity_url]],
+                payload[:snapshot][:image_url]])
+  end
+
+  def receive_alert
+    raise_config_error unless receive_validate({})
 
     src = payload[:measurement][:source]
 
@@ -31,14 +33,16 @@ class Service::Campfire < Service
        src == "unassigned" ? "" : " from #{src}",
        metric_link(payload[:metric][:type], payload[:metric][:name])]
 
-    #paste = %{Payload: #{payload.inspect}}
-    #play_sound = settings[:play_sound].to_i == 1
+    speak_msgs [message]
+  end
 
-    room.speak message
-    #room.paste paste
-    #room.play "rimshot" if play_sound && room.respond_to?(:play)
-  rescue Faraday::Error::ConnectionFailed
-    raise_error "Connection refused — invalid campfire subdomain."
+  def speak_msgs(msgs)
+    unless room = find_room
+      puts "Warning: no such campfire room: #{settings[:room]}"
+      return
+    end
+
+    msgs.each {|msg| room.speak msg }
   end
 
   def campfire_hostname
