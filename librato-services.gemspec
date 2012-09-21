@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = "2012-09-20"
+  s.date = "2012-09-21"
   s.description = "Provides service notifications for alerts"
   s.email = "mike@librato.com"
   s.extra_rdoc_files = [
@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
     "lib/librato-services/app.rb",
     "lib/librato-services/authentication.rb",
     "lib/librato-services/helpers/alert_helpers.rb",
+    "lib/librato-services/helpers/snapshot_helpers.rb",
     "lib/librato-services/service.rb",
     "librato-services.gemspec",
     "services/campfire.rb",
@@ -65,6 +66,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_runtime_dependency(%q<mail>, ["~> 2.2"])
       s.add_runtime_dependency(%q<tinder>, ["~> 1.7"])
+      s.add_runtime_dependency(%q<hipchat-api>, ["~> 1.0.4"])
       s.add_runtime_dependency(%q<rake>, ["~> 0.9.2.2"])
       s.add_development_dependency(%q<thin>, ["~> 1.2.11"])
       s.add_development_dependency(%q<shotgun>, ["~> 0.8"])
@@ -81,6 +83,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
       s.add_dependency(%q<mail>, ["~> 2.2"])
       s.add_dependency(%q<tinder>, ["~> 1.7"])
+      s.add_dependency(%q<hipchat-api>, ["~> 1.0.4"])
       s.add_dependency(%q<rake>, ["~> 0.9.2.2"])
       s.add_dependency(%q<thin>, ["~> 1.2.11"])
       s.add_dependency(%q<shotgun>, ["~> 0.8"])
@@ -98,6 +101,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<remote_syslog_logger>, ["~> 1.0.3"])
     s.add_dependency(%q<mail>, ["~> 2.2"])
     s.add_dependency(%q<tinder>, ["~> 1.7"])
+    s.add_dependency(%q<hipchat-api>, ["~> 1.0.4"])
     s.add_dependency(%q<rake>, ["~> 0.9.2.2"])
     s.add_dependency(%q<thin>, ["~> 1.2.11"])
     s.add_dependency(%q<shotgun>, ["~> 0.8"])

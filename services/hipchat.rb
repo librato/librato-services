@@ -13,32 +13,22 @@ class Service::Hipchat < Service
       errors[k] = "Is required" if settings[k].to_s.empty?
     end
 
-    #
-    # XXX: Validation is not explicitly triggered, so we don't
-    # want to send a test msg each time validation is checked.
-    # TODO: Make an explicit "test" action.
-    #
-
-    # if errors.empty?
-    #   status_code = validate_settings(settings)
-    #   if status_code == 401
-    #     errors[:auth_token] = "Invalid Auth Token"
-    #   elsif status_code == 404
-    #     errors[:room_id] = "Invalid Room Id"
-    #   end
-    # end
     errors.empty?
   end
 
   def receive_alert
-    send_message(settings, generate_message(payload))
+    raise_config_error unless receive_validate({})
+
+    send_message(alert_message)
   end
 
-  def validate_settings(settings)
-    send_message(settings, "Test message from Librato Hipchat integration").status
+  def receive_snapshot
+    raise_config_error unless receive_validate({})
+
+    send_message(snapshot_message)
   end
 
-  def generate_message(payload)
+  def alert_message
     source = payload[:measurement][:source]
     link = metric_link(payload[:metric][:type], payload[:metric][:name])
     "Alert triggered at %s for '%s' with value %f%s: <a href=\"%s\">%s</a>" %
@@ -49,13 +39,21 @@ class Service::Hipchat < Service
        link, link]
   end
 
-  def send_message(settings, message)
-    # API Documentation https://www.hipchat.com/docs/api/method/rooms/message
-    http_post hipchat_url(settings, message), {}, 'Content-Type' => 'application/json'
+  def snapshot_message
+    "%s: <a href=\"%s\">%s</a><br/><a href=\"%s\" target=\"_blank\"><img src=\"%s\"></img></a>" %
+      [payload[:snapshot][:entity_name],
+       payload[:snapshot][:entity_url],
+       payload[:snapshot][:entity_url],
+       payload[:snapshot][:image_url],
+       payload[:snapshot][:image_url]]
   end
 
-  def hipchat_url(settings, message)
-    encoded_message = URI.escape(message)
-    "https://api.hipchat.com/v1/rooms/message?auth_token=#{settings[:auth_token]}&room_id=#{settings[:room_id]}&from=#{settings[:from]}&notify=#{settings[:notify]}&message=#{encoded_message}"
+  def hipchat
+    @hipchat ||= HipChat::API.new(settings[:auth_token])
+  end
+
+  def send_message(msg)
+    hipchat.rooms_message(settings[:room_id], settings[:from], msg,
+                         settings[:notify].to_i, 'yellow', 'html')
   end
 end

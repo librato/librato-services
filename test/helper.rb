@@ -33,8 +33,12 @@ class Librato::Services::TestCase < Test::Unit::TestCase
     "Basic " + ["#{user}:#{pass}"].pack("m*").strip
   end
 
-  def payload
-    Librato::Services::Helpers::AlertHelpers.sample_payload
+  def alert_payload
+    Librato::Services::Helpers::AlertHelpers.sample_alert_payload
+  end
+
+  def snapshot_payload
+    Librato::Services::Helpers::SnapshotHelpers.sample_snapshot_payload
   end
 end
 
