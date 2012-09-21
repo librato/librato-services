@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
     "lib/librato-services/app.rb",
     "lib/librato-services/authentication.rb",
     "lib/librato-services/helpers/alert_helpers.rb",
+    "lib/librato-services/helpers/snapshot_helpers.rb",
     "lib/librato-services/service.rb",
     "librato-services.gemspec",
     "services/campfire.rb",
