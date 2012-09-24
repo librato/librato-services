@@ -1,6 +1,8 @@
 Librato Services
 ================
 
+[Build Status](https://secure.travis-ci.org/librato/librato-services.png)](http://travis-ci.org/librato/librato-services)
+
 Service hooks for [Librato Metrics](https://metrics.librato.com).
 
 Service Lifecycle
