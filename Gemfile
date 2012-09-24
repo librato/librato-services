@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 gem 'sinatra', '~> 1.2.7'
 
-gem 'faraday', '~> 0.7.5'
+gem 'faraday', '~> 0.8.4'
 
 gem 'activesupport', '~> 3.2.8', :require => 'active_support'
 gem 'yajl-ruby', :require => [ 'yajl', 'yajl/json_gem' ]
@@ -14,7 +14,7 @@ gem 'remote_syslog_logger', '~> 1.0.3'
 gem 'mail', '~> 2.2'
 
 # service :campfire
-gem 'tinder', '~> 1.7'
+gem 'tinder', '~> 1.9.1'
 
 # service :hipchat
 gem 'hipchat-api', '~> 1.0.4'
