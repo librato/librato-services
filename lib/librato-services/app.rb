@@ -4,7 +4,8 @@ module Librato
       configure :production do
         set :raise_errors, true
 
-        if ENV['NEW_RELIC_APPNAME']
+        # Check if this is set and not empty
+        if ENV['NEW_RELIC_APPNAME'].to_s.length > 0
           # Use New Relic RPM
           require "newrelic_rpm"
         end
