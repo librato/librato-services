@@ -1,7 +1,7 @@
 class Service::OpsGenie < Service
         def receive_validate(errors)
                 success = true
-                [:name, :customerKey, :recipients].each do |k|
+                [:name, :customerKey ].each do |k|
                         if settings[k].to_s.empty?
                                 errors[k] = "Is required"
                                 success = false
@@ -12,6 +12,9 @@ class Service::OpsGenie < Service
 
         def receive_alert
                 raise_config_error unless receive_validate({})
+		if settings[:recipients].to_s.empty?
+			settings[:recipients] = "all"
+		end
 				
                 message = "[Librato Metrics] Metric #{payload[:metric][:name]} value: #{payload[:measurement][:value]} has triggered an alert!"
                 
