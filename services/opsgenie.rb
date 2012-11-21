@@ -1,7 +1,7 @@
 class Service::OpsGenie < Service
         def receive_validate(errors)
                 success = true
-                [:name, :customerKey ].each do |k|
+                [:name, :customer_key ].each do |k|
                         if settings[k].to_s.empty?
                                 errors[k] = "Is required"
                                 success = false
@@ -29,7 +29,7 @@ class Service::OpsGenie < Service
                 }
 				
                 params = {
-                  :customerKey => settings[:customerKey],
+                  :customerKey => settings[:customer_key],
                   :recipients => settings[:recipients],
                   :message => message,
                   :source => "Librato",
