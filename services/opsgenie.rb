@@ -32,6 +32,7 @@ class Service::OpsGenie < Service
                 params = {
                   :customerKey => settings[:customer_key],
                   :recipients => settings[:recipients],
+                  :alias => payload[:metric][:name],
                   :message => message,
                   :source => "Librato",
                   :details => details
