@@ -20,14 +20,15 @@ class Service::OpsGenie < Service
                 
                 details = {
                         :"Alert Id" => payload[:alert][:id],
-                        :"Alert Name" => payload[:alert][:name],
                         :Metric => payload[:metric][:name],
                         :"Measurement Value"=> payload[:measurement][:value],
                         :"Triggered At" => Time.at(payload[:trigger_time]).utc,
                         :"Measurement Source" => payload[:measurement][:source],
                         :"Metric Link" => metric_link(payload[:metric][:type],payload[:metric][:name])
                 }
-				
+
+                details[:"Alert Name"] = payload[:alert][:name] if payload[:alert][:name]
+
                 params = {
                   :customerKey => settings[:customer_key],
                   :recipients => settings[:recipients],
