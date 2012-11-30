@@ -1,7 +1,7 @@
 class Service::OpsGenie < Service
         def receive_validate(errors)
                 success = true
-                [:name, :customer_key ].each do |k|
+                [:customer_key ].each do |k|
                         if settings[k].to_s.empty?
                                 errors[k] = "Is required"
                                 success = false
