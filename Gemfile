@@ -37,10 +37,9 @@ end
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
-  gem "thin", "~> 1.2.11"
+  gem "thin", "~> 1.5.0"
   gem "shotgun", "~> 0.8"
   gem "shoulda", ">= 0"
-  gem "bundler", "~> 1.0.0"
   gem "jeweler", "~> 1.6.4"
   gem "rcov", ">= 0"
   gem 'yard'
