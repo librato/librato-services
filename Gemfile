@@ -29,7 +29,7 @@ group :app do
   gem 'airbrake', '~> 3.0.9'
 
   # New Relic
-  gem 'newrelic_rpm', '~> 3.3.0'
+  # gem 'newrelic_rpm', '~> 3.3.0'
 
   gem 'unicorn'
 end
