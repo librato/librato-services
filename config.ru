@@ -26,6 +26,16 @@ if ENV["ERRBIT_API_KEY"].to_s.length > 0
   end
 
   use Airbrake::Rack
+elsif ENV["HONEYBADGER_API_KEY"].to_s.length > 0
+  require "honeybadger"
+
+  # Configure the API key
+  Honeybadger.configure do |config|
+    config.api_key = ENV["HONEYBADGER_API_KEY"]
+  end
+
+  # And use Honeybadger's rack middleware
+  use Honeybadger::Rack
 end
 
 $:.unshift File.join(File.dirname(__FILE__), 'lib')

@@ -28,6 +28,8 @@ gem 'rake', '~>0.9.2.2'
 group :app do
   gem 'airbrake', '~> 3.0.9', :require => false
 
+  gem 'honeybadger', '~> 1.6.1', :require => false
+
   # New Relic
   # gem 'newrelic_rpm', '~> 3.3.0'
 
