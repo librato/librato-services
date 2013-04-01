@@ -14,7 +14,9 @@ end
 # Add exception tracking middleware here to catch
 # all exceptions from the following middleware.
 #
-if ENV["ERRBIT_API_KEY"]
+if ENV["ERRBIT_API_KEY"].to_s.length > 0
+  require "airbrake"
+
   Airbrake.configure do |config|
     config.api_key = ENV['ERRBIT_API_KEY']
     config.host	   = ENV['ERRBIT_HOST']
