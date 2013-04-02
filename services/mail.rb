@@ -62,7 +62,7 @@ class Service::Mail < Service
               <td align="center" valign="top">
                 <div id="headbar" style="background-color: #000000;padding: 20px;border-bottom: 0px solid #000000;">
                   <div id="headlogo" style="color: #CCC; font-size: 3em; font-family: Arial; font-weight: bold; text-align: left; text-shadow: black 0px 2px 0px, #E5E5E5 0px -1px 0px; vertical-align: middle">
-                    <img src="https://s3.amazonaws.com/librato_images/logo_auth.png" alt="Librato Metrics">
+                    <img src="https://s3.amazonaws.com/librato_images/librato_logo.png" alt="Librato Metrics">
                   </div>
                 </div>
               </td>
