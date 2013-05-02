@@ -48,7 +48,7 @@ class Service::Mail < Service
   def html_email
     erb(unindent(<<-EOF), binding)
 
-<htm>
+<html>
   <head>
     <title>Librato Metrics</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
