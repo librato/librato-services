@@ -24,7 +24,7 @@ class Service::Mail < Service
     @mail_message ||= begin
       mail = ::Mail.new
       mail.from    'Librato Metrics <metrics@librato.com>'
-      mail.to      settings[:addresses].split(/,/).map { |a| a.strip }
+      mail.to      settings[:addresses].to_s.split(/,/).map { |a| a.strip }
       mail.subject %{[Librato Metrics] Metric #{payload[:metric][:name]} has triggered an alert!}
 
       text = text_email
