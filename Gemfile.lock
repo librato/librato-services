@@ -14,6 +14,9 @@ GEM
       multipart-post (~> 1.1)
     faraday_middleware (0.8.8)
       faraday (>= 0.7.4, < 0.9)
+    flowdock (0.3.1)
+      httparty (~> 0.7)
+      multi_json
     git (1.2.5)
     hashie (1.2.0)
     hipchat-api (1.0.4)
@@ -90,6 +93,7 @@ DEPENDENCIES
   activesupport (~> 3.2.8)
   airbrake (~> 3.0.9)
   faraday (~> 0.8.4)
+  flowdock (~> 0.3.1)
   hipchat-api (~> 1.0.4)
   honeybadger (~> 1.6.1)
   jeweler (~> 1.6.4)
