@@ -1,19 +1,18 @@
 # encoding: utf-8
 
 require 'services/mail'
+require 'flowdock'
 
 class Service::Flowdock < Service::Mail
   attr_writer :flowdock
 
   def receive_validate(errors = {})
-    success = true
-    [:api_token, :user_name].each do |k|
-      if settings[k].to_s.empty?
-        errors[k] = "Is required"
-        success = false
-      end
+    if settings[:api_token].to_s.empty?
+      errors[:api_token] = "Is required"
+      return false
     end
-    success
+
+    true
   end
 
   def receive_snapshot
@@ -35,14 +34,15 @@ class Service::Flowdock < Service::Mail
   end
 
   def flowdock
-    @flowdock ||= Flowdock::Flow.new(
+    @flowdock ||= ::Flowdock::Flow.new(
       :api_token => settings[:api_token],
-      :external_user_name => settings[:user_name],
+      # No whitespace, < 16 chars
+      :external_user_name => "Librato",
       :source => "Librato Metrics",
       :from => {
         :name => "Librato Metrics",
         :address => "metrics@librato.com"})
-  rescue Flowdock::Flow::ApiError => ai
+  rescue ::Flowdock::Flow::ApiError => ai
     if ai.message =~ /Invalid tokens/
       raise_error 'Authentication failed — invalid token'
     else
