@@ -6,14 +6,21 @@ class Service::Flowdock < Service::Mail
   attr_writer :flowdock
 
   def receive_validate(errors = {})
-    success = true
-    [:api_token, :user_name].each do |k|
-      if settings[k].to_s.empty?
-        errors[k] = "Is required"
-        success = false
+    if settings[:api_token].to_s.empty?
+      errors[:api_token] = "Is required"
+      return false
+    end
+
+    unless settings[:user_name].blank?
+      # No whitespace, < 16 chars
+      if settings[:user_name].length >= 16 ||
+          settings[:user_name].include?(" ")
+        errors[:user_name] = "Invalid format"
+        return false
       end
     end
-    success
+
+    true
   end
 
   def receive_snapshot
@@ -35,14 +42,17 @@ class Service::Flowdock < Service::Mail
   end
 
   def flowdock
-    @flowdock ||= Flowdock::Flow.new(
+    username = "Librato"
+    username = settings[:user_name] unless settings[:user_name].blank?
+
+    @flowdock ||= ::Flowdock::Flow.new(
       :api_token => settings[:api_token],
-      :external_user_name => settings[:user_name],
+      :external_user_name => username,
       :source => "Librato Metrics",
       :from => {
         :name => "Librato Metrics",
         :address => "metrics@librato.com"})
-  rescue Flowdock::Flow::ApiError => ai
+  rescue ::Flowdock::Flow::ApiError => ai
     if ai.message =~ /Invalid tokens/
       raise_error 'Authentication failed — invalid token'
     else
