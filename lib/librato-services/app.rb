@@ -1,5 +1,3 @@
-require 'sinatra'
-
 module Librato
   module Services
     class App < Sinatra::Base

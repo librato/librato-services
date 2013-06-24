@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'erb'
-require 'mail'
 
 class Service::Mail < Service
   def receive_validate(errors)

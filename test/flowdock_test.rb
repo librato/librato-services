@@ -19,7 +19,7 @@ class FlowdockTest < Librato::Services::TestCase
   end
 
   def test_alerts
-    svc = service(:alert, {"api_token" => "t"}.with_indifferent_access, alert_payload)
+    svc = service(:alert, {"api_token" => "t", "user_name" => "Test"}.with_indifferent_access, alert_payload)
     svc.flowdock = MockFlowdock.new
     svc.receive_alert
 

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'services/mail'
-require 'flowdock'
 
 class Service::Flowdock < Service::Mail
   attr_writer :flowdock
@@ -10,6 +9,15 @@ class Service::Flowdock < Service::Mail
     if settings[:api_token].to_s.empty?
       errors[:api_token] = "Is required"
       return false
+    end
+
+    unless settings[:user_name].blank?
+      # No whitespace, < 16 chars
+      if settings[:user_name].length >= 16 ||
+          settings[:user_name].include?(" ")
+        errors[:user_name] = "Invalid format"
+        return false
+      end
     end
 
     true
@@ -34,10 +42,12 @@ class Service::Flowdock < Service::Mail
   end
 
   def flowdock
+    username = "Librato"
+    username = settings[:user_name] unless settings[:user_name].blank?
+
     @flowdock ||= ::Flowdock::Flow.new(
       :api_token => settings[:api_token],
-      # No whitespace, < 16 chars
-      :external_user_name => "Librato",
+      :external_user_name => username,
       :source => "Librato Metrics",
       :from => {
         :name => "Librato Metrics",
