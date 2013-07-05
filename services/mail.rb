@@ -25,7 +25,7 @@ class Service::Mail < Service
       mail = ::Mail.new
       mail.from    'Librato Metrics <metrics@librato.com>'
       mail.to      settings[:addresses].to_s.split(/,/).map { |a| a.strip }
-      mail.subject %{[Librato Metrics] Metric #{payload[:metric][:name]} has triggered an alert!}
+      mail.subject %{[Librato Metrics] Metric #{payload[:metric][:name]} source #{payload[:measurement][:source]} has triggered an alert!}
 
       text = text_email
       html = html_email
