@@ -16,8 +16,18 @@ class Service::Campfire < Service
   def receive_snapshot
     raise_config_error unless receive_validate({})
 
-    speak_msgs(["%s: %s" % [payload[:snapshot][:entity_name],
-                            payload[:snapshot][:entity_url]],
+    # Make sure that spaces in the URI's are encoded.
+    # We can't just call URI.escape, because escaping
+    # an escaped URI is not idempotent. It will re-escape
+    # the '%' signs from the first escaping
+    uri = payload[:snapshot][:entity_url].gsub(/ /, '%20')
+
+    # Campfire can't handle URI's that end in an '*'
+    # because RACECARS :-/
+    uri.gsub!(/\*$/, '%2A')
+
+    # Send it!
+    speak_msgs(["%s: %s" % [payload[:snapshot][:entity_name], uri],
                 payload[:snapshot][:image_url]])
   end
 
