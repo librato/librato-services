@@ -8,6 +8,8 @@ GEM
       activesupport
       builder
     builder (3.0.0)
+    customerio (0.5.0)
+      httparty (>= 0.5, < 1.0)
     daemons (1.1.9)
     eventmachine (1.0.0)
     faraday (0.8.4)
@@ -92,6 +94,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 3.2.8)
   airbrake (~> 3.0.9)
+  customerio (~> 0.5.0)
   faraday (~> 0.8.4)
   flowdock (~> 0.3.1)
   hipchat-api (~> 1.0.4)
