@@ -52,7 +52,7 @@ class Service::Mail < Service
   end
 
   def filter_addresses(addresses)
-    addresses.keep_if {|a| !email_blacklist.include?(a.downcase) }
+    addresses.reject {|a| email_blacklist.include?(a.downcase) }
   end
 
   def html_email
