@@ -132,6 +132,10 @@ module Librato
         }
       end
 
+      def email_blacklist
+        @blacklist ||= ENV['BLACKLISTED_EMAILS'].to_s.split(",").map {|a| a.downcase }
+      end
+
       def sample_payload
         @helper.sample_payload
       end

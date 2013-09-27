@@ -17,14 +17,20 @@ class Service::Mail < Service
   def receive_alert
     raise_config_error unless receive_validate({})
 
-    mail_message.deliver
+    mm = mail_message
+    mm.deliver unless mm.to.empty?
+  end
+
+  def mail_addresses
+    @addresses ||=
+      filter_addresses(settings[:addresses].to_s.split(/,/).map { |a| a.strip })
   end
 
   def mail_message
     @mail_message ||= begin
       mail = ::Mail.new
       mail.from    'Librato Metrics <metrics@librato.com>'
-      mail.to      settings[:addresses].to_s.split(/,/).map { |a| a.strip }
+      mail.to      mail_addresses
       mail.subject %{[Librato Metrics] Metric #{payload[:metric][:name]} has triggered an alert!}
 
       text = text_email
@@ -43,6 +49,10 @@ class Service::Mail < Service
 
       mail
     end
+  end
+
+  def filter_addresses(addresses)
+    addresses.reject {|a| email_blacklist.include?(a.downcase) }
   end
 
   def html_email
