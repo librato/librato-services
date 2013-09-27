@@ -38,6 +38,19 @@ class MailTest < Librato::Services::TestCase
     message = svc.mail_message
 
     assert_not_nil message
+    assert(!message.to.empty?)
+  end
+
+  def test_blacklist
+    save_bl = ENV['BLACKLISTED_EMAILS']
+
+    ENV['BLACKLISTED_EMAILS'] = 'fred@barn.com'
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, alert_payload)
+
+    message = svc.mail_message
+    ENV['BLACKLISTED_EMAILS'] = save_bl
+
+    assert(message.to.empty?)
   end
 
   def test_html
