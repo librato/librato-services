@@ -42,7 +42,6 @@ module Librato
 
       def self.inherited(svc)
         Librato::Services::Service.services[svc.hook_name] = svc
-        Librato::Services::App.service(svc)
         super
       end
 
