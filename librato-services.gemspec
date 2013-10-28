@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = "2013-10-23"
+  s.date = "2013-10-28"
   s.description = "Provides service notifications for alerts"
   s.email = "mike@librato.com"
   s.extra_rdoc_files = [
@@ -27,12 +27,8 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "config.ru",
-    "config/newrelic.yml",
-    "config/unicorn.rb",
-    "config/unicorn_new.rb",
     "dot.rvmrc",
     "lib/librato-services.rb",
-    "lib/librato-services/app.rb",
     "lib/librato-services/authentication.rb",
     "lib/librato-services/helpers/alert_helpers.rb",
     "lib/librato-services/helpers/snapshot_helpers.rb",
@@ -66,6 +62,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<faraday>, ["~> 0.8.4"])
+      s.add_runtime_dependency(%q<tilt>, ["~> 1.4.1"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 4.0.0"])
       s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<mail>, ["~> 2.2"])
@@ -79,6 +76,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<yard>, [">= 0"])
     else
       s.add_dependency(%q<faraday>, ["~> 0.8.4"])
+      s.add_dependency(%q<tilt>, ["~> 1.4.1"])
       s.add_dependency(%q<activesupport>, ["~> 4.0.0"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_dependency(%q<mail>, ["~> 2.2"])
@@ -93,6 +91,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<faraday>, ["~> 0.8.4"])
+    s.add_dependency(%q<tilt>, ["~> 1.4.1"])
     s.add_dependency(%q<activesupport>, ["~> 4.0.0"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
     s.add_dependency(%q<mail>, ["~> 2.2"])
