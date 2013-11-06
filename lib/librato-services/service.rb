@@ -5,6 +5,7 @@ Dir[File.join(File.dirname(__FILE__), 'helpers/*helpers*')].each { |helper|
 }
 
 require 'helpers/alert_helpers'
+require 'faraday'
 
 module Librato
   module Services
