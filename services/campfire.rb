@@ -66,7 +66,6 @@ class Service::Campfire < Service
   end
 
   def find_room
-    room = campfire.find_room_by_name(settings[:room])
-  rescue StandardError
+    campfire.find_room_by_name(settings[:room])
   end
 end
