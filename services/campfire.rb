@@ -1,4 +1,7 @@
 # encoding: utf-8
+
+require 'tinder'
+
 class Service::Campfire < Service
   attr_writer :campfire
 
