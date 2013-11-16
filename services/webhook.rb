@@ -27,7 +27,8 @@ class Service::Webhook < Service
     result = {
       :alert => payload['alert'],
       :metric => payload['metric'],
-      :measurement => payload['measurement'],
+      :measurement => payload['measurements'][0],
+      :measurements => payload['measurements'],
       :trigger_time => payload['trigger_time']
     }
 

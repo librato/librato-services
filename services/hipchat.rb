@@ -29,14 +29,38 @@ class Service::Hipchat < Service
   end
 
   def alert_message
-    source = payload[:measurement][:source]
     link = metric_link(payload[:metric][:type], payload[:metric][:name])
-    "Alert triggered at %s for '%s' with value %f%s: <a href=\"%s\">%s</a>" %
-      [Time.at(payload[:trigger_time]).utc,
-       payload[:metric][:name],
-       payload[:measurement][:value],
-       source == "unassigned" ? "" : " from #{source}",
-       link, link]
+    # grab the first 20 measurements
+    measurements = payload[:measurements][0..19]
+    if measurements.size == 1
+      src = payload[:measurements][0][:source]
+      "Alert triggered at %s for '%s' with value %f%s: <a href=\"%s\">%s</a>" %
+        [
+          Time.at(payload[:trigger_time]).utc,
+          payload[:metric][:name],
+          measurements[0][:value],
+          src == "unassigned" ? "" : " from #{src}",
+          link,
+          link
+        ]
+    else
+      # paste time
+      message = "Alert triggered at %s for '%s'. Measurements:" %
+        [
+          Time.at(payload[:trigger_time]).utc,
+          payload[:metric][:name]
+        ]
+      message << "\n"
+      measurements = measurements.map do |m|
+        if m["source"] == "unassigned"
+          "  %f" % [m[:value]]
+        else
+          "  %s: %f" % [m[:source], m[:value]]
+        end
+      end
+      message << measurements.join("\n")
+      message
+    end
   end
 
   def snapshot_message

@@ -49,3 +49,4 @@ pkg
 
 .rvmrc
 log/newrelic*
+/payloads

@@ -85,7 +85,7 @@ GEM
       kgio (~> 2.4)
       rack
       raindrops (~> 0.6)
-    yajl-ruby (0.8.3)
+    yajl-ruby (1.1.0)
     yard (0.7.3)
 
 PLATFORMS
@@ -110,5 +110,5 @@ DEPENDENCIES
   thin (~> 1.5.0)
   tinder (~> 1.9.1)
   unicorn
-  yajl-ruby
+  yajl-ruby (~> 1.1)
   yard

@@ -17,7 +17,7 @@ class Service::CustomerIo < Service
   end
 
   def user_id
-    id = payload[:measurement][:source].split(':').last
+    id = payload[:measurements][0][:source].split(':').last
     return if id.nil? || id !~ /\d+/
     Integer(id)
   end
