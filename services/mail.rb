@@ -45,7 +45,6 @@ class Service::Mail < Service
         body html
       end
 
-      puts "SMTP settings: #{smtp_settings.inspect}"
       mail.delivery_method :smtp, smtp_settings
 
       mail
