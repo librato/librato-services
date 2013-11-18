@@ -36,7 +36,8 @@ module Librato
               payload = {
                 :alert => body['alert'],
                 :metric => body['metric'],
-                :measurements => measurements,
+                :measurements => body['measurements'],
+                :measurement => body['measurement'],
                 :trigger_time => body['trigger_time']
               }
             else
