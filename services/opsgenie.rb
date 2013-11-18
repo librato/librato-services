@@ -16,15 +16,15 @@ class Service::OpsGenie < Service
       settings[:recipients] = "all"
     end
 
-    measurements = payload[:measurements][0..19]
+    measurements = get_measurements(payload)[0..19]
     if measurements.size == 1
-      message = "[Librato Metrics] Metric #{payload[:metric][:name]} value: #{payload[:measurements][0][:value]} has triggered an alert!"
+      message = "[Librato Metrics] Metric #{payload[:metric][:name]} value: #{measurements[0][:value]} has triggered an alert!"
       details = {
         :"Alert Id" => payload[:alert][:id],
         :Metric => payload[:metric][:name],
-        :"Measurement Value"=> payload[:measurements][0][:value],
-        :"Triggered At" => Time.at(payload[:trigger_time]).utc,
-        :"Measurement Source" => payload[:measurements][0][:source],
+        :"Measurement Value"=> measurements[0][:value],
+        :"triggered at" => time.at(payload[:trigger_time]).utc,
+        :"measurement source" => measurement[0][:source],
         :"Metric Link" => metric_link(payload[:metric][:type],payload[:metric][:name])
       }
     else
@@ -39,7 +39,7 @@ class Service::OpsGenie < Service
       details = {
         :"Alert Id" => payload[:alert][:id],
         :Metric => payload[:metric][:name],
-        :"Measurements"=> payload[:measurements].map { |m|
+        :"Measurements"=> measurements.map { |m|
           m["source"] == "unassigned" ? "%f" % [m[:value]] : "%s: %f" % [m[:source],m[:value]]
         }.join(", "),
         :"Triggered At" => Time.at(payload[:trigger_time]).utc,

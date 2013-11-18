@@ -31,9 +31,9 @@ class Service::Hipchat < Service
   def alert_message
     link = metric_link(payload[:metric][:type], payload[:metric][:name])
     # grab the first 20 measurements
-    measurements = payload[:measurements][0..19]
+    measurements = get_measurements(payload)[0..19]
     if measurements.size == 1
-      src = payload[:measurements][0][:source]
+      src = measurements[0][:source]
       "Alert triggered at %s for '%s' with value %f%s: <a href=\"%s\">%s</a>" %
         [
           Time.at(payload[:trigger_time]).utc,

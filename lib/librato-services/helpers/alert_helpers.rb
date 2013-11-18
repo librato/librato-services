@@ -13,12 +13,32 @@ module Librato
               :name => "my_sample_alert",
               :type => "gauge"
             },
+            :measurement => { :value => 2345.9, :source => "r3.acme.com" },
+            :trigger_time => 1321311840
+          }.with_indifferent_access
+        end
+
+        def self.sample_alert_payload_multiple_measurements
+          {
+            :alert => {
+              :id => 12345
+            },
+            :metric => {
+              :name => "my_sample_alert",
+              :type => "gauge"
+            },
             :measurements => [
               { :value => 2345.9, :source => "r3.acme.com" },
               { :value => 123,    :source => "r2.acme.com" }
             ],
             :trigger_time => 1321311840
           }.with_indifferent_access
+        end
+
+        def get_measurements(body)
+          measurements = body['measurements'] || []
+          measurements << body['measurement']
+          measurements.compact
         end
 
         def erb(template, target_binding)

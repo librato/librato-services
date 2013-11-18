@@ -35,14 +35,14 @@ class Service::Campfire < Service
     raise_config_error unless receive_validate({})
 
     # grab the first 20 measurements
-    measurements = payload[:measurements][0..19]
+    measurements = get_measurements(payload)[0..19]
     if measurements.size == 1
-      src = payload[:measurements][0][:source]
+      src = measurements[0][:source]
       message = "Alert triggered at %s for '%s' with value %f%s: %s" %
         [
           Time.at(payload[:trigger_time]).utc,
           payload[:metric][:name],
-          payload[:measurements][0][:value],
+          measurements[0][:value],
           src == "unassigned" ? "" : " from #{src}",
           metric_link(payload[:metric][:type], payload[:metric][:name])
         ]

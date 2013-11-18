@@ -23,12 +23,13 @@ class Service::Webhook < Service
     raise_config_error unless receive_validate({})
 
     uri = URI.parse(settings[:url])
+    measurements = get_measurements(payload)[0..19]
 
     result = {
       :alert => payload['alert'],
       :metric => payload['metric'],
-      :measurement => payload['measurements'][0],
-      :measurements => payload['measurements'],
+      :measurement => measurements[0],
+      :measurements => measurements,
       :trigger_time => payload['trigger_time']
     }
 

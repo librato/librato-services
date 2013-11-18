@@ -83,7 +83,7 @@ class Service::Mail < Service
                   <h2>Metric <%= h payload[:metric][:name] %> has triggered an alert!</h2>
                   <ul>
                     <li>Metric: <em><%= h payload[:metric][:name] %></em></li>
-                    <% payload[:measurements][0..19].each do |measurement| %>
+                    <% get_measurements(payload)[0..19].each do |measurement| %>
                       <li>
                         <% if measurement[:source] != 'unassigned' %>
                           <%= h measurement[:source] %> :
@@ -116,7 +116,7 @@ EOF
     erb(unindent(<<-EOF), binding)
       Metric <%= h payload[:metric][:name] %> has triggered an alert!
 
-      <%- payload[:measurements][0..19].each do |measurement| %>
+      <%- get_measurements(payload)[0..19].each do |measurement| %>
       <%= measurement[:source] != 'unassigned' ? "%s: " % [measurement[:source]] : "" %><%= h measurement[:value] %>
       <%- end %>
 

@@ -33,15 +33,6 @@ module Librato
             halt 404 unless [:alert, :snapshot].include?(event)
 
             if event == :alert
-              # rolls up both measurement and measurements into a single array
-              #
-              measurements = body['measurements'] || []
-              measurements << body['measurement']
-              measurements.compact!
-
-              puts "measurement: #{body['measurement'].inspect}"
-              puts "measurements: #{measurements.inspect}"
-
               payload = {
                 :alert => body['alert'],
                 :metric => body['metric'],
