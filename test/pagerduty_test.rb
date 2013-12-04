@@ -22,6 +22,20 @@ class PagerdutyTest < Librato::Services::TestCase
     end
   end
 
+  def test_alerts_multiple_measurements
+    svc = service(:alert, {
+                    :service_key => 'k',
+                    :event_type => 't',
+                    :description => 'd'
+                  }, alert_payload_multiple_measurements)
+
+    @stubs.post '/generic/2010-04-15/create_event.json' do |env|
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
   def test_alerts
     svc = service(:alert, {
                     :service_key => 'k',

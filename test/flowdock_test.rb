@@ -18,6 +18,18 @@ class FlowdockTest < Librato::Services::TestCase
     end
   end
 
+  def test_alerts_multiple_measurements
+    svc = service(:alert, {"api_token" => "t", "user_name" => "Test"}.with_indifferent_access, alert_payload_multiple_measurements)
+    svc.flowdock = MockFlowdock.new
+    svc.receive_alert
+
+    assert_equal 0, svc.flowdock.chats.count
+    assert_equal 1, svc.flowdock.inbox.count
+    assert_equal true, !!(svc.flowdock.inbox.first[:content] =~ /alert/)
+    assert_equal true, !!(svc.flowdock.inbox.first[:content] =~ /r3.acme.com/)
+    assert_equal true, !!(svc.flowdock.inbox.first[:content] =~ /r2.acme.com/)
+  end
+
   def test_alerts
     svc = service(:alert, {"api_token" => "t", "user_name" => "Test"}.with_indifferent_access, alert_payload)
     svc.flowdock = MockFlowdock.new

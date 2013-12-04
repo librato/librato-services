@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'services/mail'
+require 'flowdock'
 
 class Service::Flowdock < Service::Mail
   attr_writer :flowdock

@@ -5,6 +5,7 @@ Dir[File.join(File.dirname(__FILE__), 'helpers/*helpers*')].each { |helper|
 }
 
 require 'helpers/alert_helpers'
+require 'faraday'
 
 module Librato
   module Services
@@ -42,7 +43,6 @@ module Librato
 
       def self.inherited(svc)
         Librato::Services::Service.services[svc.hook_name] = svc
-        Librato::Services::App.service(svc)
         super
       end
 

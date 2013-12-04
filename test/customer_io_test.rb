@@ -38,10 +38,10 @@ class CustomerIoTest < Librato::Services::TestCase
     {
       alert: { id: 12345 },
       metric: { name: "sample_alert", type: "gauge" },
-      measurement: {
+      measurements: [{
         value: 3.14,
         source: "uid:123"
-      },
+      }],
       trigger_time: Time.now.to_i
     }.with_indifferent_access
   end

@@ -3,6 +3,9 @@
 # Integration with the Customer.io service, which will trigger an event being
 # sent when an alert occurs. This requires that your source name be of the format
 # "uid:123", where 123 is the customer.io customer id to event upon.
+
+require 'customerio'
+
 class Service::CustomerIo < Service
   attr_writer :client
 
@@ -17,7 +20,7 @@ class Service::CustomerIo < Service
   end
 
   def user_id
-    id = payload[:measurement][:source].split(':').last
+    id = get_measurements(payload)[0][:source].split(':').last
     return if id.nil? || id !~ /\d+/
     Integer(id)
   end

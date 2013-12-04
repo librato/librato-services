@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'erb'
+require 'mail'
 
 class Service::Mail < Service
   def receive_validate(errors)
@@ -83,9 +84,13 @@ class Service::Mail < Service
                   <h2>Metric <%= h payload[:metric][:name] %> has triggered an alert!</h2>
                   <ul>
                     <li>Metric: <em><%= h payload[:metric][:name] %></em></li>
-                    <li>Value: <em><%= h payload[:measurement][:value] %></em></li>
-                    <% if payload[:measurement][:source] != 'unassigned' %>
-                      <li>Source: <em><%= h payload[:measurement][:source] %></em></li>
+                    <% get_measurements(payload)[0..19].each do |measurement| %>
+                      <li>
+                        <% if measurement[:source] != 'unassigned' %>
+                          <%= h measurement[:source] %> :
+                        <% end %>
+                        <em><%= h measurement[:value] %></em>
+                      </li>
                     <% end %>
                     <li>Triggered at: <em><%= Time.at(payload[:trigger_time]).utc %></em></li>
                   </ul>
@@ -112,10 +117,10 @@ EOF
     erb(unindent(<<-EOF), binding)
       Metric <%= h payload[:metric][:name] %> has triggered an alert!
 
-      Value: <%= h payload[:measurement][:value] %>
-      <% if payload[:measurement][:source] != 'unassigned' %>
-      Source: <%= h payload[:measurement][:source] %>
-      <% end %>
+      <%- get_measurements(payload)[0..19].each do |measurement| %>
+      <%= measurement[:source] != 'unassigned' ? "%s: " % [measurement[:source]] : "" %><%= h measurement[:value] %>
+      <%- end %>
+
       Triggered at: <%= Time.at(payload[:trigger_time]).utc %>
 
       View the metric here: <%= metric_link(payload[:metric][:type], payload[:metric][:name]) %>
