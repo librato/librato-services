@@ -16,19 +16,39 @@ class Service::OpsGenie < Service
       settings[:recipients] = "all"
     end
 
-    message = "[Librato Metrics] Metric #{payload[:metric][:name]} value: #{payload[:measurement][:value]} has triggered an alert!"
+    measurements = get_measurements(payload)[0..19]
+    if measurements.size == 1
+      message = "[Librato Metrics] Metric #{payload[:metric][:name]} value: #{measurements[0][:value]} has triggered an alert!"
+      details = {
+        :"Alert Id" => payload[:alert][:id],
+        :Metric => payload[:metric][:name],
+        :"Measurement Value"=> measurements[0][:value],
+        :"Triggered At" => time.at(payload[:trigger_time]).utc,
+        :"Measurement Source" => measurement[0][:source],
+        :"Metric Link" => metric_link(payload[:metric][:type],payload[:metric][:name])
+      }
+    else
+      message = "[Librato Metrics] Metric #{payload[:metric][:name]} has triggered an alert! Measurements:\n"
+      measurements.each do |m|
+        if m["source"] == "unassigned"
+          " %f" % [m[:value]]
+        else
+          " %s: %f" % [m[:source], m[:value]]
+        end
+      end
+      details = {
+        :"Alert Id" => payload[:alert][:id],
+        :Metric => payload[:metric][:name],
+        :"Measurements"=> measurements.map { |m|
+          m["source"] == "unassigned" ? "%f" % [m[:value]] : "%s: %f" % [m[:source],m[:value]]
+        }.join(", "),
+        :"Triggered At" => Time.at(payload[:trigger_time]).utc,
+        :"Metric Link" => metric_link(payload[:metric][:type],payload[:metric][:name])
+      }
+    end
 
-    details = {
-      :"Alert Id" => payload[:alert][:id],
-      :Metric => payload[:metric][:name],
-      :"Measurement Value"=> payload[:measurement][:value],
-      :"Triggered At" => Time.at(payload[:trigger_time]).utc,
-      :"Measurement Source" => payload[:measurement][:source],
-      :"Metric Link" => metric_link(payload[:metric][:type],payload[:metric][:name])
-    }
 
     details[:"Alert Name"] = payload[:alert][:name] if payload[:alert][:name]
-
     params = {
       :customerKey => settings[:customer_key],
       :recipients => settings[:recipients],
@@ -37,7 +57,6 @@ class Service::OpsGenie < Service
       :source => "Librato",
       :details => details
     }
-
     url = "https://api.opsgenie.com/v1/json/alert"
     http_post url, params, 'Content-Type' => 'application/json'
   end

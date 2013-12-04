@@ -37,16 +37,38 @@ class Service::Campfire < Service
   def receive_alert
     raise_config_error unless receive_validate({})
 
-    src = payload[:measurement][:source]
-
-    message = "Alert triggered at %s for '%s' with value %f%s: %s" %
-      [Time.at(payload[:trigger_time]).utc,
-       payload[:metric][:name],
-       payload[:measurement][:value],
-       src == "unassigned" ? "" : " from #{src}",
-       metric_link(payload[:metric][:type], payload[:metric][:name])]
-
-    speak_msgs [message]
+    # grab the first 20 measurements
+    measurements = get_measurements(payload)[0..19]
+    if measurements.size == 1
+      src = measurements[0][:source]
+      message = "Alert triggered at %s for '%s' with value %f%s: %s" %
+        [
+          Time.at(payload[:trigger_time]).utc,
+          payload[:metric][:name],
+          measurements[0][:value],
+          src == "unassigned" ? "" : " from #{src}",
+          metric_link(payload[:metric][:type], payload[:metric][:name])
+        ]
+      speak_msgs [message]
+    else
+      # paste time
+      message = "Alert triggered at %s for %s:" %
+        [
+          Time.at(payload[:trigger_time]).utc,
+          metric_link(payload[:metric][:type], payload[:metric][:name])
+        ]
+      speak_msgs [message]
+      message = "'%s' measurements:\n" % [payload[:metric][:name]]
+      measurements = measurements.map do |m|
+        if m["source"] == "unassigned"
+          "  %f" % [m[:value]]
+        else
+          "  %s: %f" % [m[:source], m[:value]]
+        end
+      end
+      message << measurements.join("\n")
+      paste_message message
+    end
   end
 
   def speak_msgs(msgs)
@@ -54,8 +76,15 @@ class Service::Campfire < Service
       puts "Warning: no such campfire room: #{settings[:room]}"
       return
     end
-
     msgs.each {|msg| room.speak msg }
+  end
+
+  def paste_message(msg)
+    unless room = find_room
+      puts "Warning: no such campfire room: #{settings[:room]}"
+      return
+    end
+    room.paste msg
   end
 
   def campfire_hostname

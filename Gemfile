@@ -3,8 +3,8 @@ source "http://rubygems.org"
 gem 'faraday', '~> 0.8.4'
 gem 'tilt',  '~> 1.4.1'
 
+gem 'yajl-ruby', '~> 1.1', :require => [ 'yajl', 'yajl/json_gem' ]
 gem 'activesupport', '~> 4.0.0', :require => 'active_support'
-gem 'yajl-ruby', :require => [ 'yajl', 'yajl/json_gem' ]
 
 # service: mail
 gem 'mail', '~> 2.2'
