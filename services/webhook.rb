@@ -2,6 +2,8 @@
 
 require 'uri'
 require 'cgi'
+require 'yajl'
+require 'faraday'
 
 class Service::Webhook < Service
   def receive_validate(errors = {})

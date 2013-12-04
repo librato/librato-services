@@ -3,6 +3,9 @@
 # Integration with the Customer.io service, which will trigger an event being
 # sent when an alert occurs. This requires that your source name be of the format
 # "uid:123", where 123 is the customer.io customer id to event upon.
+
+require 'customerio'
+
 class Service::CustomerIo < Service
   attr_writer :client
 

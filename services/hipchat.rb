@@ -1,3 +1,5 @@
+require 'hipchat-api'
+
 class Service::Hipchat < Service
 
   # Required parameters:
