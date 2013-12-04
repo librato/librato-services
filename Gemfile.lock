@@ -87,5 +87,5 @@ DEPENDENCIES
   shoulda
   tilt (~> 1.4.1)
   tinder (~> 1.9.1)
-  yajl-ruby
+  yajl-ruby (~> 1.1)
   yard

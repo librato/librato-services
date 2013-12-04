@@ -35,30 +35,15 @@ class HipchatTest < Librato::Services::TestCase
     @settings.keys.each {|setting| assert_equal "Is required", errors[setting]}
   end
 
-  # def test_receive_validate_invalid_auth_token
-  #   errors = {}
-  #   opts = {}
-  #   message = URI.escape("Test message from Librato Hipchat integration")
-  #   stub_message_call(@test_message, 401)
+  def test_alert_multiple_measurements
+    service = service(:alert, @settings, alert_payload_multiple_measurements)
 
-  #   service = service(:alert, @settings, alert_payload)
-  #   result = service.receive_validate(errors)
+    stub_message_call(@test_message, 200)
+    alert_message = service.alert_message
+    stub_message_call(alert_message, 200)
 
-  #   assert !result
-  #   assert_equal "Invalid Auth Token", errors[:auth_token]
-  # end
-
-  # def test_receive_validate_invalid_room
-  #   errors = {}
-  #   opts = {}
-  #   stub_message_call(@test_message, 404)
-
-  #   service = service(:alert, @settings, alert_payload)
-  #   result = service.receive_validate(errors)
-
-  #   assert !result
-  #   assert_equal "Invalid Room Id", errors[:room_id]
-  # end
+    service.receive_alert
+  end
 
   def test_alert
     service = service(:alert, @settings, alert_payload)
