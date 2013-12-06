@@ -21,11 +21,14 @@ class CustomerIoTest < Librato::Services::TestCase
     svc.client = MockCustomerIo.new
     svc.receive_alert
 
-    assert_equal 1, svc.client.events.count
+    assert_equal 2, svc.client.events.count
 
-    user_id, event_name, payload = *svc.client.events.first
-
+    user_id, event_name, payload = *svc.client.events[0]
     assert_equal 123, user_id
+    assert_equal event_name, "test_event"
+
+    user_id, event_name, payload = *svc.client.events[1]
+    assert_equal 234, user_id
     assert_equal event_name, "test_event"
   end
 
@@ -41,6 +44,9 @@ class CustomerIoTest < Librato::Services::TestCase
       measurements: [{
         value: 3.14,
         source: "uid:123"
+      }, {
+        value: 1.23,
+        source: "uid:234"
       }],
       trigger_time: Time.now.to_i
     }.with_indifferent_access
