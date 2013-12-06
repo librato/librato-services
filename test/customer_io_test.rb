@@ -26,10 +26,12 @@ class CustomerIoTest < Librato::Services::TestCase
     user_id, event_name, payload = *svc.client.events[0]
     assert_equal 123, user_id
     assert_equal event_name, "test_event"
+    assert_equal 3.14, payload[:measurement][:value]
 
     user_id, event_name, payload = *svc.client.events[1]
     assert_equal 234, user_id
     assert_equal event_name, "test_event"
+    assert_equal 1.23, payload[:measurement][:value]
   end
 
   def service(*args)
