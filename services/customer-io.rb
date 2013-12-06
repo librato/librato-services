@@ -16,11 +16,16 @@ class Service::CustomerIo < Service
   end
 
   def receive_alert
-    client.track(user_id, event_name, payload)
+    get_measurements(payload).each do |m|
+      pd = payload.dup
+      pd[:measurement] = m
+      user_id = get_user_id(m)
+      client.track(user_id, event_name, pd)
+    end
   end
 
-  def user_id
-    id = get_measurements(payload)[0][:source].split(':').last
+  def get_user_id(measurement)
+    id = measurement[:source].split(':').last
     return if id.nil? || id !~ /\d+/
     Integer(id)
   end
