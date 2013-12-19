@@ -23,7 +23,7 @@ class Service::OpsGenie < Service
         :"Alert Id" => payload[:alert][:id],
         :Metric => payload[:metric][:name],
         :"Measurement Value"=> measurements[0][:value],
-        :"Triggered At" => time.at(payload[:trigger_time]).utc,
+        :"Triggered At" => Time.at(payload[:trigger_time]).utc,
         :"Measurement Source" => measurement[0][:source],
         :"Metric Link" => metric_link(payload[:metric][:type],payload[:metric][:name])
       }
