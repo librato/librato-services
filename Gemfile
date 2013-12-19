@@ -14,7 +14,7 @@ gem 'remote_syslog_logger', '~> 1.0.3'
 gem 'mail', '~> 2.2'
 
 # service :campfire
-gem 'tinder', '~> 1.9.1'
+gem 'tinder', '~> 1.9.3'
 
 # service :hipchat
 gem 'hipchat-api', '~> 1.0.4'
