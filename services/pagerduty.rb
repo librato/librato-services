@@ -16,6 +16,17 @@ class Service::Pagerduty < Service
 
   def receive_alert
     raise_config_error unless receive_validate({})
+    link = metric_link(payload[:metric][:type], payload[:metric][:name])
+    do_post(link)
+  end
+
+  def receive_missing_signals_alert
+    raise_config_error unless receive_validate({})
+    link = alert_link(payload[:alert])
+    do_post(link)
+  end
+
+  def do_post(link)
 
     body = {
       :service_key => settings[:service_key],
@@ -24,8 +35,7 @@ class Service::Pagerduty < Service
       :details => payload
     }
 
-    body[:details][:metric_link] = metric_link(payload[:metric][:type],
-                                               payload[:metric][:name])
+    body[:details][:metric_link] = link
 
     body[:incident_key] = settings[:incident_key] if settings[:incident_key]
 
@@ -33,4 +43,5 @@ class Service::Pagerduty < Service
 
     http_post url, body, 'Content-Type' => 'application/json'
   end
+
 end

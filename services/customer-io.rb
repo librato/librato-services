@@ -24,6 +24,11 @@ class Service::CustomerIo < Service
     end
   end
 
+  def receive_missing_signals_alert
+    # FIXME need a way to pass through user id
+    raise "Unsupported operation"
+  end
+
   def get_user_id(measurement)
     id = measurement[:source].split(':').last
     return if id.nil? || id !~ /\d+/

@@ -24,9 +24,7 @@ class Service::Webhook < Service
   def receive_alert
     raise_config_error unless receive_validate({})
 
-    uri = URI.parse(settings[:url])
     measurements = get_measurements(payload)[0..19]
-
     result = {
       :alert => payload['alert'],
       :metric => payload['metric'],
@@ -34,6 +32,17 @@ class Service::Webhook < Service
       :measurements => measurements,
       :trigger_time => payload['trigger_time']
     }
+    do_post(result)
+  end
+
+  def receive_missing_signals_alert
+    raise_config_error unless receive_validate({})
+
+    do_post(payload)
+  end
+
+  def do_post(result)
+    uri = URI.parse(settings[:url])
 
     # Faraday doesn't unescape user and password
     if uri.userinfo

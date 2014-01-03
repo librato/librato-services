@@ -71,6 +71,18 @@ class Service::Campfire < Service
     end
   end
 
+  def receive_missing_signals_alert
+    raise_config_error unless receive_validate({})
+
+    signals = payload[:missing_signals]
+    message = "Missing data alert '%s' triggered:" % payload[:alert][:name]
+    signals = signals.map do |signal|
+      "%s last seen: %s" % [signal[:source], signal[:last_seen]]
+    end
+    message << signals.join("\n")
+    paste_message message
+  end
+
   def speak_msgs(msgs)
     unless room = find_room
       puts "Warning: no such campfire room: #{settings[:room]}"

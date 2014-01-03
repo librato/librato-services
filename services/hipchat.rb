@@ -24,10 +24,25 @@ class Service::Hipchat < Service
     send_message(alert_message)
   end
 
+  def receive_missing_signals_alert
+    raise_config_error unless receive_validate({})
+
+    send_message(missing_signals_message)
+  end
+
   def receive_snapshot
     raise_config_error unless receive_validate({})
 
     send_message(snapshot_message)
+  end
+
+  def missing_signals_message
+    message = "Missing data alert '%s' triggered:" % payload[:alert][:name]
+    signals = signals.map do |signal|
+      "%s last seen: %s" % [signal[:source], signal[:last_seen]]
+    end
+    message << signals.join("\n")
+    message
   end
 
   def alert_message

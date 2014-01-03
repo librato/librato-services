@@ -42,6 +42,16 @@ class Service::Flowdock < Service::Mail
       :link => metric_link(payload[:metric][:type], payload[:metric][:name]))
   end
 
+  def receive_missing_signals_alert
+    raise_config_error unless receive_validate({})
+
+    mail = missing_signals_mail
+    flowdock.push_to_team_inbox(
+      :subject => mail.subject,
+      :content => mail.html_part.body,
+      :link => alert_link(payload[:alert]))
+  end
+
   def flowdock
     username = "Librato"
     username = settings[:user_name] unless settings[:user_name].blank?

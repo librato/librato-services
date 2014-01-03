@@ -61,6 +61,11 @@ module Librato
         def metric_link(type, name)
           "https://#{ENV['METRICS_APP_URL']}/metrics/#{name}"
         end
+
+        def alert_link(alert)
+          #FIXME
+          "https://#{ENV['METRICS_APP_URL']}/TBD/#{alert[:id]}"
+        end
       end
     end
   end
