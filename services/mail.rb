@@ -34,6 +34,8 @@ class Service::Mail < Service
       mail.to      mail_addresses
       mail.subject %{[Librato Metrics] Metric #{payload[:metric][:name]} has triggered an alert!}
 
+      mail.header['X-Mailgun-Tag'] = 'alerts'
+
       text = text_email
       html = html_email
 
