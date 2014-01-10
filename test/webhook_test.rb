@@ -48,6 +48,18 @@ class WebhookTest < Librato::Services::TestCase
     svc.receive_alert
   end
 
+  def test_new_alerts
+    path = "/post_path.json"
+    url = "http://localhost#{path}"
+    svc = service(:alert, { :url => url }, new_alert_payload)
+
+    @stubs.post "#{path}" do |env|
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
   def service(*args)
     super Service::Webhook, *args
   end

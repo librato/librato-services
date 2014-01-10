@@ -1,3 +1,4 @@
+# TODO: fix for new-style alerts
 # encoding: utf-8
 #
 # Integration with the Customer.io service, which will trigger an event being

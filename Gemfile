@@ -21,6 +21,9 @@ gem 'flowdock', '~> 0.3.1'
 # service :customerio
 gem 'customerio', '~> 0.5.0'
 
+# markdown generation
+gem 'redcarpet', '~> 2.3.0'
+
 # Ensure everyone plays nice with SSL
 #
 #gem 'always_verify_ssl_certificates', '~> 0.3.0'

@@ -1,3 +1,4 @@
+# TODO fix for new-style alerts
 class Service::OpsGenie < Service
   def receive_validate(errors)
     success = true

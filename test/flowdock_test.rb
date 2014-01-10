@@ -18,6 +18,17 @@ class FlowdockTest < Librato::Services::TestCase
     end
   end
 
+  def test_new_alerts
+    svc = service(:alert, {"api_token" => "t", "user_name" => "Test"}.with_indifferent_access, new_alert_payload)
+    svc.flowdock = MockFlowdock.new
+    svc.receive_alert
+    output = Librato::Services::Output.new(new_alert_payload)
+
+    assert_equal 0, svc.flowdock.chats.count
+    assert_equal 1, svc.flowdock.inbox.count
+    assert_equal output.html, svc.flowdock.inbox.first[:content].to_s
+  end
+
   def test_alerts_multiple_measurements
     svc = service(:alert, {"api_token" => "t", "user_name" => "Test"}.with_indifferent_access, alert_payload_multiple_measurements)
     svc.flowdock = MockFlowdock.new
