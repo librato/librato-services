@@ -34,8 +34,52 @@ class CustomerIoTest < Librato::Services::TestCase
     assert_equal 1.23, payload[:measurement][:value]
   end
 
+  def test_new_alerts
+    svc = service(:alert,
+                  {"site_id" => "x", "api_key" => "x", "event_name" => "test_event"}.with_indifferent_access,
+                  new_customerio_payload)
+    svc.client = MockCustomerIo.new
+    svc.receive_alert
+
+    assert_equal 2, svc.client.events.count
+
+    user_id, event_name, payload = *svc.client.events[0]
+    assert_equal 1, user_id
+    assert_equal event_name, "test_event"
+    assert_equal 1, payload.length
+    assert_equal "metric.name", payload[0][:metric]
+    assert_equal 100, payload[0][:value]
+    assert_equal 1, payload[0][:condition_violated]
+
+    user_id, event_name, payload = *svc.client.events[1]
+    assert_equal 2, user_id
+    assert_equal event_name, "test_event"
+    assert_equal 1, payload.length
+    assert_equal "another.metric", payload[0][:metric]
+    assert_equal 300, payload[0][:value]
+    assert_equal 1, payload[0][:condition_violated]
+  end
+
   def service(*args)
     super Service::CustomerIo, *args
+  end
+
+  def new_customerio_payload
+    {
+      alert: { id: 12345, name: "my alert", version: 2},
+      conditions: [{type: "above", threshold: 10, id: 1}],
+      violations: {
+        "foo.bar:1" => [{
+          metric: "metric.name", value: 100, recorded_at: 1389391083,
+          condition_violated: 1
+        }],
+        "foo.bar:2" => [{
+          metric: "another.metric", value: 300, recorded_at: 1389391083,
+          condition_violated: 1
+        }]
+      },
+      trigger_time: Time.now.to_i
+    }.with_indifferent_access
   end
 
   # Customer io requires a specially crafted source name of `uid:123` to work

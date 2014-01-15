@@ -17,6 +17,13 @@ class Service::CustomerIo < Service
   end
 
   def receive_alert
+    if payload[:alert][:version] == 2
+      payload[:violations].each do |source, violations|
+        user_id = get_user_id_from_string(source)
+        client.track(user_id, event_name, violations)
+      end
+      return
+    end
     get_measurements(payload).each do |m|
       pd = payload.dup
       pd[:measurement] = m
@@ -25,10 +32,14 @@ class Service::CustomerIo < Service
     end
   end
 
-  def get_user_id(measurement)
-    id = measurement[:source].split(':').last
+  def get_user_id_from_string(str)
+    id = str.split(':').last
     return if id.nil? || id !~ /\d+/
     Integer(id)
+  end
+
+  def get_user_id(measurement)
+    get_user_id_from_string(measurement[:source])
   end
 
   def event_name
