@@ -38,7 +38,7 @@ class Service::Mail < Service
       if payload[:alert][:version] == 2
         output = Librato::Services::Output.new(payload)
         text = output.markdown
-        html = output.html
+        html = new_html_email(output.html)
       else
         text = text_email
         html = html_email

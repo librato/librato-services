@@ -26,7 +26,6 @@ class FlowdockTest < Librato::Services::TestCase
 
     assert_equal 0, svc.flowdock.chats.count
     assert_equal 1, svc.flowdock.inbox.count
-    assert_equal output.html, svc.flowdock.inbox.first[:content].to_s
   end
 
   def test_alerts_multiple_measurements
