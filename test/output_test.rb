@@ -1,7 +1,5 @@
 require File.expand_path('../helper', __FILE__)
 
-require "lib/librato-services/output"
-
 class Librato::Services::OutputTestCase < Test::Unit::TestCase
   def test_simple_alert
     payload = {
