@@ -36,7 +36,7 @@ class Service::Slack < Service
           :fields => [
             {
               :title => "Metric",
-              :value => payload[:metric][:name],
+              :value => "<%s|%s>" % [link, payload[:metric][:name]],
               :short => true
             },
             {
