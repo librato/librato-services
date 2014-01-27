@@ -20,7 +20,7 @@ class SlackTest < Librato::Services::TestCase
   end
 
   def test_alerts
-    token = "okfLErqIOHVRGK6OgX209dbW"
+    token = "foo"
     subdomain = "tinyspeck"
     path = "/services/hooks/incoming-webhook?token=%s" % [token]
     svc = service(:alert, { :subdomain => subdomain, :token => token }, alert_payload)
