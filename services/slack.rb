@@ -64,6 +64,6 @@ class Service::Slack < Service
   end
 
   def slack_url
-    "https://%s.dev.slack.com/services/hooks/incoming-webhook?token=%s" % [settings[:subdomain], settings[:token]]
+    "https://%s.slack.com/services/hooks/incoming-webhook?token=%s" % [settings[:subdomain], settings[:token]]
   end
 end
