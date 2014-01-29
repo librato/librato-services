@@ -31,7 +31,14 @@ class Service::Hipchat < Service
   end
 
   def alert_message
-    link = metric_link(payload[:metric][:type], payload[:metric][:name])
+    link = payload_link(payload)
+
+    # New-style alerts
+    if payload[:alert][:version] == 2
+      output = Librato::Services::Output.new(payload)
+      return output.markdown
+    end
+    # Old-style alerts
     # grab the first 20 measurements
     measurements = get_measurements(payload)[0..19]
     if measurements.size == 1

@@ -24,8 +24,7 @@ class Service::Pagerduty < Service
       :details => payload
     }
 
-    body[:details][:metric_link] = metric_link(payload[:metric][:type],
-                                               payload[:metric][:name])
+    body[:details][:metric_link] = payload_link(payload)
 
     body[:incident_key] = settings[:incident_key] if settings[:incident_key]
 

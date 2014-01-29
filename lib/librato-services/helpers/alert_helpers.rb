@@ -35,6 +35,24 @@ module Librato
           }.with_indifferent_access
         end
 
+        #TODO rename when it's no longer "new"
+        def self.sample_new_alert_payload
+          {
+            alert: {id: 123, name: "Some alert name", version: 2},
+            settings: {},
+            service_type: "campfire",
+            event_type: "alert",
+            trigger_time: 12321123,
+            conditions: [{type: "above", threshold: 10, id: 1}],
+            violations: {
+              "foo.bar" => [{
+                metric: "metric.name", value: 100, recorded_at: 1389391083,
+                condition_violated: 1
+              }]
+            }
+          }
+        end
+
         def get_measurements(body)
           measurements = body['measurements'] || []
           measurements << body['measurement']
@@ -60,6 +78,15 @@ module Librato
 
         def metric_link(type, name)
           "https://#{ENV['METRICS_APP_URL']}/metrics/#{name}"
+        end
+
+        # TODO: fix for specific alert id?
+        def payload_link(payload)
+          if payload[:alert][:version] == 2
+            "https://#{ENV['METRICS_APP_URL']}/metrics/"
+          else
+            metric_link(payload[:metric][:type], payload[:metric][:name])
+          end
         end
       end
     end

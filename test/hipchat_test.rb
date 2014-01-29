@@ -45,6 +45,16 @@ class HipchatTest < Librato::Services::TestCase
     service.receive_alert
   end
 
+  def test_new_alert
+    service = service(:alert, @settings, new_alert_payload)
+
+    stub_message_call(@test_message, 200)
+    alert_message = service.alert_message
+    stub_message_call(alert_message, 200)
+
+    service.receive_alert
+  end
+
   def test_alert
     service = service(:alert, @settings, alert_payload)
 

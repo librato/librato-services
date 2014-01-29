@@ -37,6 +37,14 @@ class Service::Campfire < Service
   def receive_alert
     raise_config_error unless receive_validate({})
 
+    # New-style alerts
+    if payload[:alert][:version] == 2
+      output = Librato::Services::Output.new(payload)
+      paste_message output.markdown
+      return
+    end
+
+    # Old-style alerts
     # grab the first 20 measurements
     measurements = get_measurements(payload)[0..19]
     if measurements.size == 1

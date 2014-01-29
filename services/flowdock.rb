@@ -39,7 +39,7 @@ class Service::Flowdock < Service::Mail
     flowdock.push_to_team_inbox(
       :subject => mail_message.subject,
       :content => mail_message.html_part.body,
-      :link => metric_link(payload[:metric][:type], payload[:metric][:name]))
+      :link => payload_link(payload))
   end
 
   def flowdock

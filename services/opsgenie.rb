@@ -16,9 +16,15 @@ class Service::OpsGenie < Service
       settings[:recipients] = "all"
     end
 
+    if payload[:alert][:version] == 2
+      message = "Alert #{payload[:alert][:name]} has triggered!"
+      send(payload[:alert][:name], message, payload)
+      return
+    end
+
     measurements = get_measurements(payload)[0..19]
     if measurements.size == 1
-      message = "[Librato Metrics] Metric #{payload[:metric][:name]} value: #{measurements[0][:value]} has triggered an alert!"
+      message = "[Librato] Metric #{payload[:metric][:name]} value: #{measurements[0][:value]} has triggered an alert!"
       details = {
         :"Alert Id" => payload[:alert][:id],
         :Metric => payload[:metric][:name],
@@ -28,7 +34,7 @@ class Service::OpsGenie < Service
         :"Metric Link" => metric_link(payload[:metric][:type],payload[:metric][:name])
       }
     else
-      message = "[Librato Metrics] Metric #{payload[:metric][:name]} has triggered an alert! Measurements:\n"
+      message = "[Librato] Metric #{payload[:metric][:name]} has triggered an alert! Measurements:\n"
       measurements.each do |m|
         if m["source"] == "unassigned"
           " %f" % [m[:value]]
@@ -49,10 +55,14 @@ class Service::OpsGenie < Service
 
 
     details[:"Alert Name"] = payload[:alert][:name] if payload[:alert][:name]
+    send(payload[:metric][:name], message, details)
+  end
+
+  def send(name, message, details)
     params = {
       :customerKey => settings[:customer_key],
       :recipients => settings[:recipients],
-      :alias => payload[:metric][:name],
+      :alias => name,
       :message => message,
       :source => "Librato",
       :details => details

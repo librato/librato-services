@@ -24,6 +24,12 @@ class MailTest < Librato::Services::TestCase
     assert(errors[:addresses])
   end
 
+  def test_new_alerts
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, new_alert_payload)
+    svc.mail_message.perform_deliveries = false
+    svc.receive_alert
+  end
+
   def test_alert_multiple_measurements
     svc = service(:alert, { :addresses => 'fred@barn.com' }, alert_payload_multiple_measurements)
     svc.mail_message.perform_deliveries = false
