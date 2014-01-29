@@ -18,7 +18,7 @@ class Service::OpsGenie < Service
 
     if payload[:alert][:version] == 2
       message = "Alert #{payload[:alert][:name]} has triggered!"
-      send(payload[:alert][:name], message, payload)
+      do_post(payload[:alert][:name], message, payload)
       return
     end
 
@@ -55,10 +55,10 @@ class Service::OpsGenie < Service
 
 
     details[:"Alert Name"] = payload[:alert][:name] if payload[:alert][:name]
-    send(payload[:metric][:name], message, details)
+    do_post(payload[:metric][:name], message, details)
   end
 
-  def send(name, message, details)
+  def do_post(name, message, details)
     params = {
       :customerKey => settings[:customer_key],
       :recipients => settings[:recipients],
