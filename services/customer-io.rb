@@ -22,13 +22,13 @@ class Service::CustomerIo < Service
         user_id = get_user_id_from_string(source)
         client.track(user_id, event_name, violations)
       end
-      return
-    end
-    get_measurements(payload).each do |m|
-      pd = payload.dup
-      pd[:measurement] = m
-      user_id = get_user_id(m)
-      client.track(user_id, event_name, pd)
+    else
+      get_measurements(payload).each do |m|
+        pd = payload.dup
+        pd[:measurement] = m
+        user_id = get_user_id(m)
+        client.track(user_id, event_name, pd)
+      end
     end
   end
 
