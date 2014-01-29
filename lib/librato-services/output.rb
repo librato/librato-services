@@ -39,7 +39,8 @@ module Librato
             else
               type_msg = "#{condition[:type]} threshold (#{condition[:threshold]}) with value #{measurement[:value]}"
             end
-            recorded_at = Time.at(measurement[:recorded_at]).to_datetime.strftime("%a, %b %e %Y at %H:%M:%S UTC")
+            recorded_at = DateTime.strptime(measurement[:recorded_at].to_s, "%s").
+                strftime("%a, %b %e %Y at %H:%M:%S UTC")
             result_array << "* metric `#{measurement[:metric]}` was #{type_msg} recorded at #{recorded_at}"
           end
           result_array << "" # To append a newline after each source group
