@@ -24,7 +24,7 @@ Service Lifecycle
    the post data:
    - `params[:settings]`: the options the user specified in the Service configuration
    - `params[:payload]`: the event data for the triggered alert
-1. A [sinatra][] app [lib/librato-services/app.rb][] decodes the request
+1. A [sinatra][] app [lib/librato-services/app.rb](lib/librato-services/app.rb) decodes the request
    and dispatches it to a registered service if it exists
 
 Writing a Service
