@@ -31,7 +31,7 @@ module Librato
       def generate_markdown
         result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
         @violations.each do |source, measurements|
-          result_array << "Source `#{source}`:\n"
+          result_array << "Source `#{source}`:"
           measurements.each do |measurement|
             condition = @conditions[measurement[:condition_violated]]
             if condition[:type] == "absent"
@@ -49,7 +49,7 @@ module Librato
       end
       class << self
         def renderer
-          @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+          @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, lax_spacing: true)
         end
       end
     end
