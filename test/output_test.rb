@@ -98,4 +98,29 @@ EOF
 
     assert_equal(expected, Librato::Services::Output.renderer.render(markdown))
   end
+
+  def test_windowed_alert
+    payload = {
+        alert: {id: 123, name: "Some alert name", version: 2},
+        settings: {},
+        service_type: "campfire",
+        event_type: "alert",
+        trigger_time: 12321123,
+        conditions: [{type: "above", threshold: 10, id: 1}],
+        violations: {
+            "foo.bar" => [{
+                              metric: "metric.name", value: 100, recorded_at: 1389391083,
+                              condition_violated: 1, count: 10, begin: 12321123, end: 12321183
+                          }]
+        }
+    }
+    output = Librato::Services::Output.new(payload)
+    expected = <<EOF
+# Alert Some alert name has triggered!
+
+Source `foo.bar`:
+* metric `metric.name` was above threshold (10 over 60 seconds) with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+EOF
+    assert_equal(expected, output.markdown)
+  end
 end

@@ -37,7 +37,7 @@ module Librato
             if condition[:type] == "absent"
               type_msg = "absent"
             else
-              type_msg = "#{condition[:type]} threshold (#{condition[:threshold]}) with value #{measurement[:value]}"
+              type_msg = "#{condition[:type]} threshold (#{threshold(condition, measurement)}) with value #{measurement[:value]}"
             end
             recorded_at = DateTime.strptime(measurement[:recorded_at].to_s, "%s").
                 strftime("%a, %b %e %Y at %H:%M:%S UTC")
@@ -47,6 +47,24 @@ module Librato
         end
         result_array.join("\n")
       end
+
+      def threshold(condition, measurement)
+        thresh_str = condition[:threshold].to_s
+        duration = calculate_duration(measurement)
+        if duration
+          thresh_str += " over #{duration} seconds"
+        end
+        thresh_str
+      end
+
+      def calculate_duration(measurement)
+        if measurement[:begin] && measurement[:end]
+          measurement[:end] - measurement[:begin]
+        else
+          nil
+        end
+      end
+
       class << self
         def renderer
           @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, lax_spacing: true)
