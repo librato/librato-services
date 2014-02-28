@@ -37,7 +37,7 @@ module Librato
             if condition[:type] == "absent"
               type_msg = "absent"
             else
-              type_msg = "#{condition[:type]} threshold (#{threshold(condition, measurement)}) with value #{measurement[:value]}"
+              type_msg = "#{condition[:type]} threshold #{threshold(condition, measurement)} with value #{measurement[:value]}"
             end
             recorded_at = DateTime.strptime(measurement[:recorded_at].to_s, "%s").
                 strftime("%a, %b %e %Y at %H:%M:%S UTC")

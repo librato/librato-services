@@ -21,7 +21,7 @@ class Librato::Services::OutputTestCase < Test::Unit::TestCase
 # Alert Some alert name has triggered!
 
 Source `foo.bar`:
-* metric `metric.name` was above threshold (10) with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
     assert_equal(expected, output.markdown)
   end
@@ -58,11 +58,11 @@ EOF
 # Alert Some alert name has triggered!
 
 Source `foo.bar`:
-* metric `metric.name` was above threshold (10) with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 
 Source `baz.lol`:
-* metric `something.else` was above threshold (10) with value 250 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
-* metric `another.metric` was below threshold (100) with value 10 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `something.else` was above threshold 10 with value 250 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `another.metric` was below threshold 100 with value 10 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 * metric `i.am.absent` was absent recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
     assert_equal(expected, output.markdown)
@@ -84,7 +84,7 @@ EOF
 # Alert Some alert name has triggered!
 
 Source `foo.bar`:
-* metric `metric.name` was above threshold (10) with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
     expected = <<EOF
 <h1>Alert Some alert name has triggered!</h1>
@@ -92,7 +92,7 @@ EOF
 <p>Source <code>foo.bar</code>:</p>
 
 <ul>
-<li>metric <code>metric.name</code> was above threshold (10) with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC</li>
+<li>metric <code>metric.name</code> was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC</li>
 </ul>
 EOF
 
@@ -119,7 +119,7 @@ EOF
 # Alert Some alert name has triggered!
 
 Source `foo.bar`:
-* metric `metric.name` was above threshold (10 over 60 seconds) with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `metric.name` was above threshold 10 over 60 seconds with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
     assert_equal(expected, output.markdown)
   end
