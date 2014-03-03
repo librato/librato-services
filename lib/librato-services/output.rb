@@ -45,6 +45,10 @@ module Librato
           end
           result_array << "" # To append a newline after each source group
         end
+        runbook_url = @alert[:runbook_url]
+        if !runbook_url.nil? && !runbook_url.empty?
+          result_array << "Runbook: #{runbook_url}\n"
+        end
         result_array.join("\n")
       end
 
