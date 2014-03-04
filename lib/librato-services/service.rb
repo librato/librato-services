@@ -15,7 +15,7 @@ module Librato
         if svc.respond_to?(event_method)
           # XXX: Need a timeout!
           #Timeout.timeout(TIMEOUT, TimeoutError) do
-          svc.send(event_method, *args)
+          svc.send(event_method)
           #end
 
           if event.to_sym == :alert
