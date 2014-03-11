@@ -1,4 +1,5 @@
 require 'tilt'
+require 'active_support'
 
 module Librato
   module Services
@@ -37,7 +38,7 @@ module Librato
 
         #TODO rename when it's no longer "new"
         def self.sample_new_alert_payload
-          {
+          ::HashWithIndifferentAccess.new({
             alert: {id: 123, name: "Some alert name", version: 2},
             settings: {},
             service_type: "campfire",
@@ -50,7 +51,7 @@ module Librato
                 condition_violated: 1
               }]
             }
-          }
+          })
         end
 
         def get_measurements(body)
