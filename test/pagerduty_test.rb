@@ -58,6 +58,7 @@ class PagerdutyTest < Librato::Services::TestCase
                   }, new_alert_payload)
 
     @stubs.post '/generic/2010-04-15/create_event.json' do |env|
+      assert_nil env[:body][:details]["auth"]
       [200, {}, '']
     end
 

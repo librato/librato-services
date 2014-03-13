@@ -17,11 +17,13 @@ class Service::Pagerduty < Service
   def receive_alert
     raise_config_error unless receive_validate({})
 
+    pd_payload = payload.dup
+    pd_payload.delete('auth') # don't include credentials in pd post
     body = {
       :service_key => settings[:service_key],
       :event_type => settings[:event_type],
       :description => settings[:description],
-      :details => payload
+      :details => pd_payload
     }
 
     body[:details][:metric_link] = payload_link(payload)
