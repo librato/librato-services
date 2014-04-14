@@ -28,14 +28,14 @@ class Service::OpsGenie < Service
          	  :measurementValue => payload[:measurement][:value],
          	  :measurementSource => payload[:measurement][:source],
 
-         	  :measurements => Yajl::Encoder.encode(payload[:measurements]),
+         	  #:measurements => Yajl::Encoder.encode(payload[:measurements]),
          	  
          	  :metricLink => payload[:metric_link],
          	  :triggerTime => payload[:trigger_time],
          	  :recipients => settings[:recipients]
         	}
 
-                url = "https://office.ifountain.com/v1/json/librato"
+                url = "https://api.opsgenie.com/v1/json/librato"
                 http_post url, params, 'Content-Type' => 'application/json'
         end
 end
