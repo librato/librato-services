@@ -6,7 +6,7 @@ class OpsGenieTest < Librato::Services::TestCase
   end
   
   def test_alerts
-    svc = service(:alert, {
+    svc = service(:alert, { 
                     :customer_key => 'test_api_key'
                   }, alert_payload)
     
