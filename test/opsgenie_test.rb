@@ -10,7 +10,7 @@ class OpsGenieTest < Librato::Services::TestCase
                     :customer_key => 'test_api_key'
                   }, alert_payload)
     
-    @stubs.post 'http://office.ifountain.com/v1/json/librato' do |env|
+    @stubs.post 'v1/json/librato' do |env|
       [200, {}, '']
     end
     
