@@ -35,7 +35,7 @@ class Service::OpsGenie < Service
          	  :recipients => settings[:recipients]
         	}
 
-                url = "https://api.opsgenie.com/v1/json/librato"
+                url = "https://office.ifountain.com/v1/json/librato"
                 http_post url, params, 'Content-Type' => 'application/json'
         end
 end
