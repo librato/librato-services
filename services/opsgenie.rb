@@ -11,7 +11,7 @@ class Service::OpsGenie < Service
         end
 
         def receive_alert
-                raise_config_error unless receive_validate({})
+                raise_config_error unless receive_validate({ })
 		if settings[:recipients].to_s.empty?
 			settings[:recipients] = "all"
 		end
