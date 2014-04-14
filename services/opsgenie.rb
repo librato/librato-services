@@ -1,5 +1,3 @@
-require 'json'
-
 class Service::OpsGenie < Service
         def receive_validate(errors)
                 success = true
@@ -30,7 +28,7 @@ class Service::OpsGenie < Service
          	  :measurementValue => payload[:measurement][:value],
          	  :measurementSource => payload[:measurement][:source],
 
-         	  :measurements => JSON.toJson(payload[:measurements]),
+         	  :measurements => Yajl::Encoder.encode(payload[:measurements]),
          	  
          	  :metricLink => payload[:metric_link],
          	  :triggerTime => payload[:trigger_time],
