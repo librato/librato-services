@@ -15,11 +15,7 @@ class Service::Slack < Service
     success
   end
 
-  def receive_alert
-    raise_config_error unless receive_validate({})
-
-    uri = URI.parse(slack_url)
-
+  def v1_alert_result
     source = payload[:measurement][:source]
     link = metric_link(payload[:metric][:type], payload[:metric][:name])
     text = "Alert triggered for '<%s|%s>' with value %f%s" %
@@ -28,7 +24,7 @@ class Service::Slack < Service
        payload[:measurement][:value],
        source == "unassigned" ? "" : " from #{source}"]
 
-    result = {
+    {
       :fallback => text,
       :attachments => [
         {
@@ -53,9 +49,25 @@ class Service::Slack < Service
         }
       ],
       :channel => settings[:channel] == "" ? "" : settings[:channel],
-      :username => settings[:username] == "" ? "" : settings[:username]
+      :username => settings[:username] == "" ? "Librato Alerts" : settings[:username]
     }
+  end
 
+  def v2_alert_result
+    output = Librato::Services::Output.new(payload)
+    output.markdown
+  end
+
+  def receive_alert
+    raise_config_error unless receive_validate({})
+
+    result = if payload[:alert][:version] == 2
+      v2_alert_result
+    else
+      v1_alert_result
+    end
+
+    uri = URI.parse(slack_url)
     url = "%s://%s:%d%s" % [uri.scheme, uri.host, uri.port, uri.request_uri]
 
     http_post url, {:payload => Yajl::Encoder.encode(result)}

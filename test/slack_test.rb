@@ -2,11 +2,14 @@ require File.expand_path('../helper', __FILE__)
 
 class SlackTest < Librato::Services::TestCase
   def setup
+    token = "foo"
+    @path = "/services/hooks/incoming-webhook?token=%s" % [token]
+    @settings = { :subdomain => "librato", :token => token }
     @stubs = Faraday::Adapter::Test::Stubs.new
   end
 
   def test_validations
-    svc = service(:alert, {:subdomain => "tinyspeck", :token => "foo"}, alert_payload)
+    svc = service(:alert, @settings, alert_payload)
     errors = {}
     assert(svc.receive_validate(errors))
     assert_equal(0, errors.length)
@@ -19,13 +22,20 @@ class SlackTest < Librato::Services::TestCase
     assert(!errors[:token].nil?)
   end
 
-  def test_alerts
-    token = "foo"
-    subdomain = "tinyspeck"
-    path = "/services/hooks/incoming-webhook?token=%s" % [token]
-    svc = service(:alert, { :subdomain => subdomain, :token => token }, alert_payload)
+  def test_v1_alerts
+    svc = service(:alert, @settings, alert_payload)
 
-    @stubs.post "#{path}" do |env|
+    @stubs.post @path do |env|
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
+  def test_v2_alerts
+    svc = service(:alert, @settings, new_alert_payload)
+
+    @stubs.post @path do |env|
       [200, {}, '']
     end
 
