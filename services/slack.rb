@@ -79,7 +79,7 @@ class Service::Slack < Service
   end
 
   def username
-    settings[:username] == "" ? "Librato Alerts" : settings[:username]
+    (settings[:username] && settings[:username] != '') ? settings[:username] : "Librato Alerts"
   end
 
   def slack_url
