@@ -49,13 +49,16 @@ class Service::Slack < Service
         }
       ],
       :channel => settings[:channel] == "" ? "" : settings[:channel],
-      :username => settings[:username] == "" ? "Librato Alerts" : settings[:username]
+      :username => username
     }
   end
 
   def v2_alert_result
     output = Librato::Services::Output.new(payload)
-    { :text => output.markdown }
+    {
+      :text => output.markdown,
+      :username => username
+    }
   end
 
   def receive_alert
@@ -73,6 +76,10 @@ class Service::Slack < Service
     http_post url, {:payload => Yajl::Encoder.encode(result)}
   rescue Faraday::Error::ConnectionFailed
     raise_error "Connection refused — invalid URL."
+  end
+
+  def username
+    settings[:username] == "" ? "Librato Alerts" : settings[:username]
   end
 
   def slack_url
