@@ -55,7 +55,7 @@ class Service::Slack < Service
 
   def v2_alert_result
     output = Librato::Services::Output.new(payload)
-    output.markdown
+    { :text => output.markdown }
   end
 
   def receive_alert
