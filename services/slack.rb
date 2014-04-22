@@ -67,7 +67,8 @@ class Service::Slack < Service
     result = if payload[:alert][:version] == 2
       v2_alert_result
     else
-      v1_alert_result
+      # v1_alert_result
+      raise_config_error('Slack does not support V1 alerts')
     end
 
     uri = URI.parse(slack_url)

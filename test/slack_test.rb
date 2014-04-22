@@ -26,10 +26,11 @@ class SlackTest < Librato::Services::TestCase
     svc = service(:alert, @settings, alert_payload)
 
     @stubs.post @path do |env|
+      raise 'should not fire'
       [200, {}, '']
     end
 
-    svc.receive_alert
+    assert_raises(Librato::Services::Service::ConfigurationError) { svc.receive_alert }
   end
 
   def test_v2_alerts
