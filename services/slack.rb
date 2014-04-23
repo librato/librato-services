@@ -48,7 +48,7 @@ class Service::Slack < Service
           ]
         }
       ],
-      :channel => settings[:channel] == "" ? "" : settings[:channel],
+      :channel => channel,
       :username => username
     }
   end
@@ -57,7 +57,8 @@ class Service::Slack < Service
     output = Librato::Services::Output.new(payload)
     {
       :text => output.markdown,
-      :username => username
+      :username => username,
+      :channel => channel
     }
   end
 
@@ -80,7 +81,11 @@ class Service::Slack < Service
   end
 
   def username
-    (settings[:username] && settings[:username] != '') ? settings[:username] : "Librato Alerts"
+    settings[:username].blank? ? "Librato Alerts" : settings[:username]
+  end
+
+  def channel
+    settings[:channel].blank? ? "" : settings[:channel]
   end
 
   def slack_url
