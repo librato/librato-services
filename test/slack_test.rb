@@ -33,10 +33,25 @@ class SlackTest < Librato::Services::TestCase
     assert_raises(Librato::Services::Service::ConfigurationError) { svc.receive_alert }
   end
 
-  def test_v2_alerts
+  def test_v2_alerts_with_no_channel
     svc = service(:alert, @settings, new_alert_payload)
 
     @stubs.post @path do |env|
+      payload = JSON.parse(env[:body][:payload])
+      assert_equal("", payload["channel"])
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
+  def test_v2_alerts_with_channel
+    channel_name = "pbs"
+    svc = service(:alert, @settings.merge(:channel => channel_name), new_alert_payload)
+
+    @stubs.post @path do |env|
+      payload = JSON.parse(env[:body][:payload])
+      assert_equal(channel_name, payload["channel"])
       [200, {}, '']
     end
 
