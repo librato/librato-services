@@ -81,11 +81,11 @@ class Service::Slack < Service
   end
 
   def username
-    (settings[:username] && settings[:username] != '') ? settings[:username] : "Librato Alerts"
+    settings[:username].blank? ? "Librato Alerts" : settings[:username]
   end
 
   def channel
-    (settings[:channel] && settings[:channel] != '') ? settings[:channel] : ""
+    settings[:channel].blank? ? "" : settings[:channel]
   end
 
   def slack_url
