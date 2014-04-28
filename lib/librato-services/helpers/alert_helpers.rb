@@ -82,6 +82,10 @@ module Librato
           "https://#{ENV['METRICS_APP_URL']}/metrics/#{name}"
         end
 
+        def alert_link(id)
+          "https://#{ENV['METRICS_APP_URL']}/alerts#/#{id}"
+        end
+
         # TODO: fix for specific alert id?
         def payload_link(payload)
           if payload[:alert][:version] == 2
