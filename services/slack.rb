@@ -4,16 +4,9 @@ require 'uri'
 require 'cgi'
 
 class Service::Slack < Service
-  def receive_validate(errors = {})
-    success = true
-    [:subdomain, :token].each do |k|
-      if settings[k].to_s.empty?
-        errors[k] = "Is required"
-        success = false
-      end
-    end
-    success
-  end
+  # transitional
+  # Branch "gemify" has different, required settings
+  def receive_validate(errors = {}); true; end
 
   def receive_alert
     raise_config_error unless receive_validate({})

@@ -6,17 +6,10 @@ class SlackTest < Librato::Services::TestCase
   end
 
   def test_validations
-    svc = service(:alert, {:subdomain => "tinyspeck", :token => "foo"}, alert_payload)
+    svc = service(:alert, {}, alert_payload)
     errors = {}
     assert(svc.receive_validate(errors))
     assert_equal(0, errors.length)
-
-    svc = service(:alert, {}, alert_payload)
-    errors = {}
-    assert(!svc.receive_validate(errors))
-    assert_equal(2, errors.length)
-    assert(!errors[:subdomain].nil?)
-    assert(!errors[:token].nil?)
   end
 
   def test_alerts
