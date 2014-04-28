@@ -5,60 +5,18 @@ require 'cgi'
 
 class Service::Slack < Service
   def receive_validate(errors = {})
-    success = true
-    [:subdomain, :token].each do |k|
-      if settings[k].to_s.empty?
-        errors[k] = "Is required"
-        success = false
-      end
+    unless settings[:url]
+      errors[:url] = "Is required"
+      return false
     end
-    success
-  end
-
-  def v1_alert_result
-    source = payload[:measurement][:source]
-    link = metric_link(payload[:metric][:type], payload[:metric][:name])
-    text = "Alert triggered for '<%s|%s>' with value %f%s" %
-      [link,
-       payload[:metric][:name],
-       payload[:measurement][:value],
-       source == "unassigned" ? "" : " from #{source}"]
-
-    {
-      :fallback => text,
-      :attachments => [
-        {
-          :pretext => "Alert triggered",
-          :fields => [
-            {
-              :title => "Metric",
-              :value => "<%s|%s>" % [link, payload[:metric][:name]],
-              :short => true
-            },
-            {
-              :title => "Measurement Value",
-              :value => payload[:measurement][:value],
-              :short => true
-            },
-            {
-              :title => "Measurement Source",
-              :value => source,
-              :short => true
-            }
-          ]
-        }
-      ],
-      :channel => channel,
-      :username => username
-    }
+    true
   end
 
   def v2_alert_result
     output = Librato::Services::Output.new(payload)
     {
-      :text => output.markdown,
-      :username => username,
-      :channel => channel
+      :alert_text => output.markdown,
+      :alert_url => alert_link(payload[:alert][:id])
     }
   end
 
@@ -68,27 +26,14 @@ class Service::Slack < Service
     result = if payload[:alert][:version] == 2
       v2_alert_result
     else
-      # v1_alert_result
       raise_config_error('Slack does not support V1 alerts')
     end
 
-    uri = URI.parse(slack_url)
+    uri = URI.parse(settings[:url])
     url = "%s://%s:%d%s" % [uri.scheme, uri.host, uri.port, uri.request_uri]
 
-    http_post url, {:payload => Yajl::Encoder.encode(result)}
+    http_post(url, Yajl::Encoder.encode(result))
   rescue Faraday::Error::ConnectionFailed
     raise_error "Connection refused — invalid URL."
-  end
-
-  def username
-    settings[:username].blank? ? "Librato Alerts" : settings[:username]
-  end
-
-  def channel
-    settings[:channel].blank? ? "" : settings[:channel]
-  end
-
-  def slack_url
-    "https://%s.slack.com/services/hooks/incoming-webhook?token=%s" % [settings[:subdomain], settings[:token]]
   end
 end
