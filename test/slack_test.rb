@@ -37,8 +37,15 @@ class SlackTest < Librato::Services::TestCase
 
     @stubs.post @stub_url do |env|
       payload = JSON.parse(env[:body])
-      assert_not_nil(payload["alert_text"])
-      assert_not_nil(payload["alert_url"])
+      assert_not_nil(payload["attachments"])
+      assert_equal(1, payload["attachments"].length)
+      attachment = payload["attachments"][0]
+      assert_not_nil(attachment["fallback"])
+      assert_not_nil(attachment["color"])
+      assert_not_nil(attachment["pretext"])
+      assert_not_nil(attachment["fields"])
+      assert_equal(1, attachment["fields"].length)
+      assert_not_nil(attachment["mrkdwn_in"])
       [200, {}, '']
     end
 

@@ -4,6 +4,8 @@ require 'uri'
 require 'cgi'
 
 class Service::Slack < Service
+  VERTICAL_LINE_COLOR = "#0880ad"
+
   def receive_validate(errors = {})
     unless settings[:url]
       errors[:url] = "Is required"
@@ -13,11 +15,31 @@ class Service::Slack < Service
   end
 
   def v2_alert_result
-    output = Librato::Services::Output.new(payload)
+    data = Librato::Services::Output.new(payload)
     {
-      :alert_text => output.markdown,
-      :alert_url => alert_link(payload[:alert][:id])
+      :attachments => [
+        {
+          :fallback => format_fallback(data),
+          :color => VERTICAL_LINE_COLOR,
+          :pretext => "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!",
+          :fields => data.violations.map do |source, measurements|
+            {
+              :title => source,
+              :value => measurements.inject([]) do |texts, measurement|
+                texts << data.format_measurement(measurement)
+              end.join("\n")
+            }
+          end,
+          :mrkdwn_in => [:text, :fields]
+        }
+      ]
     }
+  end
+
+  def format_fallback(data)
+    data.markdown.sub(/^#\s+/, '').                 # no leading #
+      gsub('`', '\'').                              # no backticks
+      chomp + " • #{alert_link(data.alert[:id])}\n" # add the alert link
   end
 
   def receive_alert
