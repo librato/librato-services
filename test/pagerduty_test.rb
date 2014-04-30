@@ -65,6 +65,21 @@ class PagerdutyTest < Librato::Services::TestCase
     svc.receive_alert
   end
 
+  def test_description_is_alert_specific
+    svc = service(:alert, {
+                    :service_key => 'k',
+                    :event_type => 't',
+                    :description => 'd'
+                  }, new_alert_payload)
+
+    @stubs.post '/generic/2010-04-15/create_event.json' do |env|
+      assert_equal "Some alert name", env[:body][:description]
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
   def service(*args)
     super Service::Pagerduty, *args
   end

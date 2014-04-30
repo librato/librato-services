@@ -22,7 +22,7 @@ class Service::Pagerduty < Service
     body = {
       :service_key => settings[:service_key],
       :event_type => settings[:event_type],
-      :description => settings[:description],
+      :description => payload[:alert][:name],
       :details => pd_payload
     }
 
