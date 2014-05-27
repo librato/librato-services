@@ -69,11 +69,11 @@ class CustomerIoTest < Librato::Services::TestCase
       alert: { id: 12345, name: "my alert", version: 2},
       conditions: [{type: "above", threshold: 10, id: 1}],
       violations: {
-        "foo.bar:1" => [{
+        "foo.uid:1" => [{
           metric: "metric.name", value: 100, recorded_at: 1389391083,
           condition_violated: 1
         }],
-        "foo.bar:2" => [{
+        "foo.uid:2" => [{
           metric: "another.metric", value: 300, recorded_at: 1389391083,
           condition_violated: 1
         }]
