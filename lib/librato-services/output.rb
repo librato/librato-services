@@ -1,4 +1,5 @@
 require 'redcarpet'
+require 'helpers/alert_helpers'
 
 # TODO
 # This has grown to the point where it may be worth generating an Alert
@@ -6,6 +7,8 @@ require 'redcarpet'
 module Librato
   module Services
     class Output
+      include Helpers::AlertHelpers
+
       attr_reader :violations, :conditions, :alert
       def initialize(payload)
         if !payload[:conditions] || !payload[:violations]
@@ -34,6 +37,7 @@ module Librato
 
       def generate_markdown
         result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
+        result_array << "Link: #{alert_link(@alert[:id])}\n"
         @violations.each do |source, measurements|
           result_array << "Source `#{source}`:"
           measurements.each do |measurement|
