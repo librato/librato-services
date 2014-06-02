@@ -1,6 +1,7 @@
 require File.expand_path('../helper', __FILE__)
 
 class Librato::Services::OutputTestCase < Test::Unit::TestCase
+  ENV['METRICS_APP_URL'] = 'metrics.librato.com'
   def test_simple_alert
     payload = {
       alert: {id: 123, name: "Some alert name", version: 2},
@@ -19,6 +20,8 @@ class Librato::Services::OutputTestCase < Test::Unit::TestCase
     output = Librato::Services::Output.new(payload)
     expected = <<EOF
 # Alert Some alert name has triggered!
+
+Link: https://metrics.librato.com/alerts#/123
 
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
@@ -56,6 +59,8 @@ EOF
     output = Librato::Services::Output.new(payload)
     expected = <<EOF
 # Alert Some alert name has triggered!
+
+Link: https://metrics.librato.com/alerts#/123
 
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
@@ -118,6 +123,8 @@ EOF
     expected = <<EOF
 # Alert Some alert name has triggered!
 
+Link: https://metrics.librato.com/alerts#/123
+
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 over 60 seconds with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
@@ -142,6 +149,8 @@ EOF
     output = Librato::Services::Output.new(payload)
     expected = <<EOF
 # Alert Some alert name has triggered!
+
+Link: https://metrics.librato.com/alerts#/123
 
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
