@@ -59,6 +59,14 @@ class PagerdutyTest < Librato::Services::TestCase
 
     @stubs.post '/generic/2010-04-15/create_event.json' do |env|
       assert_nil env[:body][:details]["auth"]
+      assert_nil env[:body][:details]["settings"]
+      assert_nil env[:body][:details]["service_type"]
+      assert_nil env[:body][:details]["event_type"]
+      assert_not_nil env[:body][:details]["violations"]
+      assert_not_nil env[:body][:details]["conditions"]
+      assert_not_nil env[:body][:details]["trigger_time"]
+      assert_not_nil env[:body][:details]["alert"]
+      assert_not_nil env[:body][:details]["user_id"]
       [200, {}, '']
     end
 
