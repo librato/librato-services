@@ -18,10 +18,7 @@ class Service::Pagerduty < Service
     raise_config_error unless receive_validate({})
 
     pd_payload = payload.dup
-    # don't send these things in the pagerduty payload
-    ['settings', 'service_type', 'event_type', 'auth'].each do |elided|
-      pd_payload.delete(elided)
-    end
+    pd_payload.delete('auth') # don't include credentials in pd post
     body = {
       :service_key => settings[:service_key],
       :event_type => settings[:event_type],
