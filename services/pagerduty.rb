@@ -17,10 +17,9 @@ class Service::Pagerduty < Service
   def receive_alert
     raise_config_error unless receive_validate({})
 
-    pd_payload = payload.dup
-    # don't send these things in the pagerduty payload
-    ['settings', 'service_type', 'event_type', 'auth'].each do |elided|
-      pd_payload.delete(elided)
+    pd_payload = {}
+    ['user_id', 'alert', 'trigger_time', 'conditions', 'violations'].each do |whitelisted|
+      pd_payload[whitelisted] = payload[whitelisted]
     end
     body = {
       :service_key => settings[:service_key],
