@@ -122,13 +122,13 @@ DEPENDENCIES
   faraday (~> 0.8)
   flowdock (~> 0.3)
   hipchat-api (~> 1.0)
-  jeweler
+  jeweler (~> 2.0)
   mail (~> 2.2)
-  package_cloud
+  package_cloud (~> 0.2)
   rake (~> 10)
   redcarpet (~> 2.3)
-  shoulda
+  shoulda (~> 3.5)
   tilt (~> 1.4)
   tinder (~> 1.9)
   yajl-ruby (~> 1.1)
-  yard
+  yard (~> 0.8)
