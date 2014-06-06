@@ -33,8 +33,8 @@ gem 'rake', '~> 10'
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
-  gem "shoulda", ">= 0"
-  gem "jeweler", ">= 0"
-  gem 'yard', ">= 0"
-  gem "package_cloud", ">= 0"
+  gem "shoulda", "~> 0"
+  gem "jeweler", "~> 0"
+  gem 'yard', "~> 0"
+  gem "package_cloud", "~> 0"
 end
