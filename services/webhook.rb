@@ -2,6 +2,8 @@
 
 require 'uri'
 require 'cgi'
+require 'yajl'
+require 'faraday'
 
 class Service::Webhook < Service
   def receive_validate(errors = {})
@@ -21,15 +23,25 @@ class Service::Webhook < Service
 
   def receive_alert
     raise_config_error unless receive_validate({})
-
     uri = URI.parse(settings[:url])
 
-    result = {
-      :alert => payload['alert'],
-      :metric => payload['metric'],
-      :measurement => payload['measurement'],
-      :trigger_time => payload['trigger_time']
-    }
+    if payload[:alert][:version] == 2
+      result = {
+        :alert => payload['alert'],
+        :trigger_time => payload['trigger_time'],
+        :conditions => payload['conditions'],
+        :violations => payload['violations']
+      }
+    else
+      measurements = get_measurements(payload)[0..19]
+      result = {
+        :alert => payload['alert'],
+        :metric => payload['metric'],
+        :measurement => measurements[0],
+        :measurements => measurements,
+        :trigger_time => payload['trigger_time']
+      }
+    end
 
     # Faraday doesn't unescape user and password
     if uri.userinfo

@@ -1,4 +1,5 @@
 require 'tilt'
+require 'active_support'
 
 module Librato
   module Services
@@ -13,12 +14,51 @@ module Librato
               :name => "my_sample_alert",
               :type => "gauge"
             },
-            :measurement => {
-              :value => 2345.9,
-              :source => "r3.acme.com"
-            },
+            :measurement => { :value => 2345.9, :source => "r3.acme.com" },
             :trigger_time => 1321311840
           }.with_indifferent_access
+        end
+
+        def self.sample_alert_payload_multiple_measurements
+          {
+            :alert => {
+              :id => 12345
+            },
+            :metric => {
+              :name => "my_sample_alert",
+              :type => "gauge"
+            },
+            :measurements => [
+              { :value => 2345.9, :source => "r3.acme.com" },
+              { :value => 123,    :source => "r2.acme.com" }
+            ],
+            :trigger_time => 1321311840
+          }.with_indifferent_access
+        end
+
+        #TODO rename when it's no longer "new"
+        def self.sample_new_alert_payload
+          ::HashWithIndifferentAccess.new({
+            alert: {id: 123, name: "Some alert name", version: 2},
+            auth: {email:"foo@example.com", annotations_token:"lol"},
+            settings: {},
+            service_type: "campfire",
+            event_type: "alert",
+            trigger_time: 12321123,
+            conditions: [{type: "above", threshold: 10, id: 1}],
+            violations: {
+              "foo.bar" => [{
+                metric: "metric.name", value: 100, recorded_at: 1389391083,
+                condition_violated: 1
+              }]
+            }
+          })
+        end
+
+        def get_measurements(body)
+          measurements = body['measurements'] || []
+          measurements << body['measurement']
+          measurements.compact
         end
 
         def erb(template, target_binding)
@@ -40,6 +80,19 @@ module Librato
 
         def metric_link(type, name)
           "https://#{ENV['METRICS_APP_URL']}/metrics/#{name}"
+        end
+
+        def alert_link(id)
+          "https://#{ENV['METRICS_APP_URL']}/alerts#/#{id}"
+        end
+
+        # TODO: fix for specific alert id?
+        def payload_link(payload)
+          if payload[:alert][:version] == 2
+            "https://#{ENV['METRICS_APP_URL']}/metrics/"
+          else
+            metric_link(payload[:metric][:type], payload[:metric][:name])
+          end
         end
       end
     end

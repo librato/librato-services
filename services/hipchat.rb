@@ -1,3 +1,5 @@
+require 'hipchat-api'
+
 class Service::Hipchat < Service
 
   # Required parameters:
@@ -18,25 +20,60 @@ class Service::Hipchat < Service
 
   def receive_alert
     raise_config_error unless receive_validate({})
-
-    send_message(alert_message)
+    if payload[:alert][:version] == 2
+      format = 'text'
+    else
+      format = 'html'
+    end
+    send_message(alert_message, format)
   end
 
   def receive_snapshot
     raise_config_error unless receive_validate({})
 
-    send_message(snapshot_message)
+    send_message(snapshot_message, 'html')
   end
 
   def alert_message
-    source = payload[:measurement][:source]
-    link = metric_link(payload[:metric][:type], payload[:metric][:name])
-    "Alert triggered at %s for '%s' with value %f%s: <a href=\"%s\">%s</a>" %
-      [Time.at(payload[:trigger_time]).utc,
-       payload[:metric][:name],
-       payload[:measurement][:value],
-       source == "unassigned" ? "" : " from #{source}",
-       link, link]
+    link = payload_link(payload)
+
+    # New-style alerts
+    if payload[:alert][:version] == 2
+      output = Librato::Services::Output.new(payload)
+      return output.markdown
+    end
+    # Old-style alerts
+    # grab the first 20 measurements
+    measurements = get_measurements(payload)[0..19]
+    if measurements.size == 1
+      src = measurements[0][:source]
+      "Alert triggered at %s for '%s' with value %f%s: <a href=\"%s\">%s</a>" %
+        [
+          Time.at(payload[:trigger_time]).utc,
+          payload[:metric][:name],
+          measurements[0][:value],
+          src == "unassigned" ? "" : " from #{src}",
+          link,
+          link
+        ]
+    else
+      # paste time
+      message = "Alert triggered at %s for '%s'. Measurements:" %
+        [
+          Time.at(payload[:trigger_time]).utc,
+          payload[:metric][:name]
+        ]
+      message << "\n"
+      measurements = measurements.map do |m|
+        if m["source"] == "unassigned"
+          "  %f" % [m[:value]]
+        else
+          "  %s: %f" % [m[:source], m[:value]]
+        end
+      end
+      message << measurements.join("\n")
+      message
+    end
   end
 
   def snapshot_message
@@ -52,8 +89,8 @@ class Service::Hipchat < Service
     @hipchat ||= HipChat::API.new(settings[:auth_token])
   end
 
-  def send_message(msg)
+  def send_message(msg, format)
     hipchat.rooms_message(settings[:room_id], settings[:from], msg,
-                         settings[:notify].to_i, 'yellow', 'html')
+                         settings[:notify].to_i, 'yellow', format)
   end
 end

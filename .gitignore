@@ -49,3 +49,5 @@ pkg
 
 .rvmrc
 log/newrelic*
+/payloads
+/*.gem

@@ -24,7 +24,7 @@ Service Lifecycle
    the post data:
    - `params[:settings]`: the options the user specified in the Service configuration
    - `params[:payload]`: the event data for the triggered alert
-1. A [sinatra][] app [lib/librato-services/app.rb](lib/librato-services/app.rb) decodes the request
+1. A [sinatra][] app [lib/librato_services/app.rb][] decodes the request
    and dispatches it to a registered service if it exists
 
 Writing a Service
@@ -55,18 +55,18 @@ A sample payload is available at
                  'name' : 'Name of the metric that tripped alert',
                  'type' : 'gauge' or 'counter',
         },
-        'measurement' : {
+        'measurements' : [{
                  'value' : 4.5 (value that caused exception),
                  'source' : 'r3.acme.com' (source that caused exception
                                            or 'unassigned')
-        }
+        }]
 }
 ```
 
 Sample Service
 --------------
 
-Here's a simple service that posts the measurement value that
+Here's a simple service that posts the measurement value(s) that
 triggered the alert.
 
 ```ruby
@@ -81,11 +81,9 @@ class Service::Sample < Service
   end
 
   def receive_alert
-    value = payload[:measurement][:value]
-
     http_post 'https://sample-service.com/post.json' do |req|
       req.body = {
-        settings[:name] => value
+        settings[:name] => payload[:measurements]
       }
     end
   end

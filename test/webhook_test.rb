@@ -24,12 +24,45 @@ class WebhookTest < Librato::Services::TestCase
     assert(!errors[:url].nil?)
   end
 
+  def test_alerts_multiple_measurements
+    path = "/post_path.json"
+    url = "http://localhost#{path}"
+    svc = service(:alert, { :url => url }, alert_payload_multiple_measurements)
+
+    @stubs.post "#{path}" do |env|
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
   def test_alerts
     path = "/post_path.json"
     url = "http://localhost#{path}"
     svc = service(:alert, { :url => url }, alert_payload)
 
     @stubs.post "#{path}" do |env|
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
+  def test_new_alerts
+    path = "/post_path.json"
+    url = "http://localhost#{path}"
+    svc = service(:alert, { :url => url }, new_alert_payload)
+
+    @stubs.post "#{path}" do |env|
+      payload = JSON.parse(env[:body][:payload])
+      assert_equal ["alert", "conditions", "trigger_time", "violations"], payload.keys.sort
+      assert_equal 123, payload['alert']['id']
+      assert_equal 'Some alert name', payload['alert']['name']
+      assert_equal 1, payload['conditions'].length
+      violations = payload['violations']
+      foo_bar_violations = violations['foo.bar']
+      assert_equal 1, foo_bar_violations.length
+      assert_equal 'metric.name', foo_bar_violations[0]['metric']
       [200, {}, '']
     end
 

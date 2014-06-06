@@ -1,8 +1,12 @@
+# TODO: fix for new-style alerts
 # encoding: utf-8
 #
 # Integration with the Customer.io service, which will trigger an event being
 # sent when an alert occurs. This requires that your source name be of the format
 # "uid:123", where 123 is the customer.io customer id to event upon.
+
+require 'customerio'
+
 class Service::CustomerIo < Service
   attr_writer :client
 
@@ -13,13 +17,41 @@ class Service::CustomerIo < Service
   end
 
   def receive_alert
-    client.track(user_id, event_name, payload)
+    if payload[:alert][:version] == 2
+      payload[:violations].each do |source, violations|
+        source_data = extract_data_from_source(source)
+        user_id = source_data["uid"]
+        client.track(user_id, event_name, violations.map{|v| v.merge(source_data)})
+      end
+    else
+      get_measurements(payload).each do |measurement|
+        pd = payload.dup
+        pd[:measurement] = measurement
+        source_data = extract_data_from_source(measurement[:source])
+        user_id = source_data["uid"]
+        client.track(user_id, event_name, source_data.merge(pd))
+      end
+    end
   end
 
-  def user_id
-    id = payload[:measurement][:source].split(':').last
+  def extract_data_from_source(source)
+    {}.tap do |data|
+      source.split(".").each do |segment|
+        k, v = segment.split(":")
+        v = Integer(v) if v =~ /^\d+$/
+        data[k] = v
+      end
+    end.with_indifferent_access
+  end
+
+  def get_user_id_from_string(str)
+    id = str.split(':').last
     return if id.nil? || id !~ /\d+/
     Integer(id)
+  end
+
+  def get_user_id(measurement)
+    get_user_id_from_string(measurement[:source])
   end
 
   def event_name
