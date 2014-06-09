@@ -40,11 +40,13 @@ class PagerdutyTest < Librato::Services::TestCase
     svc = service(:alert, {
                     :service_key => 'k',
                     :event_type => 't',
-                    :description => 'd'
+                    :description => 'settings description'
                   }, alert_payload)
 
     @stubs.post '/generic/2010-04-15/create_event.json' do |env|
       [200, {}, '']
+      # if the alert does not have a name, then verify it uses the description
+      assert_equal 'settings description', env[:body][:description]
     end
 
     svc.receive_alert
@@ -67,6 +69,7 @@ class PagerdutyTest < Librato::Services::TestCase
       assert_not_nil env[:body][:details]["trigger_time"]
       assert_not_nil env[:body][:details]["alert"]
       assert_not_nil env[:body][:details]["user_id"]
+      assert_equal 'Some alert name', env[:body][:description]
       [200, {}, '']
     end
 
