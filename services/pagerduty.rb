@@ -21,10 +21,12 @@ class Service::Pagerduty < Service
     ['user_id', 'alert', 'trigger_time', 'conditions', 'violations'].each do |whitelisted|
       pd_payload[whitelisted] = payload[whitelisted]
     end
+    alert_name = payload['alert']['name']
+    description = alert_name.blank? ? settings[:description] : alert_name
     body = {
       :service_key => settings[:service_key],
       :event_type => settings[:event_type],
-      :description => settings[:description],
+      :description => description,
       :details => pd_payload
     }
 

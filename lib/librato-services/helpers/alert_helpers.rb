@@ -8,7 +8,8 @@ module Librato
         def self.sample_alert_payload
           {
             :alert => {
-              :id => 12345
+              :id => 12345,
+              :name => ""
             },
             :metric => {
               :name => "my_sample_alert",
@@ -42,7 +43,6 @@ module Librato
             user_id: 1,
             alert: {id: 123, name: "Some alert name", version: 2},
             auth: {email:"foo@example.com", annotations_token:"lol"},
-            settings: {},
             service_type: "campfire",
             event_type: "alert",
             trigger_time: 12321123,
