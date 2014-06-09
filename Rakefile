@@ -58,7 +58,7 @@ task :package_cloud do
     Gem::Builder.new(gemspec).build
   end
 
-  gem_file_path = File.join(jeweler.base_dir, "pkg", gem_file_name)
+  gem_file_path = File.join(jeweler.base_dir, gem_file_name)
 
   sh "package_cloud push librato/rubygems #{gem_file_path}"
 end
