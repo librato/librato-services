@@ -1,10 +1,10 @@
 source "http://rubygems.org"
 
 gem 'faraday', '~> 0.8'
-gem 'tilt',  '~> 1.4'
+gem 'tilt',  '~> 1'
 
 gem 'yajl-ruby', '~> 1.1', :require => [ 'yajl', 'yajl/json_gem' ]
-gem 'activesupport', '~> 4.0', :require => 'active_support'
+gem 'activesupport', '>= 3.2', :require => 'active_support'
 
 # service: mail
 gem 'mail', '~> 2.2'
@@ -28,7 +28,7 @@ gem 'redcarpet', '~> 2.3'
 #
 #gem 'always_verify_ssl_certificates', '~> 0.3.0'
 
-gem 'rake', '~> 10'
+gem 'rake', '>= 0.9'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

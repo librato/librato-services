@@ -117,7 +117,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 4.0)
+  activesupport (>= 3.2)
   customerio (~> 0.5)
   faraday (~> 0.8)
   flowdock (~> 0.3)
@@ -125,10 +125,10 @@ DEPENDENCIES
   jeweler (~> 2.0)
   mail (~> 2.2)
   package_cloud (~> 0.2)
-  rake (~> 10)
+  rake (>= 0.9)
   redcarpet (~> 2.3)
   shoulda (~> 3.5)
-  tilt (~> 1.4)
+  tilt (~> 1)
   tinder (~> 1.9)
   yajl-ruby (~> 1.1)
   yard (~> 0.8)
