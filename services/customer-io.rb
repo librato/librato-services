@@ -19,17 +19,29 @@ class Service::CustomerIo < Service
   def receive_alert
     if payload[:alert][:version] == 2
       payload[:violations].each do |source, violations|
-        user_id = get_user_id_from_string(source)
-        client.track(user_id, event_name, violations)
+        source_data = extract_data_from_source(source)
+        user_id = source_data["uid"]
+        client.track(user_id, event_name, violations.map{|v| v.merge(source_data)})
       end
     else
-      get_measurements(payload).each do |m|
+      get_measurements(payload).each do |measurement|
         pd = payload.dup
-        pd[:measurement] = m
-        user_id = get_user_id(m)
-        client.track(user_id, event_name, pd)
+        pd[:measurement] = measurement
+        source_data = extract_data_from_source(measurement[:source])
+        user_id = source_data["uid"]
+        client.track(user_id, event_name, source_data.merge(pd))
       end
     end
+  end
+
+  def extract_data_from_source(source)
+    {}.tap do |data|
+      source.split(".").each do |segment|
+        k, v = segment.split(":")
+        v = Integer(v) if v =~ /^\d+$/
+        data[k] = v
+      end
+    end.with_indifferent_access
   end
 
   def get_user_id_from_string(str)

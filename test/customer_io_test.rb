@@ -27,11 +27,13 @@ class CustomerIoTest < Librato::Services::TestCase
     assert_equal 123, user_id
     assert_equal event_name, "test_event"
     assert_equal 3.14, payload[:measurement][:value]
+    assert_equal "bar", payload[:foo]
 
     user_id, event_name, payload = *svc.client.events[1]
     assert_equal 234, user_id
     assert_equal event_name, "test_event"
     assert_equal 1.23, payload[:measurement][:value]
+    assert_equal "bar", payload[:foo]
   end
 
   def test_new_alerts
@@ -50,6 +52,7 @@ class CustomerIoTest < Librato::Services::TestCase
     assert_equal "metric.name", payload[0][:metric]
     assert_equal 100, payload[0][:value]
     assert_equal 1, payload[0][:condition_violated]
+    assert_equal "bar", payload[0][:foo]
 
     user_id, event_name, payload = *svc.client.events[1]
     assert_equal 2, user_id
@@ -58,6 +61,7 @@ class CustomerIoTest < Librato::Services::TestCase
     assert_equal "another.metric", payload[0][:metric]
     assert_equal 300, payload[0][:value]
     assert_equal 1, payload[0][:condition_violated]
+    assert_equal "bar", payload[0][:foo]
   end
 
   def service(*args)
@@ -69,11 +73,11 @@ class CustomerIoTest < Librato::Services::TestCase
       alert: { id: 12345, name: "my alert", version: 2},
       conditions: [{type: "above", threshold: 10, id: 1}],
       violations: {
-        "foo.bar:1" => [{
+        "foo:bar.uid:1" => [{
           metric: "metric.name", value: 100, recorded_at: 1389391083,
           condition_violated: 1
         }],
-        "foo.bar:2" => [{
+        "foo:bar.uid:2" => [{
           metric: "another.metric", value: 300, recorded_at: 1389391083,
           condition_violated: 1
         }]
@@ -89,10 +93,10 @@ class CustomerIoTest < Librato::Services::TestCase
       metric: { name: "sample_alert", type: "gauge" },
       measurements: [{
         value: 3.14,
-        source: "uid:123"
+        source: "foo:bar.uid:123"
       }, {
         value: 1.23,
-        source: "uid:234"
+        source: "foo:bar.uid:234"
       }],
       trigger_time: Time.now.to_i
     }.with_indifferent_access
