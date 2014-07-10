@@ -48,20 +48,20 @@ class CustomerIoTest < Librato::Services::TestCase
     user_id, event_name, payload = *svc.client.events[0]
     assert_equal 1, user_id
     assert_equal event_name, "test_event"
-    assert_equal 1, payload.length
-    assert_equal "metric.name", payload[0][:metric]
-    assert_equal 100, payload[0][:value]
-    assert_equal 1, payload[0][:condition_violated]
-    assert_equal "bar", payload[0][:foo]
+    assert       payload.is_a?(Hash)
+    assert_equal "metric.name", payload[:metric]
+    assert_equal 100, payload[:value]
+    assert_equal 1, payload[:condition_violated]
+    assert_equal "bar", payload[:foo]
 
     user_id, event_name, payload = *svc.client.events[1]
     assert_equal 2, user_id
     assert_equal event_name, "test_event"
-    assert_equal 1, payload.length
-    assert_equal "another.metric", payload[0][:metric]
-    assert_equal 300, payload[0][:value]
-    assert_equal 1, payload[0][:condition_violated]
-    assert_equal "bar", payload[0][:foo]
+    assert       payload.is_a?(Hash)
+    assert_equal "another.metric", payload[:metric]
+    assert_equal 300, payload[:value]
+    assert_equal 1, payload[:condition_violated]
+    assert_equal "bar", payload[:foo]
   end
 
   def service(*args)

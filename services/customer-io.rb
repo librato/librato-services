@@ -21,9 +21,11 @@ class Service::CustomerIo < Service
       payload[:violations].each do |source, violations|
         source_data = extract_data_from_source(source)
         user_id = source_data["uid"]
-        event_data = violations.first.merge(source_data)
-        log "customer.io event %s uid:%i %s" % [event_name, user_id, event_data.inspect]
-        client.track(user_id, event_name, event_data)
+        violations.each do |violation|
+          event_data = violation.merge(source_data)
+          log "customer.io event %s uid:%i %s" % [event_name, user_id, event_data.inspect]
+          client.track(user_id, event_name, event_data)
+        end
       end
     else
       get_measurements(payload).each do |measurement|
