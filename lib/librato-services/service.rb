@@ -1,10 +1,5 @@
-
-
-Dir[File.join(File.dirname(__FILE__), 'helpers/*helpers*')].each { |helper|
-  require helper
-}
-
 require 'helpers/alert_helpers'
+require 'helpers/snapshot_helpers'
 require 'faraday'
 require 'output'
 
@@ -13,15 +8,19 @@ module Librato
     class Service
       TIMEOUT = 20
 
-      def self.receive(event, settings, payload, *args)
-        svc = new(event, settings, payload)
+      def self.receive(event, settings, payload, api_client = nil)
+        svc = new(event, settings, payload, api_client)
 
         event_method = "receive_#{event}".to_sym
         if svc.respond_to?(event_method)
           # XXX: Need a timeout!
           #Timeout.timeout(TIMEOUT, TimeoutError) do
-          svc.send(event_method, *args)
+          svc.send(event_method)
           #end
+
+          if event.to_sym == :alert
+            svc.post_annotation()
+          end
 
           true
         else
@@ -50,18 +49,34 @@ module Librato
       attr_reader :event
       attr_reader :settings
       attr_reader :payload
+      attr_reader :api_client
       attr_writer :http
 
-      def initialize(event = :alert, settings = {}, payload = nil)
+      def initialize(event = :alert, settings = {}, payload = nil, api_client = nil)
         helper_name = "#{event.to_s.capitalize}Helpers"
         if Librato::Services::Helpers.const_defined?(helper_name)
           @helper = Librato::Services::Helpers.const_get(helper_name)
           extend @helper
         end
 
-        @event    = event
-        @settings = settings
-        @payload  = payload || sample_payload
+        @event      = event
+        @settings   = settings
+        @payload    = payload || sample_payload
+        @api_client = api_client
+      end
+
+      def post_annotation()
+        if payload[:alert][:version] < 2
+          return
+        end
+        stream = "librato.alerts.#{payload[:alert][:name]}"
+        title = "#{payload[:alert][:name]} fired"
+        annotation_data = {
+          :source => "source",
+          :start_time => Time.now.to_i, # todo: get this from the payload when available
+          :description => Librato::Services::Output.new(payload)
+        }
+        api_client.annotate(stream, title, annotation_data)
       end
 
       def http_get(url = nil, params = nil, headers = nil)
