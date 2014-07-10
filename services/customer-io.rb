@@ -21,7 +21,9 @@ class Service::CustomerIo < Service
       payload[:violations].each do |source, violations|
         source_data = extract_data_from_source(source)
         user_id = source_data["uid"]
-        client.track(user_id, event_name, violations.map{|v| v.merge(source_data)})
+        event_data = violations.map { |v| v.merge(source_data) }
+        log "customer.io event %s uid:%i %s" % [event_name, user_id, event_data.inspect]
+        client.track(user_id, event_name, event_data)
       end
     else
       get_measurements(payload).each do |measurement|
@@ -29,7 +31,9 @@ class Service::CustomerIo < Service
         pd[:measurement] = measurement
         source_data = extract_data_from_source(measurement[:source])
         user_id = source_data["uid"]
-        client.track(user_id, event_name, source_data.merge(pd))
+        event_data = source_data.merge(pd)
+        log "customer.io event %s uid:%i %s" % [event_name, user_id, event_data.inspect]
+        client.track(user_id, event_name, event_data)
       end
     end
   end
@@ -60,6 +64,10 @@ class Service::CustomerIo < Service
 
   def client
     @client ||= Customerio::Client.new(settings[:site_id], settings[:api_key])
+  end
+
+  def log(msg)
+    Rails.logger.info(msg) if defined?(Rails)
   end
 
 end
