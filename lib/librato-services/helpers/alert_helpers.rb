@@ -84,7 +84,7 @@ module Librato
         end
 
         def alert_link(id)
-          "https://#{ENV['METRICS_APP_URL']}/alerts#/#{id}"
+          "https://#{ENV['METRICS_APP_URL']}/alerts/#{id}"
         end
 
         # TODO: fix for specific alert id?

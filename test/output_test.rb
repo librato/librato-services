@@ -21,7 +21,7 @@ class Librato::Services::OutputTestCase < Test::Unit::TestCase
     expected = <<EOF
 # Alert Some alert name has triggered!
 
-Link: https://metrics.librato.com/alerts#/123
+Link: https://metrics.librato.com/alerts/123
 
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
@@ -60,7 +60,7 @@ EOF
     expected = <<EOF
 # Alert Some alert name has triggered!
 
-Link: https://metrics.librato.com/alerts#/123
+Link: https://metrics.librato.com/alerts/123
 
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
@@ -123,7 +123,7 @@ EOF
     expected = <<EOF
 # Alert Some alert name has triggered!
 
-Link: https://metrics.librato.com/alerts#/123
+Link: https://metrics.librato.com/alerts/123
 
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 over 60 seconds with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
@@ -150,7 +150,7 @@ EOF
     expected = <<EOF
 # Alert Some alert name has triggered!
 
-Link: https://metrics.librato.com/alerts#/123
+Link: https://metrics.librato.com/alerts/123
 
 Source `foo.bar`:
 * metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
