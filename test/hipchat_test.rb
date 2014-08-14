@@ -2,25 +2,38 @@ require File.expand_path('../helper', __FILE__)
 
 class HipchatTest < Librato::Services::TestCase
   def setup
-    @stubs = Faraday::Adapter::Test::Stubs.new
     @settings = { auth_token: "token", from: "who", room_id: "the_room", notify: "1" }
-    @test_message = "Test message from Librato Hipchat integration"
   end
 
-  def stub_message_call(message, response_code)
-    message = URI.escape(message)
-    @stubs.post "/v1/rooms/message?auth_token=token&from=who&message=#{message}&room_id=the_room&notify=1" do |env|
-      [response_code, {}, '']
+  class FakeResponse
+    attr_reader :success
+    def initialize(success)
+      @success = success
+    end
+    def success?
+      @success
+    end
+  end
+
+  class FakeHipchat
+    attr_writer :success
+    def initialize(success = true)
+      @success=success
+      @messages = []
+    end
+    def rooms_message(room_id, from, msg, notify, color, format)
+      @messages << msg
+      FakeResponse.new(@success)
+    end
+    def message(idx=0)
+      @messages[idx]
     end
   end
 
   def test_receive_validate
     errors = {}
-    stub_message_call(@test_message, 200)
-
     service = service(:alert, @settings, alert_payload)
     result = service.receive_validate(errors)
-
     assert result
     assert errors.empty?
   end
@@ -30,49 +43,44 @@ class HipchatTest < Librato::Services::TestCase
     opts = {}
     service = service(:alert, {}, alert_payload)
     result = service.receive_validate(errors)
-
     assert !result
     @settings.keys.each {|setting| assert_equal "Is required", errors[setting]}
   end
 
   def test_alert_multiple_measurements
+    fake_hipchat = FakeHipchat.new
     service = service(:alert, @settings, alert_payload_multiple_measurements)
-
-    stub_message_call(@test_message, 200)
+    service.hipchat = fake_hipchat
     alert_message = service.alert_message
-    stub_message_call(alert_message, 200)
-
     service.receive_alert
+    assert alert_message == fake_hipchat.message
   end
 
   def test_new_alert
+    fake_hipchat = FakeHipchat.new
     service = service(:alert, @settings, new_alert_payload)
-
-    stub_message_call(@test_message, 200)
+    service.hipchat = fake_hipchat
     alert_message = service.alert_message
-    stub_message_call(alert_message, 200)
-
     service.receive_alert
+    assert alert_message == fake_hipchat.message
   end
 
   def test_alert
+    fake_hipchat = FakeHipchat.new
     service = service(:alert, @settings, alert_payload)
-
-    stub_message_call(@test_message, 200)
+    service.hipchat = fake_hipchat
     alert_message = service.alert_message
-    stub_message_call(alert_message, 200)
-
     service.receive_alert
+    assert alert_message == fake_hipchat.message
   end
 
   def test_snapshot
+    fake_hipchat = FakeHipchat.new
     service = service(:snapshot, @settings, snapshot_payload)
-
-    stub_message_call(@test_message, 200)
+    service.hipchat = fake_hipchat
     snapshot_message = service.snapshot_message
-    stub_message_call(snapshot_message, 200)
-
     service.receive_snapshot
+    assert snapshot_message == fake_hipchat.message
   end
 
   def service(*args)

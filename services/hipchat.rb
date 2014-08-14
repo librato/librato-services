@@ -1,6 +1,7 @@
 require 'hipchat-api'
 
 class Service::Hipchat < Service
+  attr_writer :hipchat
 
   # Required parameters:
   #
