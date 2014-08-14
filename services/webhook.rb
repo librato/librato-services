@@ -52,6 +52,10 @@ class Service::Webhook < Service
 
     http_post url, {:payload => Yajl::Encoder.encode(result)}
   rescue Faraday::Error::ConnectionFailed
-    raise_error "Connection refused — invalid URL."
+    log("Connection failed for url: #{url}")
+  end
+
+  def log(msg)
+    Rails.logger.info(msg) if defined?(Rails)
   end
 end
