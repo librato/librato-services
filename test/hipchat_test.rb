@@ -74,6 +74,20 @@ class HipchatTest < Librato::Services::TestCase
     assert alert_message == fake_hipchat.message
   end
 
+  def test_failure
+    fake_hipchat = FakeHipchat.new(false) # will return a false success response
+    service = service(:alert, @settings, alert_payload)
+    service.hipchat = fake_hipchat
+    failed = false
+    begin
+      service.receive_alert
+    rescue Exception
+      # ok
+      failed = true
+    end
+    assert failed
+  end
+
   def test_snapshot
     fake_hipchat = FakeHipchat.new
     service = service(:snapshot, @settings, snapshot_payload)
