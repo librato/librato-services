@@ -1,6 +1,7 @@
 require 'hipchat-api'
 
 class Service::Hipchat < Service
+  attr_writer :hipchat
 
   # Required parameters:
   #
@@ -90,7 +91,8 @@ class Service::Hipchat < Service
   end
 
   def send_message(msg, format)
-    hipchat.rooms_message(settings[:room_id], settings[:from], msg,
-                         settings[:notify].to_i, 'yellow', format)
+    r = hipchat.rooms_message(settings[:room_id], settings[:from], msg,
+                              settings[:notify].to_i, 'yellow', format)
+    raise Exception.new(r) unless r.success?
   end
 end
