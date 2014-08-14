@@ -16,6 +16,15 @@ module Librato
       def self.receive(event, settings, payload, *args)
         svc = new(event, settings, payload)
 
+        if event.to_s == "alert" && payload[:clear]
+          event_method = "receive_alert_clear"
+          if !svc.respond_to?(event_method)
+            return false
+          end
+          svc.send(event_method, *args)
+          return true
+        end
+
         event_method = "receive_#{event}".to_sym
         if svc.respond_to?(event_method)
           # XXX: Need a timeout!
