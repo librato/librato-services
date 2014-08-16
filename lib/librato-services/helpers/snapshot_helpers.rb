@@ -4,6 +4,9 @@ module Librato
   module Services
     module Helpers
       module SnapshotHelpers
+        DEFAULT_SNAPSHOT_WIDTH  = 600
+        DEFAULT_SNAPSHOT_HEIGHT = 416
+
         def self.sample_snapshot_payload
           {
             :snapshot => {
