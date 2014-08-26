@@ -21,7 +21,7 @@ class Service::Slack < Service
         {
           :fallback => format_fallback(data),
           :color => VERTICAL_LINE_COLOR,
-          :pretext => "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!",
+          :pretext => "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered! Runbook <#{data.alert[:runbook_url]}|#{data.alert[:runbook_url]}>",
           :fields => data.violations.map do |source, measurements|
             {
               :title => source,
