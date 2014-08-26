@@ -16,12 +16,17 @@ class Service::Slack < Service
 
   def v2_alert_result
     data = Librato::Services::Output.new(payload)
+
+    pretext = "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!"
+    if runbook_url = data.alert[:runbook_url]
+      pretext << "Runbook: <#{runbook_url}|#{runbook_url}>"
+    end
     {
       :attachments => [
         {
           :fallback => format_fallback(data),
           :color => VERTICAL_LINE_COLOR,
-          :pretext => "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered! Runbook <#{data.alert[:runbook_url]}|#{data.alert[:runbook_url]}>",
+          :pretext => pretext,
           :fields => data.violations.map do |source, measurements|
             {
               :title => source,
