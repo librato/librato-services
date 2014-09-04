@@ -6,14 +6,16 @@ class Service::Campfire < Service
   attr_writer :campfire
 
   def receive_validate(errors = {})
-    success = true
     [:subdomain, :token, :room].each do |k|
       if settings[k].to_s.empty?
-        errors[k] = "Is required"
-        success = false
+        errors[k] = "is required"
       end
     end
-    success
+
+    # Remove any surrounding whitespace from token
+    settings[:token].strip! if errors.empty?
+
+    errors.empty?
   end
 
   def receive_snapshot

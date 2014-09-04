@@ -22,6 +22,14 @@ class PagerdutyTest < Librato::Services::TestCase
     end
   end
 
+  def test_receive_validate_strips_token
+    settings = {service_key: ' abc ', event_type: 't', description: 'd'}
+    payload = {}
+    service = service(:dummy, settings, payload)
+    assert service.receive_validate
+    assert settings[:service_key] == 'abc', "Expected token whitespace to be stripped"
+  end
+
   def test_alerts_multiple_measurements
     svc = service(:alert, {
                     :service_key => 'k',

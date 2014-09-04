@@ -13,8 +13,11 @@ class Service::Hipchat < Service
   #         for people in the room (0 | 1)
   def receive_validate(errors = {})
     [:auth_token, :from, :room_id, :notify].each do |k|
-      errors[k] = "Is required" if settings[k].to_s.empty?
+      errors[k] = "is required" if settings[k].to_s.empty?
     end
+
+    # Remove any surrounding whitespace from token
+    settings[:auth_token].strip! if errors.empty?
 
     errors.empty?
   end

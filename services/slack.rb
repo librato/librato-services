@@ -9,9 +9,8 @@ class Service::Slack < Service
   def receive_validate(errors = {})
     unless settings[:url]
       errors[:url] = "Is required"
-      return false
     end
-    true
+    errors.empty?
   end
 
   def v2_alert_result

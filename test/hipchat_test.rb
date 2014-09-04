@@ -39,12 +39,20 @@ class HipchatTest < Librato::Services::TestCase
   end
 
   def test_receive_validate_missing_arguments
+    settings = payload = {}
+    service = service(:dummy, settings, payload)
     errors = {}
-    opts = {}
-    service = service(:alert, {}, alert_payload)
     result = service.receive_validate(errors)
-    assert !result
-    @settings.keys.each {|setting| assert_equal "Is required", errors[setting]}
+    refute result
+    @settings.keys.each {|setting| assert_equal "is required", errors[setting]}
+  end
+
+  def test_receive_validate_strips_token
+    @settings[:auth_token] = ' abc '
+    payload = {}
+    service = service(:dummy, @settings, payload)
+    assert service.receive_validate
+    assert @settings[:auth_token] == 'abc', "Expected token whitespace to be stripped"
   end
 
   def test_alert_multiple_measurements

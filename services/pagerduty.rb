@@ -3,15 +3,17 @@
 # Initial implementation by Mike Heffner:
 #  https://github.com/librato/papertrail_pagerduty_webhook
 class Service::Pagerduty < Service
-  def receive_validate(errors)
-    success = true
+  def receive_validate(errors={})
     [:service_key, :event_type, :description].each do |k|
       if settings[k].to_s.empty?
-        errors[k] = "Is required"
-        success = false
+        errors[k] = "is required"
       end
     end
-    success
+
+    # Remove any surrounding whitespace from token
+    settings[:service_key].strip! if errors.empty?
+
+    errors.empty?
   end
 
   def receive_alert

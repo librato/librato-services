@@ -79,6 +79,14 @@ class CampfireTest < Librato::Services::TestCase
     #assert_equal 1, svc.campfire.rooms.first.pastes.size # logs
   end
 
+  def test_receive_validate_strips_token
+    settings = {token: ' abc ', subdomain: 's', room: 'r'}
+    payload = {}
+    service = service(:dummy, settings, payload)
+    assert service.receive_validate
+    assert settings[:token] == 'abc', "Expected token whitespace to be stripped"
+  end
+
   def service(*args)
     super Service::Campfire, *args
   end

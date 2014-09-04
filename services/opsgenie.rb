@@ -1,13 +1,15 @@
 class Service::OpsGenie < Service
-  def receive_validate(errors)
-    success = true
-    [:customer_key ].each do |k|
+  def receive_validate(errors={})
+    [:customer_key].each do |k|
       if settings[k].to_s.empty?
-        errors[k] = "Is required"
-        success = false
+        errors[k] = "is required"
       end
     end
-    success
+
+    # Remove any surrounding whitespace from token
+    settings[:customer_key].strip! if errors.empty?
+
+    errors.empty?
   end
 
   def receive_alert

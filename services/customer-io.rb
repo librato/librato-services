@@ -11,9 +11,16 @@ class Service::CustomerIo < Service
   attr_writer :client
 
   def receive_validate(errors = {})
-    [:site_id, :api_key, :event_name].any? { |k|
-      settings[k].to_s.empty? && errors[k] = "Is required"
-    }
+    [:site_id, :api_key, :event_name].each do |k|
+      if settings[k].to_s.empty?
+        errors[k] = "is required"
+      end
+    end
+
+    # Remove any surrounding whitespace from token
+    settings[:api_key].strip! if errors.empty?
+
+    errors.empty?
   end
 
   def receive_alert

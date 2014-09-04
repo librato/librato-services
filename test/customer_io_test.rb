@@ -14,6 +14,23 @@ class CustomerIoTest < Librato::Services::TestCase
 
   end
 
+  def test_receive_validate
+    errors = {}
+    settings = {site_id: 'x', api_key: 'x', event_name: 'test_event'}
+    service = service(:dummy, settings, {})
+    result = service.receive_validate(errors)
+    assert result, "Expected validate to return true"
+    assert errors.empty?, "Expected errors to be empty"
+  end
+
+  def test_receive_validate_strips_token
+    settings = {site_id: 'x', api_key: ' abc ', event_name: 'test_event'}
+    service = service(:dummy, settings, {})
+    result = service.receive_validate
+    assert result, "Expected validate to return true"
+    assert settings[:api_key] == 'abc', "Expected token whitespace to be stripped"
+  end
+
   def test_alerts
     svc = service(:alert,
                   {"site_id" => "x", "api_key" => "x", "event_name" => "test_event"}.with_indifferent_access,
