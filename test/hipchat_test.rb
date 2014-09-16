@@ -1,4 +1,5 @@
 require File.expand_path('../helper', __FILE__)
+require 'timeout'
 
 class HipchatTest < Librato::Services::TestCase
   def setup
@@ -12,6 +13,27 @@ class HipchatTest < Librato::Services::TestCase
     end
     def success?
       @success
+    end
+  end
+
+  class TimesOutOnceHipchat
+    attr_writer :success
+    attr_accessor :times
+    def initialize(success = true)
+      @success=success
+      @messages = []
+      @times = 0
+    end
+    def rooms_message(room_id, from, msg, notify, color, format)
+      @times += 1
+      if @times == 1
+        raise Timeout::Error
+      end
+      @messages << msg
+      FakeResponse.new(@success)
+    end
+    def message(idx=0)
+      @messages[idx]
     end
   end
 
@@ -63,6 +85,16 @@ class HipchatTest < Librato::Services::TestCase
     alert_message = service.alert_message
     service.receive_alert
     assert alert_message == fake_hipchat.message
+  end
+
+  def test_alert_retries_on_timeout
+    fake_hipchat = TimesOutOnceHipchat.new
+    service = service(:alert, @settings, new_alert_payload)
+    service.hipchat = fake_hipchat
+    alert_message = service.alert_message
+    service.receive_alert
+    assert alert_message == fake_hipchat.message
+    assert fake_hipchat.times == 2 # was called twice
   end
 
   def test_alert
