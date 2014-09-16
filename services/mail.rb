@@ -4,15 +4,21 @@ require 'mail'
 
 class Service::Mail < Service
   def receive_validate(errors)
-    if settings[:addresses].to_s.empty?
+    addresses = settings[:addresses]
+    if addresses.to_s.empty?
       errors[:addresses] = "Is required"
-      false
-    elsif settings[:addresses].class != String
-      errors[:addresses] = "Must be a comma-separated string"
-      false
-    else
-      true
+      return false
     end
+    if addresses.class != String
+      errors[:addresses] = "Must be a comma-separated string"
+      return false
+    end
+    addresses = addresses.to_s.strip
+    if addresses =~ /\s/
+      errors[:addresses] = "Must be a comma-separated string"
+      return false
+    end
+    true
   end
 
   def receive_alert
