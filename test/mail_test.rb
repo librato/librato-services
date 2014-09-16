@@ -16,6 +16,11 @@ class MailTest < Librato::Services::TestCase
     assert(svc.receive_validate(errors))
     assert_equal(0, errors.length)
 
+    svc = service(:alert, { :addresses => 'fred@barn.com, collin@barn.com' }, alert_payload)
+    errors = {}
+    assert(svc.receive_validate(errors))
+    assert_equal(0, errors.length)
+
     svc = service(:alert, { :addresses => 'fred@barn.com collin@barn.com' }, alert_payload)
     errors = {}
     assert(!svc.receive_validate(errors))

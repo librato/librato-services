@@ -14,9 +14,11 @@ class Service::Mail < Service
       return false
     end
     addresses = addresses.to_s.strip
-    if addresses =~ /\s/
-      errors[:addresses] = "Must be a comma-separated string"
-      return false
+    addresses.split(/,/).each do |address|
+      if address.strip =~ /\s/
+        errors[:addresses] = "Must be a comma-separated string"
+        return false
+      end
     end
     true
   end
