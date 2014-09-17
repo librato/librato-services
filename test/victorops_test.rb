@@ -3,23 +3,31 @@ require File.expand_path('../helper', __FILE__)
 class VictorOpsTest < Librato::Services::TestCase
 
   def setup
+    @settings = { api_key: 'some_keys', routing_key: 'five' }
     @stubs = Faraday::Adapter::Test::Stubs.new do |stub|
-      stub.post('/integrations/generic/20131114/f0c05b89-7099-45b3-9c0e-f8c9a8f8a97b'){ |env| [200, {}, ''] }
+      stub.post("/integrations/generic/20131114/alert/#{@settings[:api_key]}/#{@settings[:routing_key]}"){ |env| [200, {}, ''] }
+      stub.post("/integrations/generic/20131114/alert/#{@settings[:api_key]}/nil"){ |env| [200, {}, ''] }
     end
-
-    @params = { api_key: 'f0c05b89-7099-45b3-9c0e-f8c9a8f8a97b' }
   end
 
   def test_validattions
+    svc = service(:alert, @settings, alert_payload)
+    errors = {}
+    assert svc.receive_validate(errors), 'Validation was false'
+    assert_equal 0, errors.length
 
+    # Test missing API key
+    svc = service(:alert, {}, alert_payload)
+    errors = {}
+    assert !svc.receive_validate(errors), 'Validation was false'
+    assert_equal 1, errors.length
   end
 
   def test_alerts
-    svc = service(:alert, @params, alert_payload)
-    @stubs.post '/generic/2010-04-15/create_event.json' do |env|
-      [200, {}, '']
-    end
-    svc.receive_alert
+    service(:alert, @settings, alert_payload).receive_alert
+    settings_no_routing_key = @settings.dup
+    settings_no_routing_key.delete :routing_key
+    service(:alert, settings_no_routing_key, alert_payload).receive_alert
   end
 
   def service(*args)

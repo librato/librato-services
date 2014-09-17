@@ -1,48 +1,40 @@
 require 'uri'
-require 'debugger'
 
 class Service::VictorOps < Service
-
-  MOCK = true
   REQUIRED_SETTING_KEYS = [:api_key]
 
   def receive_validate(errors = {})
     REQUIRED_SETTING_KEYS.inject(true) do |previous_passed, key|
-      key_not_found = settings[key].to_s.empty?
-      if key_not_found
-        errors[:name] = "Is required"
-        return false
-      end
-      previous_passed && key_not_found
+      key_found = !settings[key].to_s.empty?
+      errors[:name] = "Not found" unless key_found
+      previous_passed && key_found
     end
   end
 
   def receive_alert
-    stdout_logger "Payload: #{payload}"
-    stdout_logger "Settings: #{settings}"
+    body = settings.merge(flatten_hash payload)
+    body.delete :api_key
 
-    body = {
-      api_key: settings[:api_key],
-      event_type: settings[:event_type],
-      description: settings[:description],
-      monitoring_tool: 'librato'
-    }.merge(flatten_hash payload)
-    body[:entity_id] = settings[:incident_key] if settings[:incident_key]
+    # Keys that will soon be in the payload
+    body[:entity_id] = payload[:incident_key] || payload['alert']['id']
+    body[:clear] = payload[:clear] if payload[:clear]
 
-    uri = uri_for_key body[:api_key]
-    debugger
+    # Fire
+    uri = uri_for_key settings[:api_key]
     http_post uri, body, headers
+  end
+
+  def settings
+    @settings.merge({
+      monitoring_tool: 'librato'
+    })
   end
 
   private
 
-  def state_message
-    payload['payload']['alert']['name']
-  end
-
   def flatten_hash(payload)
     {
-      alert_name: payload['alert']['name'],
+      state_message: payload['alert']['name'] || 'No Alert Name Provided',
       metric_name: payload['metric']['name'],
       metric_type: payload['metric']['type'],
       measurment_name: payload['measurement']['value'],
@@ -58,24 +50,20 @@ class Service::VictorOps < Service
     }
   end
 
-  def uri_for_key(key); URI.join("#{http_scheme}#{host}", integrations_path_for_key(key) ); end
+  # Helpers
+  def uri_for_key(key)
+    File.join("#{http_scheme}#{host}", integrations_path_for_key(key), (settings[:routing_key] || 'nil')).to_s
+  end
 
   def host; 'alert.victorops.com'; end
 
   def http_scheme; 'https://'; end
 
-  def integrations_path_for_key(key); URI.join(integrations_path, key) ;end
+  def integrations_path_for_key(key); File.join(integrations_path, key).to_s ;end
 
-  def integrations_path; "https://alert.victorops.com/integrations/generic/20131114/alert"; end
+  def integrations_path; "integrations/generic/20131114/alert"; end
 
-  def stdout_logger(msg)
-    return unless MOCK
-    "VICTOROPS SERVICE: " + msg
-  end
+  def stdout_logger(msg); "VICTOROPS SERVICE: " + msg; end
 
-  def headers
-    {
-      'Content-Type' => 'application/json'
-    }
-  end
+  def headers; { 'Content-Type' => 'application/json' }; end
 end
