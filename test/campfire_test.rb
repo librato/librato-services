@@ -35,6 +35,13 @@ class CampfireTest < Librato::Services::TestCase
     end
   end
 
+  def test_campfire_hostname
+    svc = service(:alert, {"token" => "t", "subdomain" => "s", "room" => "r"}.with_indifferent_access, new_alert_payload)
+    assert_equal "s", svc.campfire_hostname
+    svc = service(:alert, {"token" => "t", "subdomain" => "s.campfirenow.com", "room" => "r"}.with_indifferent_access, new_alert_payload)
+    assert_equal "s", svc.campfire_hostname
+  end
+
   def test_new_alerts_payload
     svc = service(:alert, {"token" => "t", "subdomain" => "s", "room" => "r"}.with_indifferent_access, new_alert_payload)
     svc.campfire = MockCampfire.new

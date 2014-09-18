@@ -96,7 +96,8 @@ class Service::Campfire < Service
   end
 
   def campfire_hostname
-    settings[:subdomain].to_s[/^(.+)(\.campfirenow\.com)?$/, 1]
+    subdomain = settings[:subdomain].to_s
+    subdomain.to_s[/^(.+?)(\.campfirenow\.com)?$/, 1]
   end
 
   def campfire
