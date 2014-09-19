@@ -21,6 +21,17 @@ class Service::Webhook < Service
     return true
   end
 
+  def receive_alert_clear
+    raise_config_error unless receive_validate({})
+    uri = URI.parse(settings[:url])
+    result = {
+      :alert => payload['alert'],
+      :trigger_time => payload['trigger_time'],
+      :clear => true
+    }
+    post_it(uri, result)
+  end
+
   def receive_alert
     raise_config_error unless receive_validate({})
     uri = URI.parse(settings[:url])
@@ -43,14 +54,16 @@ class Service::Webhook < Service
       }
     end
 
+    post_it(uri, result)
+  end
+
+  def post_it(uri, hash)
     # Faraday doesn't unescape user and password
     if uri.userinfo
       http.basic_auth *uri.userinfo.split(":").map{|x| CGI.unescape(x)}
     end
-
     url = "%s://%s:%d%s" % [uri.scheme, uri.host, uri.port, uri.request_uri]
-
-    http_post url, {:payload => Yajl::Encoder.encode(result)}
+    http_post url, {:payload => Yajl::Encoder.encode(hash)}
   rescue Faraday::Error::ConnectionFailed
     log("Connection failed for url: #{url} for payload: #{payload.inspect}")
   end

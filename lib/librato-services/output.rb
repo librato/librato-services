@@ -9,18 +9,22 @@ module Librato
     class Output
       include Helpers::AlertHelpers
 
-      attr_reader :violations, :conditions, :alert
+      attr_reader :violations, :conditions, :alert, :clear
       def initialize(payload)
-        if !payload[:conditions] || !payload[:violations]
-          raise "Invalid payload: #{payload}"
-        end
+        if !payload[:clear]
+          # conditions and violations are required for faults
+          if !payload[:conditions] || !payload[:violations] && !payload[:clear]
+            raise "Invalid payload: #{payload}"
+          end
 
-        @conditions = payload[:conditions].inject({}) do |injected, value|
-          injected[value[:id]] = value
-          injected
+          @conditions = payload[:conditions].inject({}) do |injected, value|
+            injected[value[:id]] = value
+            injected
+          end
+          @violations = payload[:violations]
         end
-        @violations = payload[:violations]
         @alert = payload[:alert]
+        @clear = payload[:clear]
       end
 
       def html
@@ -36,6 +40,14 @@ module Librato
       end
 
       def generate_markdown
+        if @clear
+          generate_alert_cleared
+        else
+          generate_alert_raised
+        end
+      end
+
+      def generate_alert_raised
         result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
         result_array << "Link: #{alert_link(@alert[:id])}\n"
         @violations.each do |source, measurements|
@@ -50,6 +62,10 @@ module Librato
           result_array << "Runbook: #{runbook_url}\n"
         end
         result_array.join("\n")
+      end
+
+      def generate_alert_cleared
+        return "# Alert #{@alert[:name]} has cleared\n"
       end
 
       def format_measurement(measurement)
