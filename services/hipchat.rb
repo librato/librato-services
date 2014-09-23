@@ -20,6 +20,10 @@ class Service::Hipchat < Service
     errors.empty?
   end
 
+  def receive_alert_clear
+    receive_alert
+  end
+
   def receive_alert
     raise_config_error unless receive_validate({})
     if payload[:alert][:version] == 2

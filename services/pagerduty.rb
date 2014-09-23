@@ -14,6 +14,10 @@ class Service::Pagerduty < Service
     success
   end
 
+  def receive_alert_clear
+    receive_alert
+  end
+
   def receive_alert
     raise_config_error unless receive_validate({})
 
@@ -30,9 +34,12 @@ class Service::Pagerduty < Service
       :details => pd_payload
     }
 
+    body[:event_type] = payload[:clear] ? "resolve" : "trigger"
     body[:details][:metric_link] = payload_link(payload)
-
-    body[:incident_key] = settings[:incident_key] if settings[:incident_key]
+    keys = [settings[:incident_key], payload[:incident_key]].compact
+    if keys.size > 0
+      body[:incident_key] = keys.join("-")
+    end
 
     url = "https://events.pagerduty.com/generic/2010-04-15/create_event.json"
 

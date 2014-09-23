@@ -23,9 +23,12 @@ class Service::Mail < Service
     true
   end
 
+  def receive_alert_clear
+    receive_alert
+  end
+
   def receive_alert
     raise_config_error unless receive_validate({})
-
     mm = mail_message
     mm.deliver unless mm.to.empty?
   end

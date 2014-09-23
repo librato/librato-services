@@ -41,6 +41,7 @@ module Librato
         def self.sample_new_alert_payload
           ::HashWithIndifferentAccess.new({
             user_id: 1,
+            incident_key: "foo",
             alert: {id: 123, name: "Some alert name", version: 2},
             auth: {email:"foo@example.com", annotations_token:"lol"},
             service_type: "campfire",

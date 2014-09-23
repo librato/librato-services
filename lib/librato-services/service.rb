@@ -19,7 +19,7 @@ module Librato
         if event.to_s == "alert" && payload[:clear]
           event_method = "receive_alert_clear"
           if !svc.respond_to?(event_method)
-            return false
+            return true
           end
           svc.send(event_method, *args)
           return true

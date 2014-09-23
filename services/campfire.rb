@@ -34,6 +34,11 @@ class Service::Campfire < Service
                 payload[:snapshot][:image_url]])
   end
 
+  def receive_alert_clear
+    output = Librato::Services::Output.new(payload)
+    paste_message output.markdown
+  end
+
   def receive_alert
     raise_config_error unless receive_validate({})
 
