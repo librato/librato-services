@@ -65,7 +65,9 @@ module Librato
       end
 
       def generate_alert_cleared
-        return "# Alert #{@alert[:name]} has cleared\n"
+        lines = ["# Alert #{@alert[:name]} has cleared\n"]
+        lines << "Link: #{alert_link(@alert[:id])}\n"
+        lines.join("\n")
       end
 
       def format_measurement(measurement)
