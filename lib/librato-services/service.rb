@@ -7,6 +7,7 @@ Dir[File.join(File.dirname(__FILE__), 'helpers/*helpers*')].each { |helper|
 require 'helpers/alert_helpers'
 require 'faraday'
 require 'output'
+require 'timeout'
 
 module Librato
   module Services
@@ -27,11 +28,9 @@ module Librato
 
         event_method = "receive_#{event}".to_sym
         if svc.respond_to?(event_method)
-          # XXX: Need a timeout!
-          #Timeout.timeout(TIMEOUT, TimeoutError) do
-          svc.send(event_method, *args)
-          #end
-
+          Timeout.timeout(TIMEOUT) do
+            svc.send(event_method, *args)
+          end
           true
         else
           false
