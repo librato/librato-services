@@ -31,10 +31,8 @@ module Librato
           begin
             Timeout.timeout(TIMEOUT) do
               svc.send(event_method, *args)
-            end
-          rescue Timeout::Error
-            raise 
           end
+        end
           true
         else
           false

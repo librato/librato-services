@@ -15,9 +15,13 @@ class TimeoutServiceTest < Librato::Services::TestCase
     event = :timeout_request
     settings = {}
     payload = { }
+    failed = false
     begin
-      assert TimeoutService.receive(event, settings, payload)
+      TimeoutService.receive(event, settings, payload)
     rescue Timeout::Error => e
+      # ok
+      failed = true
     end
+    assert failed
   end
 end
