@@ -28,11 +28,9 @@ module Librato
 
         event_method = "receive_#{event}".to_sym
         if svc.respond_to?(event_method)
-          begin
-            Timeout.timeout(TIMEOUT) do
-              svc.send(event_method, *args)
+          Timeout.timeout(TIMEOUT) do
+            svc.send(event_method, *args)
           end
-        end
           true
         else
           false
