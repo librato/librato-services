@@ -58,11 +58,28 @@ class MailTest < Librato::Services::TestCase
     svc.receive_alert
   end
 
-  def test_mail_message
+  def test_mail_message_alert
     svc = service(:alert, { :addresses => 'fred@barn.com' }, alert_payload)
-
     message = svc.mail_message
+    assert_equal "[Librato] Alert  has triggered!", message.subject
+    assert_not_nil message
+    assert(!message.to.empty?)
+  end
 
+  def test_mail_message_new_alert
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, new_alert_payload)
+    message = svc.mail_message
+    assert_equal "[Librato] Alert Some alert name has triggered!", message.subject
+    assert_not_nil message
+    assert(!message.to.empty?)
+  end
+
+  def test_mail_message_new_alert_clear
+    payload = new_alert_payload.dup
+    payload[:clear] = true
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    message = svc.mail_message
+    assert_equal "[Librato] Alert Some alert name has cleared.", message.subject
     assert_not_nil message
     assert(!message.to.empty?)
   end

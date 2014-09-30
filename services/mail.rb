@@ -44,7 +44,11 @@ class Service::Mail < Service
       mail.from    'Librato Metrics <metrics@librato.com>'
       mail.to      mail_addresses
       mail.header['X-Mailgun-Tag'] = 'alerts'
-      mail.subject %{[Librato] Alert #{payload[:alert][:name]} has triggered!}
+      if payload[:clear]
+        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has cleared.}
+      else
+        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has triggered!}
+      end
 
       if payload[:alert][:version] == 2
         output = Librato::Services::Output.new(payload)
