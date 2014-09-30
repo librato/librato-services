@@ -1,5 +1,3 @@
-
-
 Dir[File.join(File.dirname(__FILE__), 'helpers/*helpers*')].each { |helper|
   require helper
 }
@@ -12,7 +10,6 @@ require 'timeout'
 module Librato
   module Services
     class Service
-      TIMEOUT = 20
 
       def self.receive(event, settings, payload, *args)
         svc = new(event, settings, payload)
@@ -28,13 +25,17 @@ module Librato
 
         event_method = "receive_#{event}".to_sym
         if svc.respond_to?(event_method)
-          Timeout.timeout(TIMEOUT) do
+          Timeout.timeout(timeout_seconds) do
             svc.send(event_method, *args)
           end
           true
         else
           false
         end
+      end
+
+      def self.timeout_seconds
+        @timeout_seconds ||= 20
       end
 
       def self.services
