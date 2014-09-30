@@ -41,7 +41,7 @@ class Service::Mail < Service
   def mail_message
     @mail_message ||= begin
       mail = ::Mail.new
-      mail.from    'Librato Metrics <metrics@librato.com>'
+      mail.from    'Librato <metrics@librato.com>'
       mail.to      mail_addresses
       mail.header['X-Mailgun-Tag'] = 'alerts'
       if payload[:clear]
