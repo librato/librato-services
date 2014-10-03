@@ -80,7 +80,7 @@ class PagerdutyTest < Librato::Services::TestCase
 
   def test_new_alerts_clearing
     payload = new_alert_payload.dup
-    payload[:clear] = true
+    payload[:clear] = "manual"
     svc = service(:alert, {
                     :service_key => 'k',
                     :event_type => 't',

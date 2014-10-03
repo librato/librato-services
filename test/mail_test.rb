@@ -76,7 +76,7 @@ class MailTest < Librato::Services::TestCase
 
   def test_mail_message_new_alert_clear
     payload = new_alert_payload.dup
-    payload[:clear] = true
+    payload[:clear] = "manual"
     svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
     message = svc.mail_message
     assert_equal "[Librato] Alert Some alert name has cleared.", message.subject
