@@ -27,7 +27,7 @@ class Service::Webhook < Service
     result = {
       :alert => payload['alert'],
       :trigger_time => payload['trigger_time'],
-      :clear => "auto"
+      :clear => true
     }
     post_it(uri, result)
   end
