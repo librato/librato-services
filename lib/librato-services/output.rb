@@ -9,7 +9,7 @@ module Librato
     class Output
       include Helpers::AlertHelpers
 
-      attr_reader :violations, :conditions, :alert, :clear
+      attr_reader :violations, :conditions, :alert, :clear, :trigger_time
       def initialize(payload)
         if !payload[:clear]
           # conditions and violations are required for faults
@@ -25,6 +25,7 @@ module Librato
         end
         @alert = payload[:alert]
         @clear = payload[:clear]
+        @trigger_time = payload[:trigger_time]
       end
 
       def html
@@ -65,7 +66,7 @@ module Librato
       end
 
       def generate_alert_cleared
-        lines = ["# Alert #{@alert[:name]} has cleared\n"]
+        lines = ["# Alert #{@alert[:name]} has cleared at #{Time.at(trigger_time).utc}\n"]
         lines << "Link: #{alert_link(@alert[:id])}\n"
         lines.join("\n")
       end

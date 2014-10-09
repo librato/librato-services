@@ -2,6 +2,24 @@ require File.expand_path('../helper', __FILE__)
 
 class Librato::Services::OutputTestCase < Test::Unit::TestCase
   ENV['METRICS_APP_URL'] = 'metrics.librato.com'
+  def test_clear
+    payload = {
+      alert: {id: 123, name: "Some alert name", version: 2},
+      settings: {},
+      service_type: "campfire",
+      event_type: "alert",
+      trigger_time: 12321123,
+      clear: "manual"
+    }
+    output = Librato::Services::Output.new(payload)
+    expected = <<EOF
+# Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC
+
+Link: https://metrics.librato.com/alerts/123
+EOF
+    assert_equal(expected, output.markdown)
+  end
+
   def test_simple_alert
     payload = {
       alert: {id: 123, name: "Some alert name", version: 2},
