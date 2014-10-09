@@ -12,7 +12,7 @@ class Service::VictorOps < Service
   end
 
   def receive_alert
-    body = settings.merge(flatten_hash payload)
+    body = settings.merge(flatten_hash(payload))
     body.delete :api_key
 
     # Keys that will soon be in the payload
@@ -20,8 +20,8 @@ class Service::VictorOps < Service
     body[:clear] = payload[:clear] if payload[:clear]
 
     # Fire
-    uri = uri_for_key settings[:api_key]
-    http_post uri, body, headers
+    uri = uri_for_key(settings[:api_key])
+    http_post(uri, body, headers)
   end
 
   def settings
@@ -46,7 +46,6 @@ class Service::VictorOps < Service
     {
       message_type: type,
       entity_id: null,
-
     }
   end
 

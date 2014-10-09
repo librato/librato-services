@@ -10,7 +10,7 @@ class VictorOpsTest < Librato::Services::TestCase
     end
   end
 
-  def test_validattions
+  def test_validations
     svc = service(:alert, @settings, alert_payload)
     errors = {}
     assert svc.receive_validate(errors), 'Validation was false'
@@ -19,7 +19,7 @@ class VictorOpsTest < Librato::Services::TestCase
     # Test missing API key
     svc = service(:alert, {}, alert_payload)
     errors = {}
-    assert !svc.receive_validate(errors), 'Validation was false'
+    assert !svc.receive_validate(errors), 'Validation was true'
     assert_equal 1, errors.length
   end
 
