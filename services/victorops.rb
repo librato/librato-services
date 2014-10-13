@@ -11,13 +11,30 @@ class Service::VictorOps < Service
     end
   end
 
+  def receive_alert_clear
+    receive_alert
+  end
+
   def receive_alert
+    raise_config_error unless receive_validate({})
+
+    # New-style alerts
+    if payload[:alert][:version] == 1
+      stdout_logger "Only version 2 and greater alerts supported"
+      return true
+    end
+
     body = settings.merge(flatten_hash(payload))
     body.delete :api_key
 
     # Keys that will soon be in the payload
     body[:entity_id] = payload[:incident_key] || payload['alert']['id']
-    body[:clear] = payload[:clear] if payload[:clear]
+    if payload[:clear]
+      body[:clear] = payload[:clear]
+      body[:message_type] = "CRITICAL"
+    else
+      body[:message_type] = "RECOVERY"
+    end
 
     # Fire
     uri = uri_for_key(settings[:api_key])
@@ -39,13 +56,6 @@ class Service::VictorOps < Service
       metric_type: payload['metric']['type'],
       measurment_name: payload['measurement']['value'],
       measurment_source: payload['measurement']['source']
-    }
-  end
-
-  def alert_for_type(type)
-    {
-      message_type: type,
-      entity_id: null,
     }
   end
 
