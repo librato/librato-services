@@ -11,6 +11,12 @@ class Service::Slack < Service
       errors[:url] = "Is required"
       return false
     end
+    begin
+      URI.parse(settings[:url])
+    rescue => e
+      errors[:url] = "Is not valid"
+      return false
+    end
     true
   end
 
