@@ -7,7 +7,7 @@ class Service::Slack < Service
   VERTICAL_LINE_COLOR = "#0880ad"
 
   def receive_validate(errors = {})
-    unless settings[:url]
+    if settings[:url].blank?
       errors[:url] = "Is required"
       return false
     end

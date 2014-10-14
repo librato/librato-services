@@ -13,6 +13,12 @@ class SlackTest < Librato::Services::TestCase
     assert(svc.receive_validate(errors))
     assert_equal(0, errors.length)
 
+    # the url is non-nil, but blank
+    svc = service(:alert, @settings.merge(:url => ''), new_alert_payload)
+    errors = {}
+    assert(!svc.receive_validate(errors))
+    assert_equal(1, errors.length)
+
     # the '/' in the token in this case is invalid
     svc = service(:alert, @settings.merge(:url => 'https://slack.com/services/hooks/slackbot?token=test_token\&test=true'), new_alert_payload)
     errors = {}
