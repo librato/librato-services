@@ -15,7 +15,15 @@ class Service::OpsGenie < Service
     if settings[:recipients].to_s.empty?
       settings[:recipients] = "all"
     end
-    message = "Alert #{payload[:alert][:name]} has cleared"
+    trigger_time_utc = Time.at(payload[:trigger_time]).utc
+    message = case payload[:clear]
+              when "manual"
+                "Alert #{payload[:alert][:name]} was manually cleared at #{trigger_time_utc}"
+              when "auto"
+                "Alert #{payload[:alert][:name]} was automatically cleared at #{trigger_time_utc}"
+              else
+                "Alert #{payload[:alert][:name]} has cleared at #{trigger_time_utc}"
+              end
     do_post(payload[:alert][:name], message, payload)
     return
   end

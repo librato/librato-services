@@ -66,7 +66,16 @@ module Librato
       end
 
       def generate_alert_cleared
-        lines = ["# Alert #{@alert[:name]} has cleared at #{Time.at(trigger_time).utc}\n"]
+        alert_name = @alert[:name]
+        trigger_time_utc = Time.at(trigger_time).utc
+        case clear
+        when "auto"
+          lines = ["# Alert #{alert_name} was automatically cleared at #{trigger_time_utc}\n"]
+        when "manual"
+          lines = ["# Alert #{alert_name} was manually cleared at #{trigger_time_utc}\n"]
+        else
+          lines = ["# Alert #{alert_name} has cleared at #{trigger_time_utc}\n"]
+        end
         lines << "Link: #{alert_link(@alert[:id])}\n"
         lines.join("\n")
       end

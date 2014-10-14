@@ -74,12 +74,42 @@ class MailTest < Librato::Services::TestCase
     assert(!message.to.empty?)
   end
 
-  def test_mail_message_new_alert_clear
+  def test_mail_message_new_alert_clear_normal
+    payload = new_alert_payload.dup
+    payload[:clear] = "normal"
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    message = svc.mail_message
+    assert_equal "[Librato] Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC.", message.subject
+    assert_not_nil message
+    assert(!message.to.empty?)
+  end
+
+  def test_mail_message_new_alert_clear_unsupported
+    payload = new_alert_payload.dup
+    payload[:clear] = "unknown"
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    message = svc.mail_message
+    assert_equal "[Librato] Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC.", message.subject
+    assert_not_nil message
+    assert(!message.to.empty?)
+  end
+
+  def test_mail_message_new_alert_clear_manual
     payload = new_alert_payload.dup
     payload[:clear] = "manual"
     svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
     message = svc.mail_message
-    assert_equal "[Librato] Alert Some alert name has cleared.", message.subject
+    assert_equal "[Librato] Alert Some alert name was manually cleared at 1970-05-23 14:32:03 UTC.", message.subject
+    assert_not_nil message
+    assert(!message.to.empty?)
+  end
+
+  def test_mail_message_new_alert_clear_auto
+    payload = new_alert_payload.dup
+    payload[:clear] = "auto"
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    message = svc.mail_message
+    assert_equal "[Librato] Alert Some alert name was automatically cleared at 1970-05-23 14:32:03 UTC.", message.subject
     assert_not_nil message
     assert(!message.to.empty?)
   end
