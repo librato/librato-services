@@ -43,9 +43,24 @@ class SlackTest < Librato::Services::TestCase
     assert_raises(Librato::Services::Service::ConfigurationError) { svc.receive_alert }
   end
 
+  def test_v2_custom_alert_clear
+    payload = new_alert_payload.dup
+    payload[:clear] = "normal"
+    svc = service(:alert, @settings, payload)
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body])
+      assert_not_nil(payload["attachments"])
+      assert_equal(1, payload["attachments"].length)
+      attachment = payload["attachments"][0]
+      assert_equal(["color", "fallback", "text"], attachment.keys.sort)
+      assert_nil(payload["text"])
+      [200, {}, '']
+    end
+    svc.receive_alert
+  end
+
   def test_v2_custom_alerts
     svc = service(:alert, @settings, new_alert_payload)
-
     @stubs.post @stub_url do |env|
       payload = JSON.parse(env[:body])
       assert_not_nil(payload["attachments"])
@@ -59,7 +74,6 @@ class SlackTest < Librato::Services::TestCase
       assert_not_nil(attachment["mrkdwn_in"])
       [200, {}, '']
     end
-
     svc.receive_alert
   end
 
