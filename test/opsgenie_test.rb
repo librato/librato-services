@@ -13,7 +13,7 @@ class OpsGenieTest < Librato::Services::TestCase
     payload[:clear] = "normal"
     svc = service(:alert, @settings, payload)
     @stubs.post @stub_url do |env|
-      assert_equal("Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC", env[:body][:message])
+      assert_equal("Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC", env[:body][:note])
       [200, {}, '']
     end
     svc.receive_alert_clear
@@ -24,7 +24,7 @@ class OpsGenieTest < Librato::Services::TestCase
     payload[:clear] = "dont know"
     svc = service(:alert, @settings, payload)
     @stubs.post @stub_url do |env|
-      assert_equal("Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC", env[:body][:message])
+      assert_equal("Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC", env[:body][:note])
       [200, {}, '']
     end
     svc.receive_alert_clear
@@ -35,7 +35,7 @@ class OpsGenieTest < Librato::Services::TestCase
     payload[:clear] = "manual"
     svc = service(:alert, @settings, payload)
     @stubs.post @stub_url do |env|
-      assert_equal("Alert Some alert name was manually cleared at 1970-05-23 14:32:03 UTC", env[:body][:message])
+      assert_equal("Alert Some alert name was manually cleared at 1970-05-23 14:32:03 UTC", env[:body][:note])
       [200, {}, '']
     end
     svc.receive_alert_clear
@@ -46,7 +46,7 @@ class OpsGenieTest < Librato::Services::TestCase
     payload[:clear] = "auto"
     svc = service(:alert, @settings, payload)
     @stubs.post @stub_url do |env|
-      assert_equal("Alert Some alert name was automatically cleared at 1970-05-23 14:32:03 UTC", env[:body][:message])
+      assert_equal("Alert Some alert name was automatically cleared at 1970-05-23 14:32:03 UTC", env[:body][:note])
       [200, {}, '']
     end
     svc.receive_alert_clear

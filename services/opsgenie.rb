@@ -77,15 +77,22 @@ class Service::OpsGenie < Service
   end
 
   def do_post(name, message, details)
+    message = message[0,130] # opsgenie allows max 130 chars
     params = {
       :customerKey => settings[:customer_key],
       :recipients => settings[:recipients],
       :alias => name,
-      :message => message,
       :source => "Librato",
-      :details => details
+      :details => details,
+      :alias => payload[:incident_key]
     }
-    url = "https://api.opsgenie.com/v1/json/alert"
+    if payload[:clear]
+      url = "https://api.opsgenie.com/v1/json/alert/close"
+      params[:note] = message
+    else
+      params[:message] = message
+      url = "https://api.opsgenie.com/v1/json/alert"
+    end
     http_post url, params, 'Content-Type' => 'application/json'
   end
 end
