@@ -54,6 +54,62 @@ class SlackTest < Librato::Services::TestCase
       attachment = payload["attachments"][0]
       assert_equal(["color", "fallback", "text"], attachment.keys.sort)
       assert_nil(payload["text"])
+      assert_equal "Alert <https://metrics.librato.com/alerts/123|Some alert name> has cleared at 1970-05-23 14:32:03 UTC", attachment["text"]
+      assert_equal "Alert 'Some alert name' has cleared at 1970-05-23 14:32:03 UTC", attachment["fallback"]
+      [200, {}, '']
+    end
+    svc.receive_alert
+  end
+
+  def test_v2_custom_alert_clear_unknown
+    payload = new_alert_payload.dup
+    payload[:clear] = "dont know"
+    svc = service(:alert, @settings, payload)
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body])
+      assert_not_nil(payload["attachments"])
+      assert_equal(1, payload["attachments"].length)
+      attachment = payload["attachments"][0]
+      assert_equal(["color", "fallback", "text"], attachment.keys.sort)
+      assert_nil(payload["text"])
+      assert_equal "Alert <https://metrics.librato.com/alerts/123|Some alert name> has cleared at 1970-05-23 14:32:03 UTC", attachment["text"]
+      assert_equal "Alert 'Some alert name' has cleared at 1970-05-23 14:32:03 UTC", attachment["fallback"]
+      [200, {}, '']
+    end
+    svc.receive_alert
+  end
+
+  def test_v2_custom_alert_clear_manual
+    payload = new_alert_payload.dup
+    payload[:clear] = "manual"
+    svc = service(:alert, @settings, payload)
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body])
+      assert_not_nil(payload["attachments"])
+      assert_equal(1, payload["attachments"].length)
+      attachment = payload["attachments"][0]
+      assert_equal(["color", "fallback", "text"], attachment.keys.sort)
+      assert_nil(payload["text"])
+      assert_equal "Alert <https://metrics.librato.com/alerts/123|Some alert name> was manually cleared at 1970-05-23 14:32:03 UTC", attachment["text"]
+      assert_equal "Alert 'Some alert name' was manually cleared at 1970-05-23 14:32:03 UTC", attachment["fallback"]
+      [200, {}, '']
+    end
+    svc.receive_alert
+  end
+
+  def test_v2_custom_alert_clear_auto
+    payload = new_alert_payload.dup
+    payload[:clear] = "auto"
+    svc = service(:alert, @settings, payload)
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body])
+      assert_not_nil(payload["attachments"])
+      assert_equal(1, payload["attachments"].length)
+      attachment = payload["attachments"][0]
+      assert_equal(["color", "fallback", "text"], attachment.keys.sort)
+      assert_nil(payload["text"])
+      assert_equal "Alert <https://metrics.librato.com/alerts/123|Some alert name> was automatically cleared at 1970-05-23 14:32:03 UTC", attachment["text"]
+      assert_equal "Alert 'Some alert name' was automatically cleared at 1970-05-23 14:32:03 UTC", attachment["fallback"]
       [200, {}, '']
     end
     svc.receive_alert

@@ -25,11 +25,27 @@ class Service::Slack < Service
     runbook_url = data.alert[:runbook_url]
     trigger_time_utc = Time.at(data.trigger_time).utc
     if data.clear
+      text = case data.clear
+             when "manual"
+              "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> was manually cleared at #{trigger_time_utc}"
+             when "auto"
+               "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> was automatically cleared at #{trigger_time_utc}"
+             else
+               "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has cleared at #{trigger_time_utc}"
+             end
+      fallback = case data.clear
+                 when "manual"
+                   "Alert '#{data.alert[:name]}' was manually cleared at #{trigger_time_utc}"
+                 when "auto"
+                   "Alert '#{data.alert[:name]}' was automatically cleared at #{trigger_time_utc}"
+                 else
+                   "Alert '#{data.alert[:name]}' has cleared at #{trigger_time_utc}"
+                 end
       {
         :attachments => [
           {
-            :text => "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has cleared at #{trigger_time_utc}",
-            :fallback => "Alert '#{data.alert[:name]}' has cleared at #{trigger_time_utc}",
+            :text => text,
+            :fallback => fallback,
             :color => "#17B03C"
           }
         ]
