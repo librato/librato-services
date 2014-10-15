@@ -36,6 +36,9 @@ class Service::OpsGenie < Service
 
     if payload[:alert][:version] == 2
       message = "Alert #{payload[:alert][:name]} has triggered!"
+      payload = payload.dup
+      payload.delete(:auth)
+      payload.delete(:settings)
       do_post(payload[:alert][:name], message, payload)
       return
     end
