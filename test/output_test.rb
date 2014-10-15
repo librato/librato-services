@@ -9,9 +9,64 @@ class Librato::Services::OutputTestCase < Test::Unit::TestCase
       service_type: "campfire",
       event_type: "alert",
       trigger_time: 12321123,
+      clear: "normal"
+    }
+    output = Librato::Services::Output.new(payload)
+    expected = <<EOF
+# Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC
+
+Link: https://metrics.librato.com/alerts/123
+EOF
+    assert_equal(expected, output.markdown)
+  end
+
+  def test_clear_auto
+    payload = {
+      alert: {id: 123, name: "Some alert name", version: 2},
+      settings: {},
+      service_type: "campfire",
+      event_type: "alert",
+      trigger_time: 12321123,
+      clear: "auto"
+    }
+    output = Librato::Services::Output.new(payload)
+    expected = <<EOF
+# Alert Some alert name was automatically cleared at 1970-05-23 14:32:03 UTC
+
+Link: https://metrics.librato.com/alerts/123
+EOF
+    assert_equal(expected, output.markdown)
+  end
+
+  def test_clear_manual
+    payload = {
+      alert: {id: 123, name: "Some alert name", version: 2},
+      settings: {},
+      service_type: "campfire",
+      event_type: "alert",
+      trigger_time: 12321123,
       clear: "manual"
     }
     output = Librato::Services::Output.new(payload)
+    expected = <<EOF
+# Alert Some alert name was manually cleared at 1970-05-23 14:32:03 UTC
+
+Link: https://metrics.librato.com/alerts/123
+EOF
+    assert_equal(expected, output.markdown)
+  end
+
+  def test_clear_unknown
+    payload = {
+      alert: {id: 123, name: "Some alert name", version: 2},
+      settings: {},
+      service_type: "campfire",
+      event_type: "alert",
+      trigger_time: 12321123,
+      clear: "unsupported"
+    }
+    output = Librato::Services::Output.new(payload)
+    # fall back to the 'normal' case
     expected = <<EOF
 # Alert Some alert name has cleared at 1970-05-23 14:32:03 UTC
 
