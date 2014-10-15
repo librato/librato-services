@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "librato-services"
-  s.version = "2.19.0"
+  s.version = "2.24.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = "2014-10-09"
+  s.date = "2014-10-15"
   s.description = "Provides service notifications for alerts"
   s.email = "mike@librato.com"
   s.extra_rdoc_files = [
@@ -51,6 +51,7 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/hipchat_test.rb",
     "test/mail_test.rb",
+    "test/opsgenie_test.rb",
     "test/output_test.rb",
     "test/pagerduty_test.rb",
     "test/slack_test.rb",

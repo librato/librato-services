@@ -7,8 +7,14 @@ class Service::Slack < Service
   VERTICAL_LINE_COLOR = "#0880ad"
 
   def receive_validate(errors = {})
-    unless settings[:url]
+    if settings[:url].blank?
       errors[:url] = "Is required"
+      return false
+    end
+    begin
+      URI.parse(settings[:url])
+    rescue => e
+      errors[:url] = "Is not valid"
       return false
     end
     true
@@ -16,29 +22,59 @@ class Service::Slack < Service
 
   def v2_alert_result
     data = Librato::Services::Output.new(payload)
-
-    pretext = "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!"
-    if runbook_url = data.alert[:runbook_url]
-      pretext << "Runbook: <#{runbook_url}|#{runbook_url}>"
-    end
-    {
-      :attachments => [
+    runbook_url = data.alert[:runbook_url]
+    trigger_time_utc = Time.at(data.trigger_time).utc
+    if data.clear
+      text = case data.clear
+             when "manual"
+              "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> was manually cleared at #{trigger_time_utc}"
+             when "auto"
+               "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> was automatically cleared at #{trigger_time_utc}"
+             else
+               "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has cleared at #{trigger_time_utc}"
+             end
+      fallback = case data.clear
+                 when "manual"
+                   "Alert '#{data.alert[:name]}' was manually cleared at #{trigger_time_utc}"
+                 when "auto"
+                   "Alert '#{data.alert[:name]}' was automatically cleared at #{trigger_time_utc}"
+                 else
+                   "Alert '#{data.alert[:name]}' has cleared at #{trigger_time_utc}"
+                 end
+      {
+        :attachments => [
+          {
+            :text => text,
+            :fallback => fallback,
+            :color => "#17B03C"
+          }
+        ]
+      }
+    else
+      pretext = "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!"
+        unless runbook_url.blank?
+          pretext << " <#{runbook_url}|Runbook>"
+        end
+      attachments = []
+      attachment = {
+        :fallback => format_fallback(data),
+        :color => VERTICAL_LINE_COLOR,
+        :pretext => pretext,
+        :fields => data.violations.map do |source, measurements|
         {
-          :fallback => format_fallback(data),
-          :color => VERTICAL_LINE_COLOR,
-          :pretext => pretext,
-          :fields => data.violations.map do |source, measurements|
-            {
-              :title => source,
-              :value => measurements.inject([]) do |texts, measurement|
-                texts << data.format_measurement(measurement)
-              end.join("\n")
-            }
-          end,
-          :mrkdwn_in => [:text, :fields]
+          :title => source,
+          :value => measurements.inject([]) do |texts, measurement|
+          texts << data.format_measurement(measurement)
+          end.join("\n")
         }
-      ]
-    }
+        end,
+          :mrkdwn_in => [:text, :fields]
+      }
+      attachments << attachment
+      {
+        :attachments => attachments
+      }
+    end
   end
 
   def url
@@ -75,17 +111,23 @@ class Service::Slack < Service
     raise_url_error
   end
 
+  def receive_alert_clear
+    receive_alert
+  end
+
   def receive_alert
     raise_config_error unless receive_validate({})
-
     result = if payload[:alert][:version] == 2
-      v2_alert_result
-    else
-      raise_config_error('Slack does not support V1 alerts')
-    end
-
+               v2_alert_result
+             else
+               raise_config_error('Slack does not support V1 alerts')
+             end
     http_post(url, Yajl::Encoder.encode(result))
   rescue Faraday::Error::ConnectionFailed
     raise_url_error
+  end
+
+  def log(msg)
+    Rails.logger.info(msg) if defined?(Rails)
   end
 end

@@ -10,16 +10,6 @@ class Service::OpsGenie < Service
     success
   end
 
-  def receive_alert_clear
-    raise_config_error unless receive_validate({})
-    if settings[:recipients].to_s.empty?
-      settings[:recipients] = "all"
-    end
-    message = "Alert #{payload[:alert][:name]} has cleared"
-    do_post(payload[:alert][:name], message, payload)
-    return
-  end
-
   def receive_alert
     raise_config_error unless receive_validate({})
     if settings[:recipients].to_s.empty?
