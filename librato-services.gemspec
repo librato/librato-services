@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
-  s.date = "2014-10-15"
+  s.date = "2014-10-16"
   s.description = "Provides service notifications for alerts"
   s.email = "mike@librato.com"
   s.extra_rdoc_files = [
@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
     "services/opsgenie.rb",
     "services/pagerduty.rb",
     "services/slack.rb",
+    "services/victorops.rb",
     "services/webhook.rb",
     "test/campfire_test.rb",
     "test/clearing_test.rb",
@@ -56,12 +57,13 @@ Gem::Specification.new do |s|
     "test/pagerduty_test.rb",
     "test/slack_test.rb",
     "test/timeout_service_test.rb",
+    "test/victorops_test.rb",
     "test/webhook_test.rb"
   ]
   s.homepage = "http://github.com/librato/librato-services"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.23.2"
+  s.rubygems_version = "1.8.23"
   s.summary = "Provides service notifications for alerts"
 
   if s.respond_to? :specification_version then
