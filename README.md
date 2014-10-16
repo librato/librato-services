@@ -36,7 +36,7 @@ named `receive_alert` that is called when an alert is matched.
 The settings are available as a `Hash` in the instance method `settings` and
 the event payload is available as a `Hash` in the instance method `payload`.
 
-Tests should accompany all services and are located in the [services/][]
+Tests should accompany all services and are located in the [test/][]
 directory.
 
 Payload
