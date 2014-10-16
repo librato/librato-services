@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "librato-services"
-  s.version = "2.25.0"
+  s.version = "2.27.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Heffner"]
