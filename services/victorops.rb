@@ -19,26 +19,27 @@ class Service::VictorOps < Service
     raise_config_error unless receive_validate({})
 
     # New-style alerts
-    if payload[:alert][:version] == 1
+    if payload[:alert][:version] == 2
+
+      body = settings.merge(flatten_hash(payload))
+      body.delete :api_key
+
+      # Keys that will soon be in the payload
+      body[:entity_id] = payload[:incident_key] || payload['alert']['id']
+      if payload[:clear]
+        body[:clear] = payload[:clear]
+        body[:message_type] = "RECOVERY"
+      else
+        body[:message_type] = "CRITICAL"
+      end
+
+      # Fire
+      uri = uri_for_key(settings[:api_key])
+      http_post(uri, body, headers)
+    else
       stdout_logger "Only version 2 and greater alerts supported"
       return true
     end
-
-    body = settings.merge(flatten_hash(payload))
-    body.delete :api_key
-
-    # Keys that will soon be in the payload
-    body[:entity_id] = payload[:incident_key] || payload['alert']['id']
-    if payload[:clear]
-      body[:clear] = payload[:clear]
-      body[:message_type] = "CRITICAL"
-    else
-      body[:message_type] = "RECOVERY"
-    end
-
-    # Fire
-    uri = uri_for_key(settings[:api_key])
-    http_post(uri, body, headers)
   end
 
   def settings
@@ -51,11 +52,7 @@ class Service::VictorOps < Service
 
   def flatten_hash(payload)
     {
-      state_message: payload['alert']['name'] || 'No Alert Name Provided',
-      metric_name: payload['metric']['name'],
-      metric_type: payload['metric']['type'],
-      measurment_name: payload['measurement']['value'],
-      measurment_source: payload['measurement']['source']
+      state_message: Librato::Services::Output.new(payload).markdown
     }
   end
 
