@@ -87,7 +87,7 @@ module Librato
 
       def format_violation_type(condition, measurement)
         if condition[:type] == "absent"
-          "absent"
+          "absent for #{condition[:duration]} seconds"
         else
           "#{condition[:type]} threshold #{threshold(condition, measurement)} with value #{measurement[:value]}"
         end

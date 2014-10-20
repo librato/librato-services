@@ -112,7 +112,7 @@ EOF
       conditions: [
         {type: "above", threshold: 10, id: 1},
         {type: "below", threshold: 100, id: 2},
-        {type: "absent", threshold: nil, id:3}
+        {type: "absent", threshold: nil, duration:600, id:3}
       ],
       violations: {
         "foo.bar" => [{
@@ -141,7 +141,7 @@ Source `foo.bar`:
 Source `baz.lol`:
 * metric `something.else` was above threshold 10 with value 250 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 * metric `another.metric` was below threshold 100 with value 10 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
-* metric `i.am.absent` was absent recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `i.am.absent` was absent for 600 seconds recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
     assert_equal(expected, output.markdown)
   end
