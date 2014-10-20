@@ -45,15 +45,10 @@ class Service::Mail < Service
       mail.to      mail_addresses
       mail.header['X-Mailgun-Tag'] = 'alerts'
       trigger_time_utc = Time.at(payload[:trigger_time]).utc
-      case payload[:clear]
-      when nil
-        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has triggered!}
-      when "auto"
-        mail.subject %{[Librato] Alert #{payload[:alert][:name]} was automatically cleared at #{trigger_time_utc}.}
-      when "manual"
-        mail.subject %{[Librato] Alert #{payload[:alert][:name]} was manually cleared at #{trigger_time_utc}.}
+      if payload[:clear]
+        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has cleared.}
       else
-        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has cleared at #{trigger_time_utc}.}
+        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has triggered!}
       end
 
       if payload[:alert][:version] == 2
