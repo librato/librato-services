@@ -1,4 +1,4 @@
-require 'hipchat-api'
+require 'hipchat'
 require 'timeout'
 
 class Service::Hipchat < Service
@@ -92,14 +92,18 @@ class Service::Hipchat < Service
   end
 
   def hipchat
-    @hipchat ||= HipChat::API.new(settings[:auth_token])
+    @hipchat ||= HipChat::Client.new(settings[:auth_token], :api_version => 'v1')
   end
 
   def send_message(msg, format)
     retries = 0
     begin
-      r = hipchat.rooms_message(settings[:room_id], settings[:from], msg, settings[:notify].to_i, 'yellow', format)
-      raise Exception.new(r) unless r.success?
+      success = false
+      success = hipchat[settings[:room_id]].send(settings[:from], msg,
+                                           :notify => settings[:notify].to_i,
+                                           :color => 'yellow',
+                                           :message_format => format)
+      raise Exception unless success
     rescue Timeout::Error => timeout
       retries += 1
       if retries > 3

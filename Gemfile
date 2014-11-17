@@ -13,7 +13,7 @@ gem 'mail', '~> 2.2'
 gem 'tinder', '~> 1.9'
 
 # service :hipchat
-gem 'hipchat-api', '~> 1.0'
+gem 'hipchat', '~> 1.4.0'
 
 # service :flowdock
 gem 'flowdock', '~> 0.3'
