@@ -24,7 +24,7 @@ class HipchatTest < Librato::Services::TestCase
       @messages = []
       @times = 0
     end
-    def rooms_message(room_id, from, msg, notify, color, format)
+    def send(from, msg, opts = {})
       @times += 1
       if @times == 1
         raise Timeout::Error
@@ -43,7 +43,7 @@ class HipchatTest < Librato::Services::TestCase
       @success=success
       @messages = []
     end
-    def rooms_message(room_id, from, msg, notify, color, format)
+    def send(from, msg, opts = {})
       @messages << msg
       FakeResponse.new(@success)
     end
@@ -71,8 +71,9 @@ class HipchatTest < Librato::Services::TestCase
 
   def test_alert_multiple_measurements
     fake_hipchat = FakeHipchat.new
+    @room = { @settings[:room_id] => fake_hipchat }
     service = service(:alert, @settings, alert_payload_multiple_measurements)
-    service.hipchat = fake_hipchat
+    service.hipchat = @room
     alert_message = service.alert_message
     service.receive_alert
     assert alert_message == fake_hipchat.message
@@ -80,8 +81,9 @@ class HipchatTest < Librato::Services::TestCase
 
   def test_new_alert
     fake_hipchat = FakeHipchat.new
+    @room = { @settings[:room_id] => fake_hipchat }
     service = service(:alert, @settings, new_alert_payload)
-    service.hipchat = fake_hipchat
+    service.hipchat = @room
     alert_message = service.alert_message
     service.receive_alert
     assert alert_message == fake_hipchat.message
@@ -89,8 +91,9 @@ class HipchatTest < Librato::Services::TestCase
 
   def test_alert_retries_on_timeout
     fake_hipchat = TimesOutOnceHipchat.new
+    @room = { @settings[:room_id] => fake_hipchat }
     service = service(:alert, @settings, new_alert_payload)
-    service.hipchat = fake_hipchat
+    service.hipchat = @room
     alert_message = service.alert_message
     service.receive_alert
     assert alert_message == fake_hipchat.message
@@ -99,8 +102,9 @@ class HipchatTest < Librato::Services::TestCase
 
   def test_alert
     fake_hipchat = FakeHipchat.new
+    @room = { @settings[:room_id] => fake_hipchat }
     service = service(:alert, @settings, alert_payload)
-    service.hipchat = fake_hipchat
+    service.hipchat = @room
     alert_message = service.alert_message
     service.receive_alert
     assert alert_message == fake_hipchat.message
@@ -108,8 +112,9 @@ class HipchatTest < Librato::Services::TestCase
 
   def test_failure
     fake_hipchat = FakeHipchat.new(false) # will return a false success response
+    @room = { @settings[:room_id] => fake_hipchat }
     service = service(:alert, @settings, alert_payload)
-    service.hipchat = fake_hipchat
+    service.hipchat = @room
     failed = false
     begin
       service.receive_alert
@@ -122,8 +127,9 @@ class HipchatTest < Librato::Services::TestCase
 
   def test_snapshot
     fake_hipchat = FakeHipchat.new
+    @room = { @settings[:room_id] => fake_hipchat }
     service = service(:snapshot, @settings, snapshot_payload)
-    service.hipchat = fake_hipchat
+    service.hipchat = @room
     snapshot_message = service.snapshot_message
     service.receive_snapshot
     assert snapshot_message == fake_hipchat.message
