@@ -98,12 +98,11 @@ class Service::Hipchat < Service
   def send_message(msg, format)
     retries = 0
     begin
-      success = false
       success = hipchat[settings[:room_id]].send(settings[:from], msg,
                                            :notify => settings[:notify].to_i,
                                            :color => 'yellow',
                                            :message_format => format)
-      raise Exception unless success
+      raise Exception unless success == true
     rescue Timeout::Error => timeout
       retries += 1
       if retries > 3

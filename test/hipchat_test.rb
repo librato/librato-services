@@ -6,16 +6,6 @@ class HipchatTest < Librato::Services::TestCase
     @settings = { auth_token: "token", from: "who", room_id: "the_room", notify: "1" }
   end
 
-  class FakeResponse
-    attr_reader :success
-    def initialize(success)
-      @success = success
-    end
-    def success?
-      @success
-    end
-  end
-
   class TimesOutOnceHipchat
     attr_writer :success
     attr_accessor :times
@@ -30,7 +20,7 @@ class HipchatTest < Librato::Services::TestCase
         raise Timeout::Error
       end
       @messages << msg
-      FakeResponse.new(@success)
+      @success
     end
     def message(idx=0)
       @messages[idx]
@@ -45,7 +35,7 @@ class HipchatTest < Librato::Services::TestCase
     end
     def send(from, msg, opts = {})
       @messages << msg
-      FakeResponse.new(@success)
+      @success
     end
     def message(idx=0)
       @messages[idx]
