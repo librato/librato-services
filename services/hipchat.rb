@@ -27,7 +27,7 @@ class Service::Hipchat < Service
 
     # check for approved char classes for :from
     if !settings[:from].nil?
-      errors[:from_classes] = "has invalid characters in string" if /^[\w\s\-\_]+$/.match(settings[:from]).nil?
+      errors[:from_string] = "has invalid characters" if /^[\w\s\-\_]+$/.match(settings[:from]).nil?
     end
 
     errors.empty?
