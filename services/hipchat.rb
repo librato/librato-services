@@ -9,7 +9,7 @@ class Service::Hipchat < Service
   # auth_token: API Auth Token that supports notifications, see
   #             https://pipewise.hipchat.com/admin/api
   # from: Name the message should appear from (max 15 chars),
-  #         can only contain letters, numbers, -, _, and spaces
+  #         can only contain letters, numbers, ., -, _, and spaces
   # room_id: Id or name of the room
   # notify: Whether or not this message should trigger a notification
   #         for people in the room (0 | 1)
@@ -27,7 +27,7 @@ class Service::Hipchat < Service
 
     # check for approved char classes for :from
     if !settings[:from].nil?
-      errors[:from] = "string has invalid characters" if /^[\w\s\-\_]+$/.match(settings[:from]).nil?
+      errors[:from] = "string has invalid characters" if /^[\w\s\.\-\_]+$/.match(settings[:from]).nil?
     end
 
     errors.empty?
