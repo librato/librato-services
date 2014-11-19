@@ -1,5 +1,6 @@
 require 'hipchat'
 require 'timeout'
+require 'uri'
 
 class Service::Hipchat < Service
   attr_writer :hipchat
@@ -13,6 +14,8 @@ class Service::Hipchat < Service
   # room_id: Id or name of the room
   # notify: Whether or not this message should trigger a notification
   #         for people in the room (0 | 1)
+  # server_url: Server URL for HipChat service, defaults to 'https://api.hipchat.com'
+
   def receive_validate(errors = {})
 
     # check for existence
@@ -28,6 +31,15 @@ class Service::Hipchat < Service
     # check for approved char classes for :from
     if !settings[:from].nil?
       errors[:from] = "string has invalid characters" if /^[\w\s\.\-\_]+$/.match(settings[:from]).nil?
+    end
+
+    # check basic syntax for server_url
+    if !settings[:server_url].nil?
+      begin
+        URI.parse settings[:server_url]
+      rescue URI::InvalidURIError
+        errors[:server_url] = "is invalid"
+      end
     end
 
     errors.empty?
@@ -104,8 +116,12 @@ class Service::Hipchat < Service
        payload[:snapshot][:image_url]]
   end
 
+  def server_url
+    settings[:server_url] || 'https://api.hipchat.com'
+  end
+
   def hipchat
-    @hipchat ||= HipChat::Client.new(settings[:auth_token], :api_version => 'v1')
+    @hipchat ||= HipChat::Client.new(settings[:auth_token], :api_version => 'v1', :server_url => server_url)
   end
 
   def send_message(msg, format)
