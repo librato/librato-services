@@ -22,12 +22,12 @@ class Service::Hipchat < Service
 
     # check length of :from
     if !settings[:from].nil?
-      errors[:from_length] = "is too long, max 15 characters" if settings[:from].length > 15
+      errors[:from] = "length is too long, max 15 characters" if settings[:from].length > 15
     end
 
     # check for approved char classes for :from
     if !settings[:from].nil?
-      errors[:from_string] = "has invalid characters" if /^[\w\s\-\_]+$/.match(settings[:from]).nil?
+      errors[:from] = "string has invalid characters" if /^[\w\s\-\_]+$/.match(settings[:from]).nil?
     end
 
     errors.empty?
