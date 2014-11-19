@@ -8,13 +8,26 @@ class Service::Hipchat < Service
   #
   # auth_token: API Auth Token that supports notifications, see
   #             https://pipewise.hipchat.com/admin/api
-  # from: Name the message should appear from
+  # from: Name the message should appear from (max 15 chars),
+  #         can only contain letters, numbers, -, _, and spaces
   # room_id: Id or name of the room
   # notify: Whether or not this message should trigger a notification
   #         for people in the room (0 | 1)
   def receive_validate(errors = {})
+
+    # check for existence
     [:auth_token, :from, :room_id, :notify].each do |k|
       errors[k] = "Is required" if settings[k].to_s.empty?
+    end
+
+    # check length of :from
+    if !settings[:from].nil?
+      errors[:from_length] = "is too long, max 15 characters" if settings[:from].length > 15
+    end
+
+    # check for approved char classes for :from
+    if !settings[:from].nil?
+      errors[:from_classes] = "has invalid characters in string" if /^[\w\s\-\_]+$/.match(settings[:from]).nil?
     end
 
     errors.empty?
