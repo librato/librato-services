@@ -33,7 +33,7 @@ class Service::Hipchat < Service
       errors[:from] = "string has invalid characters" if /^[\w\s\.\-\_]+$/.match(settings[:from]).nil?
     end
 
-    # check that notify is boolean
+    # check that nofify is boolean
     if !settings[:from].nil?
       errors[:notify] = "must be a 0 or 1" unless ['0', '1'].include?(settings[:notify])
     end
