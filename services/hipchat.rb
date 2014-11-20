@@ -45,6 +45,7 @@ class Service::Hipchat < Service
       rescue URI::InvalidURIError
         errors[:server_url] = "is invalid"
       end
+    end
 
     errors.empty?
   end
