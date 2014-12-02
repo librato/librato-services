@@ -35,7 +35,10 @@ class Service::Pagerduty < Service
     }
 
     body[:event_type] = payload[:clear] ? "resolve" : "trigger"
-    body[:details][:metric_link] = payload_link(payload)
+    if payload[:alert][:version] == 1
+      body[:details][:metric_link] = payload_link(payload)
+    end
+    body[:details][:alert_link] = alert_link(payload['alert']['id'])
     keys = [settings[:incident_key], payload[:incident_key]].compact
     if keys.size > 0
       body[:incident_key] = keys.join("-")
