@@ -50,6 +50,9 @@ module Librato
 
       def generate_alert_raised
         result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
+        if @alert[:description]
+          result_array << "Description: #{@alert[:description]}\n"
+        end
         result_array << "Link: #{alert_link(@alert[:id])}\n"
         @violations.each do |source, measurements|
           result_array << "Source `#{source}`:"
@@ -75,6 +78,9 @@ module Librato
           lines = ["# Alert #{alert_name} was manually cleared at #{trigger_time_utc}\n"]
         else
           lines = ["# Alert #{alert_name} has cleared at #{trigger_time_utc}\n"]
+        end
+        if @alert[:description]
+          lines << "Description: #{@alert[:description]}\n"
         end
         lines << "Link: #{alert_link(@alert[:id])}\n"
         lines.join("\n")
