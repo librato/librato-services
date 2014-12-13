@@ -34,7 +34,7 @@ class Service::Hipchat < Service
     end
 
     # check that notify is boolean
-    if !settings[:from].nil?
+    if !settings[:notify].nil?
       errors[:notify] = "must be a 0 or 1" unless ['0', '1'].include?(settings[:notify])
     end
 

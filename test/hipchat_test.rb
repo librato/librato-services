@@ -50,6 +50,15 @@ class HipchatTest < Librato::Services::TestCase
     assert errors.empty?
   end
 
+  def test_receive_validate_invalid_notify
+    errors = {}
+    service = service(:alert, @settings.merge(notify: "bad value"), alert_payload)
+    assert !service.receive_validate(errors)
+    errors = {}
+    service = service(:alert, @settings.merge(notify: "1"), alert_payload)
+    assert service.receive_validate(errors)
+  end
+
   def test_receive_validate_missing_arguments
     errors = {}
     opts = {}
