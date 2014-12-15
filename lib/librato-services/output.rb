@@ -50,7 +50,7 @@ module Librato
 
       def format_alert_name(is_html=false)
         # Escape underscores in alert name for html formatting
-        is_html ? @alert[:name].gsub('_', '\_') : alert[:name]
+        is_html ? @alert[:name].gsub('_', '\_') : @alert[:name]
       end
 
       def generate_alert_raised(is_html=false)
