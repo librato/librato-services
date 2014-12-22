@@ -32,24 +32,29 @@ module Librato
         @html ||= generate_html
       end
 
-      def markdown
-        @markdown ||= generate_markdown
+      def markdown(is_html=false)
+        generate_markdown(is_html)
       end
 
       def generate_html
-        Output.renderer.render(markdown)
+        Output.renderer.render(markdown(is_html=true))
       end
 
-      def generate_markdown
+      def generate_markdown(is_html=false)
         if @clear
-          generate_alert_cleared
+          generate_alert_cleared(is_html)
         else
-          generate_alert_raised
+          generate_alert_raised(is_html)
         end
       end
 
-      def generate_alert_raised
-        result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
+      def format_alert_name(is_html=false)
+        # Escape underscores in alert name for html formatting
+        is_html ? @alert[:name].gsub('_', '\_') : @alert[:name]
+      end
+
+      def generate_alert_raised(is_html=false)
+        result_array = ["# Alert #{format_alert_name(is_html)} has triggered!\n"]
         if @alert[:description]
           result_array << "Description: #{@alert[:description]}\n"
         end
@@ -68,8 +73,8 @@ module Librato
         result_array.join("\n")
       end
 
-      def generate_alert_cleared
-        alert_name = @alert[:name]
+      def generate_alert_cleared(is_html=false)
+        alert_name = format_alert_name(is_html)
         trigger_time_utc = Time.at(trigger_time).utc
         case clear
         when "auto"
