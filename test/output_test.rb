@@ -262,4 +262,39 @@ Runbook: http://example.com/
 EOF
     assert_equal(expected, output.generate_markdown(is_html=true))
   end
+
+
+
+  # Test that markdown isn't cached.  This is because the Mail output actually needs
+  # both html and text formats
+  def test_markdown_caching
+    payload = {
+        alert: {id: 123, name: "Some_alert_name", version: 2, runbook_url: "http://example.com/"},
+        settings: {},
+        service_type: "campfire",
+        event_type: "alert",
+        trigger_time: 12321123,
+        conditions: [{type: "above", threshold: 10, id: 1}],
+        violations: {
+            "foo.bar" => [{
+                              metric: "metric.name", value: 100, recorded_at: 1389391083,
+                              condition_violated: 1
+                          }]
+        }
+    }
+    output = Librato::Services::Output.new(payload)
+    expected = <<EOF
+# Alert Some\\_alert\\_name has triggered!
+
+Link: https://metrics.librato.com/alerts/123
+
+Source `foo.bar`:
+* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+
+Runbook: http://example.com/
+EOF
+    assert_equal(expected, output.markdown(is_html=true))
+    assert_not_equal(expected, output.markdown(is_html=false))
+  end
+
 end

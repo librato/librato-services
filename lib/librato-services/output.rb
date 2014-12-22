@@ -33,7 +33,7 @@ module Librato
       end
 
       def markdown(is_html=false)
-        @markdown ||= generate_markdown(is_html)
+        generate_markdown(is_html)
       end
 
       def generate_html
