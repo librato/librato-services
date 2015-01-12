@@ -135,21 +135,14 @@ class SlackTest < Librato::Services::TestCase
 
   def test_snapshots
     svc = service(:snapshot, @settings, snapshot_payload)
-    mock_bytes = '175000'
-
-    @stubs.head URI.parse(snapshot_payload["snapshot"]["image_url"]).path do |env|
-      [200, {'Content-Length' => mock_bytes}, '']
-    end
 
     @stubs.post @stub_url do |env|
       payload = JSON.parse(env[:body])
       original = snapshot_payload["snapshot"]
-      assert_equal(original["entity_name"], payload["inst_text"])
-      assert_equal(original["entity_url"], payload["inst_url"])
-      assert_equal(original["image_url"], payload["image_url"])
-      assert_equal(Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_WIDTH, payload["image_width"])
-      assert_equal(Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_HEIGHT, payload["image_height"])
-      assert_equal(mock_bytes, payload["image_bytes"])
+      assert(payload["attachments"][0]["title"].include?(original["entity_name"]))
+      assert(payload["attachments"][0]["title"].include?(original["user_email"]))
+      assert(payload["attachments"][0]["text"].include?(original["message"]))
+      assert(payload["attachments"][0]["text"].include?(original["image_url"]))
       [200, {}, '']
     end
 
