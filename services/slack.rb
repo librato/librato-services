@@ -95,20 +95,28 @@ class Service::Slack < Service
   def receive_snapshot
     raise_config_error unless receive_validate({})
 
-    bytes = http_method(:head, payload[:snapshot][:image_url]).headers[:content_length] rescue 0
-
-    data = {
-      :inst_text    => payload[:snapshot][:entity_name],
-      :inst_url     => payload[:snapshot][:entity_url],
-      :image_url    => payload[:snapshot][:image_url],
-      :image_width  => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_WIDTH,
-      :image_height => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_HEIGHT,
-      :image_bytes  => bytes,
-    }
-
-    http_post(url, Yajl::Encoder.encode(data))
+    http_post(url, snapshot_message)
   rescue Faraday::Error::ConnectionFailed
     raise_url_error
+  end
+
+  def snapshot_message
+    snapshot = payload[:snapshot]
+
+    name = snapshot[:entity_name] || snapshot[:entity_url]
+
+    data = {
+      attachments: [
+        {
+          title: "<#{snapshot[:entity_url]}|#{name}> by #{snapshot[:user_email]}",
+          fallback: "#{name} by #{snapshot[:user_email]} #{snapshot[:image_url]}",
+          text: "#{snapshot[:message]}\n#{snapshot[:image_url]}",
+          mrkdwn_in: [:title, :text]
+        }
+      ]
+    }
+
+    Yajl::Encoder.encode(data)
   end
 
   def receive_alert_clear

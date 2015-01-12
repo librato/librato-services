@@ -27,10 +27,17 @@ class Service::Flowdock < Service::Mail
   def receive_snapshot
     raise_config_error unless receive_validate({})
 
-    flowdock.push_to_chat(:content => "%s: %s" % [
-      payload[:snapshot][:entity_name],
-      payload[:snapshot][:entity_url]])
-    flowdock.push_to_chat(:content => payload[:snapshot][:image_url])
+    send_messages snapshot_message
+  end
+
+  def snapshot_message
+    snapshot = payload[:snapshot]
+    name = snapshot[:entity_name] ? "#{snapshot[:entity_name]}: " : ''
+    [
+      "#{name} #{snapshot[:entity_url]} by #{snapshot[:user_email]}",
+      snapshot[:message],
+      snapshot[:image_url]
+    ].compact
   end
 
   def receive_alert
@@ -40,6 +47,10 @@ class Service::Flowdock < Service::Mail
       :subject => mail_message.subject,
       :content => mail_message.html_part.body,
       :link => payload_link(payload))
+  end
+
+  def send_messages(messages)
+    messages.each { |m| flowdock.push_to_chat(content: m) }
   end
 
   def flowdock
