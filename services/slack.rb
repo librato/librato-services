@@ -104,12 +104,13 @@ class Service::Slack < Service
     snapshot = payload[:snapshot]
 
     name = snapshot[:entity_name] || snapshot[:entity_url]
+    by = snapshot[:user][:full_name] || snapshot[:user][:email]
 
     data = {
       attachments: [
         {
-          title: "<#{snapshot[:entity_url]}|#{name}> by #{snapshot[:user_email]}",
-          fallback: "#{name} by #{snapshot[:user_email]} #{snapshot[:image_url]}",
+          title: "<#{snapshot[:entity_url]}|#{name}> by #{by}",
+          fallback: "#{name} by #{by} #{snapshot[:image_url]}",
           text: "#{snapshot[:message]}\n#{snapshot[:image_url]}",
           mrkdwn_in: [:title, :text]
         }

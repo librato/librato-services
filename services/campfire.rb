@@ -39,7 +39,7 @@ class Service::Campfire < Service
     name = snapshot[:entity_name] ? "#{snapshot[:entity_name]}: " : ''
 
     [
-      "#{name} #{uri} by #{snapshot[:user_email]}",
+      "#{name} #{uri} by #{snapshot[:user][:full_name] || snapshot[:user][:email]}",
       snapshot[:message],
       snapshot[:image_url]
     ].compact

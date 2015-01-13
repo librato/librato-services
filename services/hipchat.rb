@@ -115,7 +115,7 @@ class Service::Hipchat < Service
   def snapshot_message
     snapshot = payload[:snapshot]
     [
-      "<a href='#{snapshot[:entity_url]}'>#{snapshot[:entity_name] || snapshot[:entity_url]}</a> by #{snapshot[:user_email]}",
+      "<a href='#{snapshot[:entity_url]}'>#{snapshot[:entity_name] || snapshot[:entity_url]}</a> by #{snapshot[:user][:full_name] || snapshot[:user][:email]}",
       snapshot[:message] ? "<br/>#{snapshot[:message]}" : nil,
       "<br/><a href='#{snapshot[:image_url]}' target='_blank'><img src='#{snapshot[:image_url]}'></img></a>"
     ].compact.join
