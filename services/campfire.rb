@@ -35,11 +35,11 @@ class Service::Campfire < Service
     # because RACECARS :-/
     uri.gsub!(/\*$/, '%2A')
 
-    # Chart name isn't required, show URL if absent
     name = snapshot[:entity_name] ? "#{snapshot[:entity_name]}: " : ''
+    sender = snapshot[:user][:full_name] || snapshot[:user][:email]
 
     [
-      "#{name} #{uri} by #{snapshot[:user][:full_name] || snapshot[:user][:email]}",
+      "#{name}#{uri} by #{sender}",
       snapshot[:message],
       snapshot[:image_url]
     ].compact

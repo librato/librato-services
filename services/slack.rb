@@ -104,14 +104,15 @@ class Service::Slack < Service
     snapshot = payload[:snapshot]
 
     name = snapshot[:entity_name] || snapshot[:entity_url]
-    by = snapshot[:user][:full_name] || snapshot[:user][:email]
+    sender = snapshot[:user][:full_name] || snapshot[:user][:email]
+    message = snapshot[:message] ? "#{snapshot[:message]}\n" : nil
 
     data = {
       attachments: [
         {
-          title: "<#{snapshot[:entity_url]}|#{name}> by #{by}",
-          fallback: "#{name} by #{by} #{snapshot[:image_url]}",
-          text: "#{snapshot[:message]}\n#{snapshot[:image_url]}",
+          title: "<#{snapshot[:entity_url]}|#{name}> by #{sender}",
+          fallback: "#{name} by #{sender}: #{snapshot[:image_url]}",
+          text: "#{message}#{snapshot[:image_url]}",
           mrkdwn_in: [:title, :text]
         }
       ]

@@ -32,9 +32,12 @@ class Service::Flowdock < Service::Mail
 
   def snapshot_message
     snapshot = payload[:snapshot]
+
     name = snapshot[:entity_name] ? "#{snapshot[:entity_name]}: " : ''
+    sender = snapshot[:user][:full_name] || snapshot[:user][:email]
+
     [
-      "#{name} #{snapshot[:entity_url]} by #{snapshot[:user][:full_name] || snapshot[:user][:email]}",
+      "#{name}#{snapshot[:entity_url]} by #{sender}",
       snapshot[:message],
       snapshot[:image_url]
     ].compact
