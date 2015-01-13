@@ -35,8 +35,8 @@ class Service::Campfire < Service
     # because RACECARS :-/
     uri.gsub!(/\*$/, '%2A')
 
-    name = snapshot[:entity_name] ? "#{snapshot[:entity_name]}: " : ''
-    sender = snapshot[:user][:full_name] || snapshot[:user][:email]
+    name = snapshot[:entity_name].blank? ? '' : "#{snapshot[:entity_name]}: "
+    sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email] : snapshot[:user][:full_name]
 
     [
       "#{name}#{uri} by #{sender}",

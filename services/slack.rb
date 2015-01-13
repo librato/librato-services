@@ -103,9 +103,9 @@ class Service::Slack < Service
   def snapshot_message
     snapshot = payload[:snapshot]
 
-    name = snapshot[:entity_name] || snapshot[:entity_url]
-    sender = snapshot[:user][:full_name] || snapshot[:user][:email]
-    message = snapshot[:message] ? "#{snapshot[:message]}\n" : nil
+    name = snapshot[:entity_name].blank? ? snapshot[:entity_url] : snapshot[:entity_name]
+    sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email] : snapshot[:user][:full_name]
+    message = snapshot[:message].blank? ? nil : "#{snapshot[:message]}\n"
 
     data = {
       attachments: [
