@@ -113,7 +113,7 @@ class Service::Slack < Service
           title: "<#{snapshot[:entity_url]}|#{name}> by #{sender}",
           fallback: "#{name} by #{sender}: #{snapshot[:image_url]}",
           text: "#{message}<#{snapshot[:image_url]}>",
-          mrkdwn_in: [:title],
+          mrkdwn_in: [:title, :text],
           color: "#0881AE"
         }
       ]
