@@ -139,11 +139,11 @@ class SlackTest < Librato::Services::TestCase
     @stubs.post @stub_url do |env|
       payload = JSON.parse(env[:body])
       original = snapshot_payload["snapshot"]
-      assert(payload["attachments"][0]["title"].include?(original["entity_name"]))
-      assert(payload["attachments"][0]["title"].include?(original["user"]["full_name"]))
-      assert(!payload["attachments"][0]["title"].include?(original["user"]["email"]))
-      assert(payload["attachments"][0]["text"].include?(original["message"]))
-      assert(payload["attachments"][0]["text"].include?(original["image_url"]))
+      assert(payload["inst_text"].include?(original["entity_name"]))
+      assert(payload["inst_text"].include?(original["user"]["full_name"]))
+      assert(!payload["inst_text"].include?(original["user"]["email"]))
+      #assert(payload["attachments"][0]["text"].include?(original["message"]))
+      assert(payload["image_url"].include?(original["image_url"]))
       [200, {}, '']
     end
 
