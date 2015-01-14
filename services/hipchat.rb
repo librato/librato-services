@@ -113,12 +113,17 @@ class Service::Hipchat < Service
   end
 
   def snapshot_message
-    "%s: <a href=\"%s\">%s</a><br/><a href=\"%s\" target=\"_blank\"><img src=\"%s\"></img></a>" %
-      [payload[:snapshot][:entity_name],
-       payload[:snapshot][:entity_url],
-       payload[:snapshot][:entity_url],
-       payload[:snapshot][:image_url],
-       payload[:snapshot][:image_url]]
+    snapshot = payload[:snapshot]
+
+    name = snapshot[:entity_name].blank? ? snapshot[:entity_url] : snapshot[:entity_name]
+    sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email] : snapshot[:user][:full_name]
+    message = snapshot[:message].blank? ? nil : "<br/>#{snapshot[:message]}"
+
+    [
+      "<a href='#{snapshot[:entity_url]}'>#{name}</a> by #{sender}",
+      message,
+      "<br/><a href='#{snapshot[:image_url]}' target='_blank'><img src='#{snapshot[:image_url]}'></img></a>"
+    ].compact.join
   end
 
   def server_url

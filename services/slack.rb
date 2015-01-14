@@ -95,20 +95,43 @@ class Service::Slack < Service
   def receive_snapshot
     raise_config_error unless receive_validate({})
 
-    bytes = http_method(:head, payload[:snapshot][:image_url]).headers[:content_length] rescue 0
-
-    data = {
-      :inst_text    => payload[:snapshot][:entity_name],
-      :inst_url     => payload[:snapshot][:entity_url],
-      :image_url    => payload[:snapshot][:image_url],
-      :image_width  => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_WIDTH,
-      :image_height => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_HEIGHT,
-      :image_bytes  => bytes,
-    }
-
-    http_post(url, Yajl::Encoder.encode(data))
+    http_post(url, snapshot_message)
   rescue Faraday::Error::ConnectionFailed
     raise_url_error
+  end
+
+  def snapshot_message
+    snapshot = payload[:snapshot]
+
+    name = snapshot[:entity_name].blank? ? snapshot[:entity_url] : snapshot[:entity_name]
+    sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email] : snapshot[:user][:full_name]
+    message = snapshot[:message].blank? ? nil : "#{snapshot[:message]}\n"
+
+    # TODO: Switch to this data type when new Slack webhooks land
+    #data = {
+    #  attachments: [
+    #    {
+    #      title: "#{name} by #{sender}",
+    #      title_link: snapshot[:entity_url],
+    #      fallback: "#{name} by #{sender}: #{snapshot[:image_url]}",
+    #      text: "#{message}<#{snapshot[:image_url]}>",
+    #      mrkdwn_in: [:title, :text],
+    #      color: "#0881AE"
+    #    }
+    #  ]
+    #}
+
+    bytes = http_method(:head, snapshot[:image_url]).headers[:content_length] rescue 0
+    data = {
+      :inst_text    => "#{name} by #{sender}",
+      :inst_url     => snapshot[:entity_url],
+      :image_url    => snapshot[:image_url],
+      :image_width  => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_WIDTH,
+      :image_height => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_HEIGHT,
+      :image_bytes  => bytes
+    }
+
+    Yajl::Encoder.encode(data)
   end
 
   def receive_alert_clear

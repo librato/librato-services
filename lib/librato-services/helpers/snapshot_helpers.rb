@@ -12,7 +12,13 @@ module Librato
             :snapshot => {
               :entity_name => "App API Requests",
               :entity_url => "https://metrics.librato.com/instruments/1234?duration=3600",
-              :image_url => "http://snapshots.librato.com/instruments/12345abcd.png"
+              :image_url => "http://snapshots.librato.com/instruments/12345abcd.png",
+              :user => {
+                :email => "portal-dev@librato.com",
+                :full_name => "Librato User"
+              },
+              :subject => "Subject of API Requests",
+              :message => "Explanation of this snapshot"
             }
           }.with_indifferent_access
         end
