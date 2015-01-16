@@ -233,8 +233,8 @@ EOF
     assert_equal(expected, output.markdown)
   end
 
-  # Escape underscores in alert name when rendering html
-  def test_escape_underscores_in_alert_name
+  # Preserve underscores in (at least) alert name when rendering html
+  def test_preserve_underscores_in_html
     payload = {
         alert: {id: 123, name: "Some_alert_name", version: 2, runbook_url: "http://example.com/"},
         settings: {},
@@ -250,51 +250,10 @@ EOF
         }
     }
     output = Librato::Services::Output.new(payload)
-    expected = <<EOF
-# Alert Some\\_alert\\_name has triggered!
-
-Link: https://metrics.librato.com/alerts/123
-
-Source `foo.bar`:
-* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
-
-Runbook: http://example.com/
-EOF
-    assert_equal(expected, output.generate_markdown(is_html=true))
+    # Trying to avoid the <em> here
+    assert_no_match(/Alert Some<em>alert<\/em>name/, output.generate_html)
+    # In favor of underscores
+    assert_match("Alert Some_alert_name", output.generate_html)
   end
 
-
-
-  # Test that markdown isn't cached.  This is because the Mail output actually needs
-  # both html and text formats
-  def test_markdown_caching
-    payload = {
-        alert: {id: 123, name: "Some_alert_name", version: 2, runbook_url: "http://example.com/"},
-        settings: {},
-        service_type: "campfire",
-        event_type: "alert",
-        trigger_time: 12321123,
-        conditions: [{type: "above", threshold: 10, id: 1}],
-        violations: {
-            "foo.bar" => [{
-                              metric: "metric.name", value: 100, recorded_at: 1389391083,
-                              condition_violated: 1
-                          }]
-        }
-    }
-    output = Librato::Services::Output.new(payload)
-    expected = <<EOF
-# Alert Some\\_alert\\_name has triggered!
-
-Link: https://metrics.librato.com/alerts/123
-
-Source `foo.bar`:
-* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
-
-Runbook: http://example.com/
-EOF
-    assert_equal(expected, output.markdown(is_html=true))
-    assert_not_equal(expected, output.markdown(is_html=false))
-  end
-
-end
+end # class
