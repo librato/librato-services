@@ -32,29 +32,24 @@ module Librato
         @html ||= generate_html
       end
 
-      def markdown(is_html=false)
-        generate_markdown(is_html)
+      def markdown
+        generate_markdown
       end
 
       def generate_html
-        Output.renderer.render(markdown(is_html=true))
+        Output.renderer.render(markdown)
       end
 
-      def generate_markdown(is_html=false)
+      def generate_markdown
         if @clear
-          generate_alert_cleared(is_html)
+          generate_alert_cleared
         else
-          generate_alert_raised(is_html)
+          generate_alert_raised
         end
       end
 
-      def format_alert_name(is_html=false)
-        # Escape underscores in alert name for html formatting
-        is_html ? @alert[:name].gsub('_', '\_') : @alert[:name]
-      end
-
-      def generate_alert_raised(is_html=false)
-        result_array = ["# Alert #{format_alert_name(is_html)} has triggered!\n"]
+      def generate_alert_raised
+        result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
         if @alert[:description]
           result_array << "Description: #{@alert[:description]}\n"
         end
@@ -73,8 +68,8 @@ module Librato
         result_array.join("\n")
       end
 
-      def generate_alert_cleared(is_html=false)
-        alert_name = format_alert_name(is_html)
+      def generate_alert_cleared
+        alert_name = @alert[:name]
         trigger_time_utc = Time.at(trigger_time).utc
         case clear
         when "auto"
@@ -129,7 +124,7 @@ module Librato
 
       class << self
         def renderer
-          @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, lax_spacing: true)
+          @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, lax_spacing: true, no_intra_emphasis: true)
         end
       end
     end

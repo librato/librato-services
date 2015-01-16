@@ -22,7 +22,7 @@ class Service::Pagerduty < Service
     raise_config_error unless receive_validate({})
 
     pd_payload = {}
-    ['user_id', 'alert', 'trigger_time', 'conditions', 'violations'].each do |whitelisted|
+    ['alert', 'trigger_time', 'conditions', 'violations'].each do |whitelisted|
       pd_payload[whitelisted] = payload[whitelisted]
     end
     alert_name = payload['alert']['name']
@@ -35,10 +35,19 @@ class Service::Pagerduty < Service
     }
 
     body[:event_type] = payload[:clear] ? "resolve" : "trigger"
+
     if payload[:alert][:version] == 1
-      body[:details][:metric_link] = payload_link(payload)
+      body[:details][:metric_url] = payload_link(payload)
     end
-    body[:details][:alert_link] = alert_link(payload['alert']['id'])
+    body[:details][:alert_url] = alert_link(payload['alert']['id'])
+    unless payload['alert']['runbook_url'].blank?
+      body[:details][:runbook_url] = payload['alert']['runbook_url']
+    end
+
+    unless payload['alert']['description'].blank?
+      body[:details][:description] = payload['alert']['description']
+    end
+
     keys = [settings[:incident_key], payload[:incident_key]].compact
     if keys.size > 0
       body[:incident_key] = keys.join("-")
