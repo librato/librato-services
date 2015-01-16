@@ -62,81 +62,77 @@ class SNSTest < Librato::Services::TestCase
     assert_raise_with_message(Librato::Services::Service::ServiceError, 'Some horrible AWS Error') do
       svc.publish_message({msg: ''})
     end
+
+    expect(aws_stub).to receive(:publish).with(
+      {
+        :topic_arn=>"arn:aws:sns:us-east-1:123456789012:test_topic-123",
+        :message=>"{\"alert\":\"some_alert\"}"
+      }
+    )
+
+    svc.publish_message({alert: 'some_alert'})
   end
 
   def test_receive_alarm
-    aws_stub = double(Aws::SNS::Client)
-    expect(Aws::SNS::Client).to receive(:new).and_return aws_stub
-    expect(aws_stub).to receive(:publish).with(
-      {
-        topic_arn: 'arn:aws:sns:us-east-1:123456789012:test_topic-123',
-        message: {
-          alert: { id: 12345, name: '' },
-          metric: { name: 'my_sample_alert', type: 'gauge' },
-          measurement: { value: 2345.9, source: 'r3.acme.com' },
-          measurements: [{ value: 2345.9, source: 'r3.acme.com'}],
-          trigger_time: 1321311840
-        }.to_json
-      })
-
     svc = service(:alert, default_setting, alert_payload)
+    expect(svc).to receive(:publish_message).once.with(hash_including(
+      {
+        alert: { id: 12345, name: '' },
+        metric: { name: 'my_sample_alert', type: 'gauge' },
+        measurement: { value: 2345.9, source: 'r3.acme.com' },
+        measurements: [{ value: 2345.9, source: 'r3.acme.com'}],
+        trigger_time: 1321311840
+      }))
+
     svc.receive_alert
   end
 
   def test_receive_alert_multiple_measurements
-    aws_stub = double(Aws::SNS::Client)
-    expect(Aws::SNS::Client).to receive(:new).and_return aws_stub
-    expect(aws_stub).to receive(:publish).with(
+    svc = service(:alert, default_setting, alert_payload_multiple_measurements)
+    expect(svc).to receive(:publish_message).once.with(hash_including(
         {
-          topic_arn: 'arn:aws:sns:us-east-1:123456789012:test_topic-123',
-          message: {
-            alert: { id: 12345 },
+          alert: { id: 12345 },
             metric: { name: 'my_sample_alert', type: 'gauge' },
             measurement: { value: 2345.9, source: 'r3.acme.com' },
             measurements: [{ value: 2345.9, source: 'r3.acme.com' },
-                           { value: 123, source: 'r2.acme.com'}],
+                           { value: 123, source: 'r2.acme.com' }],
             trigger_time: 1321311840
-          }.to_json
-        })
+        }
+        ))
 
-    svc = service(:alert, default_setting, alert_payload_multiple_measurements)
     svc.receive_alert
   end
 
   def test_receive_clear
-    aws_stub = double(Aws::SNS::Client)
-    expect(Aws::SNS::Client).to receive(:new).and_return aws_stub
-    expect(aws_stub).to receive(:publish).with(
-      {
-        topic_arn: 'arn:aws:sns:us-east-1:123456789012:test_topic-123',
-        message: {
-          alert: { id: 12345, name: '' },
-          trigger_time: 1321311840,
-          clear: 'normal'
-        }.to_json
-      })
-
     svc = service(:alert, default_setting, alert_payload)
+    expect(svc).to receive(:publish_message).once.with(hash_including(
+      {
+        alert: { id: 12345, name: '' },
+        trigger_time: 1321311840,
+        clear: 'normal'
+      }))
+
     svc.receive_alert_clear
   end
 
   def test_receive_alert_v2
-    aws_stub = double(Aws::SNS::Client)
-    expect(Aws::SNS::Client).to receive(:new).and_return aws_stub
-    expect(aws_stub).to receive(:publish).with(
-      {
-        topic_arn: 'arn:aws:sns:us-east-1:123456789012:test_topic-123',
-        message: {
-          alert: { id: 123, name: 'Some alert name', version: 2},
-          trigger_time: 12321123,
-          conditions: [{ type: 'above', threshold: 10, id: 1 }],
-          violations: {
-            "foo.bar" => [{ metric: 'metric.name', value: 100, recorded_at: 1389391083, condition_violated: 1 }]
-          }
-        }.to_json
-      })
-
     svc = service(:alert, default_setting, new_alert_payload)
+    expect(svc).to receive(:publish_message).once.with(hash_including(
+      {
+        alert: {
+          id: 123,
+          name: 'Some alert name',
+          version: 2,
+          description: 'Verbose alert explanation',
+          runbook_url: 'http://runbooks.com/howtodoit'
+        },
+        trigger_time: 12321123,
+        conditions: [{ type: 'above', threshold: 10, id: 1 }],
+        violations: {
+          "foo.bar" => [{ metric: 'metric.name', value: 100, recorded_at: 1389391083, condition_violated: 1 }]
+        }
+      }))
+
     svc.receive_alert
   end
 
