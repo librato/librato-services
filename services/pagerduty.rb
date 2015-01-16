@@ -22,7 +22,7 @@ class Service::Pagerduty < Service
     raise_config_error unless receive_validate({})
 
     pd_payload = {}
-    ['user_id', 'alert', 'trigger_time', 'conditions', 'violations'].each do |whitelisted|
+    ['alert', 'trigger_time', 'conditions', 'violations'].each do |whitelisted|
       pd_payload[whitelisted] = payload[whitelisted]
     end
     alert_name = payload['alert']['name']

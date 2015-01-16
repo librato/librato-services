@@ -68,7 +68,6 @@ class PagerdutyTest < Librato::Services::TestCase
       assert_not_nil env[:body][:details]["conditions"]
       assert_not_nil env[:body][:details]["trigger_time"]
       assert_not_nil env[:body][:details]["alert"]
-      assert_not_nil env[:body][:details]["user_id"]
       assert_not_nil env[:body][:details][:alert_url]
       assert_nil env[:body][:details][:metric_url] # no metric_link for v2 alerts
       assert_not_nil env[:body][:details][:description]
@@ -100,7 +99,6 @@ class PagerdutyTest < Librato::Services::TestCase
       assert_not_nil env[:body][:details]["conditions"]
       assert_not_nil env[:body][:details]["trigger_time"]
       assert_not_nil env[:body][:details]["alert"]
-      assert_not_nil env[:body][:details]["user_id"]
       assert_equal "resolve", env[:body][:event_type]
       assert_equal "foo", env[:body][:incident_key]
       assert_equal 'Some alert name', env[:body][:description]
