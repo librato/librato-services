@@ -42,7 +42,8 @@ module Librato
           ::HashWithIndifferentAccess.new({
             user_id: 1,
             incident_key: "foo",
-            alert: {id: 123, name: "Some alert name", version: 2},
+            alert: {id: 123, name: "Some alert name", version: 2,
+                    description: "Verbose alert explanation", runbook_url: "http://runbooks.com/howtodoit"},
             auth: {email:"foo@example.com", annotations_token:"lol"},
             service_type: "campfire",
             event_type: "alert",
