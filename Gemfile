@@ -21,6 +21,9 @@ gem 'flowdock', '~> 0.3'
 # service :customerio
 gem 'customerio', '~> 0.5'
 
+# service :aws-sns
+gem 'aws-sdk-core', '~> 2.0.18'
+
 # markdown generation
 gem 'redcarpet', '~> 2.3'
 
@@ -33,6 +36,7 @@ gem 'rake', '>= 0.9'
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
+  gem "rspec", "~>3.1"
   gem "shoulda", "~> 3.5"
   gem "jeweler", "~> 2.0"
   gem 'yard', "~> 0.8"
