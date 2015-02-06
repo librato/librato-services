@@ -58,7 +58,7 @@ class Service::Campfire < Service
       output = Librato::Services::Output.new(payload)
       paste_message output.markdown
       if snapshot_url = payload[:snapshot][:url]
-        speak_msgs ["Current snapshot: #{snapshot_url}"]
+        speak_msgs [snapshot_url]
       end
       return
     end
