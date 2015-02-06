@@ -57,7 +57,7 @@ class Service::Campfire < Service
     if payload[:alert][:version] == 2
       output = Librato::Services::Output.new(payload)
       paste_message output.markdown
-      if snapshot_url = payload[:snapshot][:url]
+      if payload[:snapshot] && snapshot_url = payload[:snapshot][:url]
         speak_msgs [snapshot_url]
       end
       return
