@@ -56,7 +56,7 @@ class Service::Campfire < Service
     # New-style alerts
     if payload[:alert][:version] == 2
       if snapshot_url = payload[:snapshot][:url]
-        speak_message snapshot_url
+        speak_msgs [snapshot_url]
       end
       output = Librato::Services::Output.new(payload)
       paste_message output.markdown
