@@ -2,6 +2,7 @@
 
 require 'uri'
 require 'cgi'
+require 'digest'
 
 class Service::Slack < Service
   VERTICAL_LINE_COLOR = "#0880ad"
@@ -106,29 +107,21 @@ class Service::Slack < Service
     name = snapshot[:entity_name].blank? ? snapshot[:entity_url] : snapshot[:entity_name]
     sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email] : snapshot[:user][:full_name]
     message = snapshot[:message].blank? ? nil : "#{snapshot[:message]}\n"
+    gravatar = "https://secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(snapshot[:user][:email])}?s=32&d=mm"
 
-    # TODO: Switch to this data type when new Slack webhooks land
-    #data = {
-    #  attachments: [
-    #    {
-    #      title: "#{name} by #{sender}",
-    #      title_link: snapshot[:entity_url],
-    #      fallback: "#{name} by #{sender}: #{snapshot[:image_url]}",
-    #      text: "#{message}<#{snapshot[:image_url]}>",
-    #      mrkdwn_in: [:title, :text],
-    #      color: "#0881AE"
-    #    }
-    #  ]
-    #}
-
-    bytes = http_method(:head, snapshot[:image_url]).headers[:content_length] rescue 0
     data = {
-      :inst_text    => "#{name} by #{sender}",
-      :inst_url     => snapshot[:entity_url],
-      :image_url    => snapshot[:image_url],
-      :image_width  => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_WIDTH,
-      :image_height => Librato::Services::Helpers::SnapshotHelpers::DEFAULT_SNAPSHOT_HEIGHT,
-      :image_bytes  => bytes
+      attachments: [
+        {
+          author_name: sender,
+          author_icon: gravatar,
+          title: name,
+          title_link: snapshot[:entity_url],
+          fallback: "#{name} by #{sender}: #{snapshot[:image_url]}",
+          image_url: snapshot[:image_url],
+          text: message,
+          color: "#0881AE"
+        }
+      ]
     }
 
     Yajl::Encoder.encode(data)
