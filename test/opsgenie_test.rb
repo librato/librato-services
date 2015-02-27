@@ -2,7 +2,7 @@ require File.expand_path('../helper', __FILE__)
 
 class OpsGenieTest < Librato::Services::TestCase
   def setup
-    @settings = { :apiKey => "my api key" }
+    @settings = { :api_key => "my api key" }
     @stub_url = URI.parse("https://api.opsgenie.com/v1/json/librato").request_uri
     @stubs = Faraday::Adapter::Test::Stubs.new
   end
