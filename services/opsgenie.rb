@@ -8,7 +8,7 @@ require 'faraday'
 class Service::OpsGenie < Service
   def receive_validate(errors)
     success = true
-    [:api_key ].each do |k|
+    [:customer_key ].each do |k|
       if settings[k].to_s.empty?
         errors[k] = "Is required"
         success = false
@@ -55,7 +55,7 @@ class Service::OpsGenie < Service
   def post_it(hash)
     url = "https://api.opsgenie.com/v1/json/librato"
     http_post url, {
-                     :apiKey => settings[:api_key],
+                     :apiKey => settings[:customer_key],
                      :payload => Yajl::Encoder.encode(hash),
                      :recipients => settings[:recipients],
                      :teams => settings[:teams],
