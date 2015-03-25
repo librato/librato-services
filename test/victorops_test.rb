@@ -6,6 +6,7 @@ class VictorOpsTest < Librato::Services::TestCase
     @settings = { api_key: 'some_keys', routing_key: 'five' }
     @stubs = Faraday::Adapter::Test::Stubs.new do |stub|
       stub.post("/integrations/generic/20131114/alert/#{@settings[:api_key]}/#{@settings[:routing_key]}"){ |env| [200, {}, ''] }
+      stub.post("/integrations/generic/20131114/alert/#{@settings[:api_key]}/has%20space"){ |env| [200, {}, ''] }
       stub.post("/integrations/generic/20131114/alert/#{@settings[:api_key]}/nil"){ |env| [200, {}, ''] }
     end
   end
@@ -21,6 +22,12 @@ class VictorOpsTest < Librato::Services::TestCase
     errors = {}
     assert !svc.receive_validate(errors), 'Validation was true'
     assert_equal 1, errors.length
+  end
+
+  def test_has_space_in_routing_key
+    svc = service(:alert, {"api_key" => @settings[:api_key], "routing_key" => "has space"}.with_indifferent_access, new_alert_payload)
+    resp = svc.receive_alert
+    assert_equal 200, resp.status
   end
 
   def test_alerts

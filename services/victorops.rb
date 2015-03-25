@@ -35,6 +35,7 @@ class Service::VictorOps < Service
 
       # Fire
       uri = uri_for_key(settings[:api_key])
+      puts "got uri: #{uri}"
       http_post(uri, body, headers)
     else
       stdout_logger "Only version 2 and greater alerts supported"
@@ -58,7 +59,7 @@ class Service::VictorOps < Service
 
   # Helpers
   def uri_for_key(key)
-    File.join("#{http_scheme}#{host}", integrations_path_for_key(key), (settings[:routing_key] || 'nil')).to_s
+    File.join("#{http_scheme}#{host}", integrations_path_for_key(key), URI::encode(settings[:routing_key] || 'nil')).to_s
   end
 
   def host; 'alert.victorops.com'; end
