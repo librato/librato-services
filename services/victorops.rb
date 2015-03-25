@@ -35,7 +35,6 @@ class Service::VictorOps < Service
 
       # Fire
       uri = uri_for_key(settings[:api_key])
-      puts "got uri: #{uri}"
       http_post(uri, body, headers)
     else
       stdout_logger "Only version 2 and greater alerts supported"
