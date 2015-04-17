@@ -40,14 +40,17 @@ class Service::BigPanda < Service
 
     body['description'] = payload['alert']['description'] if payload['alert']['description']
     body['runbook_url'] = payload['alert']['runbook_url'] if payload['alert']['runbook_url']
+    body['link'] = alert_link(payload['alert']['id'])
 
     if payload['violations']
-      output = Librato::Services::Output.new(payload)
       violations = []
-      payload['violations'].each do |key, metric|
-        metric.each {|v| violations << output.format_measurement(v) }
+      output = Librato::Services::Output.new(payload)
+      payload['violations'].each_with_index do |(source, measurements), index|
+        measurements.each do |measurement|
+          violations << "Violation #{index + 1}: #{output.format_measurement(measurement, source)}"
+        end
       end
-      body['violations'] = violations.join('\n')
+      body['violations'] = violations.join('. ')
     end
 
     body
