@@ -86,9 +86,14 @@ module Librato
         lines.join("\n")
       end
 
-      def format_measurement(measurement)
+      def format_measurement(measurement, source = nil)
         condition = @conditions[measurement[:condition_violated]]
-        "metric `#{measurement[:metric]}` was #{format_violation_type(condition, measurement)} recorded at #{format_time(measurement[:recorded_at])}"
+        if source
+          metric = "`#{measurement[:metric]}` from `#{source}`"
+        else
+          metric = "`#{measurement[:metric]}`"
+        end
+        "metric #{metric} was #{format_violation_type(condition, measurement)} recorded at #{format_time(measurement[:recorded_at])}"
       end
 
       def format_violation_type(condition, measurement)
