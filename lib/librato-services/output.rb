@@ -91,7 +91,7 @@ module Librato
         if source
           metric = "`#{measurement[:metric]}` from `#{source}`"
         else
-          metric = measurement[:metric]
+          metric = "`#{measurement[:metric]}`"
         end
         "metric #{metric} was #{format_violation_type(condition, measurement)} recorded at #{format_time(measurement[:recorded_at])}"
       end
