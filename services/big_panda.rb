@@ -43,14 +43,17 @@ class Service::BigPanda < Service
     body['link'] = alert_link(payload['alert']['id'])
 
     if payload['violations']
+      sources = []
       violations = []
       output = Librato::Services::Output.new(payload)
       payload['violations'].each_with_index do |(source, measurements), index|
+        sources << source
         measurements.each do |measurement|
           violations << "Violation #{index + 1}: #{output.format_measurement(measurement, source)}"
         end
       end
       body['violations'] = violations.join('. ')
+      body['sources'] = sources.join(', ')
     end
 
     body
