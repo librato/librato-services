@@ -39,7 +39,7 @@ class Service::BigPanda < Service
     }
 
     body['description'] = payload['alert']['description'] if payload['alert']['description']
-    body['runbook_url'] = payload['alert']['runbook_url'] if payload['alert']['runbook_url'] && payload['alert']['runbook_url'] != ""
+    body['runbook_url'] = payload['alert']['runbook_url'] if present?(payload['alert']['runbook_url'])
     body['link'] = alert_link(payload['alert']['id'])
 
     if payload['violations']
@@ -72,5 +72,9 @@ class Service::BigPanda < Service
     else
       puts(msg)
     end
+  end
+
+  def present?(str)
+    str && !str.empty?
   end
 end
