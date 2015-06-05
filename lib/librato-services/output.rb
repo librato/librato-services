@@ -26,6 +26,7 @@ module Librato
         @alert = payload[:alert]
         @clear = payload[:clear]
         @trigger_time = payload[:trigger_time]
+        @auth = payload[:auth] || {}
       end
 
       def html
@@ -52,6 +53,9 @@ module Librato
         result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
         if @alert[:description]
           result_array << "Description: #{@alert[:description]}\n"
+        end
+        if @auth[:email]
+          result_array << "Account: #{@auth[:email]}\n"
         end
         result_array << "Link: #{alert_link(@alert[:id])}\n"
         @violations.each do |source, measurements|
@@ -81,6 +85,9 @@ module Librato
         end
         if @alert[:description]
           lines << "Description: #{@alert[:description]}\n"
+        end
+        if @auth[:email]
+          lines << "Account: #{@auth[:email]}\n"
         end
         lines << "Link: #{alert_link(@alert[:id])}\n"
         lines.join("\n")

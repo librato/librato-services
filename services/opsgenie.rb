@@ -17,11 +17,18 @@ class Service::OpsGenie < Service
     success
   end
 
+  def account_email
+    if payload['auth']
+      payload['auth']['email']
+    end
+  end
+
   def receive_alert_clear
     raise_config_error unless receive_validate({})
 
     result = {
         :alert => payload['alert'],
+        :account => account_email,
         :trigger_time => payload['trigger_time'],
         :clear => "normal"
     }
@@ -34,6 +41,7 @@ class Service::OpsGenie < Service
     if payload[:alert][:version] == 2
       result = {
           :alert => payload['alert'],
+          :account => account_email,
           :trigger_time => payload['trigger_time'],
           :conditions => payload['conditions'],
           :violations => payload['violations']

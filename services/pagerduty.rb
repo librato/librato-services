@@ -18,12 +18,21 @@ class Service::Pagerduty < Service
     receive_alert
   end
 
+  def account_email
+    if payload['auth']
+      payload['auth']['email']
+    end
+  end
+
   def receive_alert
     raise_config_error unless receive_validate({})
 
     pd_payload = {}
     ['alert', 'trigger_time', 'conditions', 'violations'].each do |whitelisted|
       pd_payload[whitelisted] = payload[whitelisted]
+    end
+    if email = account_email
+      pd_payload['account'] = email
     end
     alert_name = payload['alert']['name']
     description = alert_name.blank? ? settings[:description] : alert_name

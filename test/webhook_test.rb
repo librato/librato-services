@@ -55,10 +55,11 @@ class WebhookTest < Librato::Services::TestCase
 
     @stubs.post "#{path}" do |env|
       payload = JSON.parse(env[:body][:payload])
-      assert_equal ["alert", "conditions", "trigger_time", "violations"], payload.keys.sort
+      assert_equal ["account", "alert", "conditions", "trigger_time", "violations"], payload.keys.sort
       assert_equal 123, payload['alert']['id']
       assert_equal 'Some alert name', payload['alert']['name']
       assert_equal 1, payload['conditions'].length
+      assert_equal "foo@example.com", payload['account']
       violations = payload['violations']
       foo_bar_violations = violations['foo.bar']
       assert_equal 1, foo_bar_violations.length
