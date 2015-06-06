@@ -88,33 +88,32 @@ class Service::Mail < Service
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
   <body style="background-color: #ffffff; padding: 0px; margin: 0px;">
-    <table width="100%" cellpadding="20" cellspacing="0">
-      <tr>
-        <td align="center" valign="top">
-          <table width="600" cellpadding="0" cellspacing="0" class="container" style="border: 1px solid #ffffff;">
-            <tr>
-              <td align="center" valign="top">
-                <div id="headbar" style="background-color: #ffffff;padding: 20px;border-bottom: 0px solid #ffffff;">
-                  <div id="headlogo" style="color: #CCC; font-size: 3em; font-family: Arial; font-weight: bold; text-align: left; text-shadow: black 0px 2px 0px, #E5E5E5 0px -1px 0px; vertical-align: middle">
-                    <img src="http://info.librato.com/hs-fs/hubfs/nl-librato-swi-logo-180px.png" alt="Librato Metrics">
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td valign="top" align="left" style="background-color: #FFFFFF;padding: 20px;font-family: Arial;font-size: 12px;line-height: 150%;color: #333333;">
-                <div id="content">
-                #{html}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td valign="top" align="center" style="background-color: #FFFFFF;padding: 20px;font-family: Arial;font-size: 10px;line-height: 150%;color: #333333;">
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
+    <table width="100%" cellspacing="0" cellpadding="20">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table class="container" style="border: 1px solid #ffffff;" width="600" cellspacing="0" cellpadding="0">
+              <tbody>
+                <tr>
+                  <td align="center" valign="top">
+                    <div id="headbar" style="background-color: #ffffff; padding: 20px; border-bottom: 0px solid #ffffff;">
+                      <div id="headlogo" style="color: #ccc; font-size: 3em; font-family: Arial; font-weight: bold; text-align: left; text-shadow: black 0px 2px 0px, #E5E5E5 0px -1px 0px; vertical-align: middle;"><img src="http://info.librato.com/hs-fs/hubfs/nl-librato-swi-logo-180px.png" alt="Librato Metrics" /></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 150%; color: #333333;" align="left" valign="top">
+                    <div id="content">#{html}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #333333;" align="center" valign="top">&nbsp;You received this email because you set up alerts with&nbsp;the&nbsp;Librato app.</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </body>
 </html>
