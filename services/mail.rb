@@ -97,17 +97,17 @@ class Service::Mail < Service
                 <tr>
                   <td align="center" valign="top">
                     <div id="headbar" style="background-color: #ffffff; padding: 20px; border-bottom: 0px solid #ffffff;">
-                      <div id="headlogo" style="color: #ccc; font-size: 3em; font-family: Arial; font-weight: bold; text-align: left; text-shadow: black 0px 2px 0px, #E5E5E5 0px -1px 0px; vertical-align: middle;"><img src="http://info.librato.com/hs-fs/hubfs/nl-librato-swi-logo-180px.png" alt="Librato Metrics" /></div>
+                      <div id="headlogo" style="color: #ccc; font-size: 3em; font-family: Arial; font-weight: bold; text-align: left; text-shadow: black 0px 2px 0px, #E5E5E5 0px -1px 0px; vertical-align: middle;"><img src="http://info.librato.com/hs-fs/hubfs/nl-librato-swi-logo-180px.png" alt="Librato Alert" /></div>
                     </div>
                   </td>
                 </tr>
                 <tr>
-                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 150%; color: #333333;" align="left" valign="top">
+                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 200%; color: #333333;" align="left" valign="top">
                     <div id="content">#{html}</div>
                   </td>
                 </tr>
                 <tr>
-                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #333333;" align="center" valign="top">&nbsp;You received this email because you set up alerts with&nbsp;the&nbsp;Librato app.</td>
+                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #666666;" align="center" valign="top">You received this email because you set up alerts with the Librato app.</td>
                 </tr>
               </tbody>
             </table>
