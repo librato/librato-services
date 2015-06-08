@@ -87,32 +87,26 @@ class Service::Mail < Service
     <title>Librato Alert</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
-  <body style="background-color: #f5f5f5; padding: 0px; margin: 0px;">
+  <body style="background-color: #ffffff; padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="20">
       <tbody>
         <tr>
+      <tbody>
+        <tr>
           <td align="center" valign="top">
-            <table class="container" style="border: 1px solid #ffffff;" width="600" cellspacing="0" cellpadding="0">
-              <tbody>
-                <tr>
-                  <td align="center" valign="top">
-                    <div id="headbar" style="background-color: #ffffff; padding: 20px; border-bottom: 0px solid #ffffff;">
-                      <div id="headlogo" style="color: #ccc; font-size: 3em; font-family: Arial; font-weight: bold; text-align: left; text-shadow: black 0px 2px 0px, #E5E5E5 0px -1px 0px; vertical-align: middle;"><img src="http://info.librato.com/hs-fs/hubfs/nl-librato-swi-logo-180px.png" alt="Librato Alert" /></div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 200%; color: #333333;" align="left" valign="top">
-                    <div id="content">#{html}</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #666666;" align="center" valign="top">You received this email because you set up alerts with the Librato app.</td>
-                </tr>
-              </tbody>
-            </table>
+            <div id="headlogo" style="text-align: left;"><img src="http://info.librato.com/hs-fs/hubfs/nl-librato-swi-logo-180px.png" alt="Librato Metrics" /></div>
           </td>
         </tr>
+        <tr>
+          <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 150%; color: #333333; text-align: left; vertical-align: top;">
+            <div id="content">#{html}</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #333333; text-align: center; vertical-align: top;">You received this email because you set up alerts with the Librato app.</td>
+        </tr>
+      </tbody>
+      </tr>
       </tbody>
     </table>
   </body>
