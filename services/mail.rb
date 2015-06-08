@@ -87,7 +87,7 @@ class Service::Mail < Service
     <title>Librato Alert</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
-  <body style="background-color: #ffffff; padding: 0px; margin: 0px;">
+  <body style="background-color: #f5f5f5; padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="20">
       <tbody>
         <tr>
