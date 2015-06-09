@@ -89,25 +89,19 @@ class Service::Mail < Service
   </head>
   <body style="background-color: #ffffff; padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="20">
-      <tbody>
-        <tr>
-      <tbody>
-        <tr>
-          <td align="center" valign="top">
-            <div id="headlogo" style="text-align: left;"><img src="http://info.librato.com/hs-fs/hubfs/nl-librato-swi-logo-180px.png" alt="Librato Metrics" /></div>
-          </td>
-        </tr>
-        <tr>
-          <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 150%; color: #333333; text-align: left; vertical-align: top;">
-            <div id="content">#{html}</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #333333; text-align: center; vertical-align: top;">You received this email because you set up alerts with the Librato app.</td>
-        </tr>
-      </tbody>
+      <tr>
+        <td>
+          <div id="headlogo" style="text-align: left;"><img src="https://s3.amazonaws.com/librato_images/logo-librato-swi/1503_Librato-SolarWindsCloud_600x200.png" width="180" alt="Librato Metrics" /></div>
+        </td>
       </tr>
-      </tbody>
+      <tr>
+        <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 150%; color: #000000; text-align: left; vertical-align: top;">
+          <div id="content">#{html}</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #000000; text-align: center; vertical-align: top;">You received this email because you set up alerts with the Librato app.</td>
+      </tr>
     </table>
   </body>
 </html>
