@@ -96,15 +96,7 @@ class Service::Mail < Service
       </tr>
       <tr>
         <td style="background-color: #ffffff; font-family: Arial; font-size: 12px; line-height: 150%; color: #000000; text-align: left; vertical-align: top;">
-          <div id="content">
-            <h1>Alert mike.composite.test has triggered!</h1>
-            <p>Account: portal-dev@librato.com</p>
-            <p>Link: https://metrics.librato.com/alerts/3999912</p>
-            <p>Source <code>test-source</code>:</p>
-            <ul>
-              <li>metric <code>mike.composite.test-fetchmeasurements</code> was above threshold 1 with value 43 recorded at Tue, Jun  9 2015 at 02:03:38 UTC</li>
-            </ul>
-          </div>
+          <div id="content">#{html}</div>
         </td>
       </tr>
       <tr>
