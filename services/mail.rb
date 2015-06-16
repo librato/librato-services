@@ -87,22 +87,16 @@ class Service::Mail < Service
     <title>Librato Alert</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
-  <body style="background-color: #ffffff; padding: 0px; margin: 0px;">
-    <table width="100%" cellspacing="0" cellpadding="20">
-      <tr>
-        <td>
-          <div id="headlogo" style="text-align: left;"><img src="https://s3.amazonaws.com/librato_images/logo-librato-swi/1503_Librato-SolarWindsCloud_600x200.png" width="180" alt="Librato Metrics" /></div>
-        </td>
-      </tr>
-      <tr>
-        <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 12px; line-height: 150%; color: #000000; text-align: left; vertical-align: top;">
-          <div id="content">#{html}</div>
-        </td>
-      </tr>
-      <tr>
-        <td style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #000000; text-align: center; vertical-align: top;">You received this email because you set up alerts with the Librato app.</td>
-      </tr>
-    </table>
+  <body style="background-color: #ffffff; padding: 20px; margin: 0px;">
+    <div id="headlogo" style="text-align: left;">
+    <img src="https://s3.amazonaws.com/librato_images/logo-librato-swi/1503_Librato-SolarWindsCloud_600x200.png" width="180" alt="Librato Metrics" />
+    </div>
+    <div style="background-color: #ffffff; font-family: Arial; font-size: 12px; color: #000000; text-align: left; vertical-align: top;">
+    <div id="content">#{html}</div>
+    </div>
+    <div style="background-color: #ffffff; padding: 20px; font-family: Arial; font-size: 10px; line-height: 150%; color: #000000; text-align: center; vertical-align: top;">
+      You received this email because you set up alerts with the Librato app.
+    </div>
   </body>
 </html>
 EOF
