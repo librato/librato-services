@@ -33,7 +33,7 @@ class Service::BigPanda < Service
   def body
     body = {
       'app_key' => settings[:app_key],
-      'service' => 'Librato',
+      'primary_property' => 'check',
       'check' => payload['alert']['name'],
       'timestamp' => payload['trigger_time']
     }
