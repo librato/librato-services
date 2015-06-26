@@ -24,7 +24,7 @@ class Service::Slack < Service
   def v2_alert_result
     data = Librato::Services::Output.new(payload)
     runbook_url = data.alert[:runbook_url]
-    trigger_time_utc = Time.at(data.trigger_time).utc
+    trigger_time_utc = DateTime.strptime(data.trigger_time.to_s, "%s").strftime("%a, %b %e %Y at %H:%M:%S UTC")
     if data.clear
       text = case data.clear
              when "manual"
