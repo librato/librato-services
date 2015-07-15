@@ -39,30 +39,6 @@ def remove_task(task_name)
   Rake.application.remove_task(task_name)
 end
 
-# We don't want to release to rubygems
-remove_task :release
-desc "Build gemspec, commit, and then git/tag push."
-task :release => ['gemspec:release', 'git:release', :package_cloud ]
-
-desc "Push gem to package_cloud"
-task :package_cloud do
-  # Dig into jeweler's guts to get the gem file name
-  gemspec_helper = jeweler.gemspec_helper
-  gemspec_helper.update_version(jeweler.version_helper) unless gemspec_helper.has_version?
-  gemspec = gemspec_helper.parse
-
-  gem_file_name = if Gem::Version.new(`gem -v`) >= Gem::Version.new("2.0.0.a")
-    Gem::Package.build(gemspec)
-  else
-    require "rubygems/builder"
-    Gem::Builder.new(gemspec).build
-  end
-
-  gem_file_path = File.join(jeweler.base_dir, gem_file_name)
-
-  sh "package_cloud push librato/rubygems #{gem_file_path}"
-end
-
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
