@@ -36,7 +36,7 @@ class Service::Zapier < Service
       :name => payload[:alert][:name],
       :description => "",
       :runbook_url => "",
-      :violations => []
+      :violations => ""
     }
 
     outgoing_payload.tap do
@@ -47,7 +47,7 @@ class Service::Zapier < Service
         output = Librato::Services::Output.new(payload)
         outgoing_payload[:violations] = payload[:violations].flat_map do |source, measurements|
           measurements.map { |measurement| output.format_measurement(measurement, source) }
-        end
+        end.join(". ")
       end
     end
   end
