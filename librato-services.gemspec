@@ -6,7 +6,7 @@
 
 Gem::Specification.new do |s|
   s.name = "librato-services"
-  s.version = "2.50.0"
+  s.version = "2.50.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
     "services/sns.rb",
     "services/victorops.rb",
     "services/webhook.rb",
+    "services/zapier.rb",
     "test/big_panda_test.rb",
     "test/campfire_test.rb",
     "test/clearing_test.rb",
@@ -64,7 +65,8 @@ Gem::Specification.new do |s|
     "test/sns_test.rb",
     "test/timeout_service_test.rb",
     "test/victorops_test.rb",
-    "test/webhook_test.rb"
+    "test/webhook_test.rb",
+    "test/zapier_test.rb"
   ]
   s.homepage = "http://github.com/librato/librato-services"
   s.licenses = ["MIT"]
@@ -91,7 +93,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, ["~> 3.5"])
       s.add_development_dependency(%q<jeweler>, ["~> 2.0"])
       s.add_development_dependency(%q<yard>, ["~> 0.8"])
-      s.add_development_dependency(%q<package_cloud>, ["~> 0.2"])
     else
       s.add_dependency(%q<faraday>, ["~> 0.8"])
       s.add_dependency(%q<tilt>, ["~> 1"])
