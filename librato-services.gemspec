@@ -6,7 +6,7 @@
 
 Gem::Specification.new do |s|
   s.name = "librato-services"
-  s.version = "2.50.1"
+  s.version = "2.50.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
     "librato-services.gemspec",
     "services/big_panda.rb",
     "services/campfire.rb",
-    "services/customer-io.rb",
     "services/flowdock.rb",
     "services/hipchat.rb",
     "services/mail.rb",
@@ -53,7 +52,6 @@ Gem::Specification.new do |s|
     "test/big_panda_test.rb",
     "test/campfire_test.rb",
     "test/clearing_test.rb",
-    "test/customer_io_test.rb",
     "test/flowdock_test.rb",
     "test/helper.rb",
     "test/hipchat_test.rb",
