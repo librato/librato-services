@@ -93,6 +93,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, ["~> 3.5"])
       s.add_development_dependency(%q<jeweler>, ["~> 2.0"])
       s.add_development_dependency(%q<yard>, ["~> 0.8"])
+      s.add_development_dependency(%q<package_cloud>, ["~> 0.2"])
     else
       s.add_dependency(%q<faraday>, ["~> 0.8"])
       s.add_dependency(%q<tilt>, ["~> 1"])
@@ -110,6 +111,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<shoulda>, ["~> 3.5"])
       s.add_dependency(%q<jeweler>, ["~> 2.0"])
       s.add_dependency(%q<yard>, ["~> 0.8"])
+      s.add_dependency(%q<package_cloud>, ["~> 0.2"])
     end
   else
     s.add_dependency(%q<faraday>, ["~> 0.8"])
@@ -128,6 +130,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<shoulda>, ["~> 3.5"])
     s.add_dependency(%q<jeweler>, ["~> 2.0"])
     s.add_dependency(%q<yard>, ["~> 0.8"])
+    s.add_dependency(%q<package_cloud>, ["~> 0.2"])
   end
 end
 
