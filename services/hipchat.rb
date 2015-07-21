@@ -137,7 +137,7 @@ class Service::Hipchat < Service
   def send_message(msg, format)
     retries = 0
     begin
-      success = hipchat[settings[:room_id]].send(settings[:from], msg,
+      success = hipchat[settings[:room_id]].send(settings[:from], truncate(msg),
                                            :notify => settings[:notify].to_i,
                                            :color => 'yellow',
                                            :message_format => format)
@@ -148,6 +148,18 @@ class Service::Hipchat < Service
         raise timeout
       end
       retry
+    end
+  end
+
+  private
+
+  # Prevent messages over 10,000 characters from causing a 400 error
+  # See: https://www.hipchat.com/docs/api/method/rooms/message
+  def truncate(message)
+    if message.length > 10_000
+      message[0...9985] << "... (truncated)"
+    else
+      message
     end
   end
 end
