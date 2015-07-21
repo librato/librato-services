@@ -40,5 +40,4 @@ group :development do
   gem "shoulda", "~> 3.5"
   gem "jeweler", "~> 2.0"
   gem 'yard', "~> 0.8"
-  gem "package_cloud", "~> 0.2"
 end
