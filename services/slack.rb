@@ -105,7 +105,7 @@ class Service::Slack < Service
     snapshot = payload[:snapshot]
 
     name = snapshot[:entity_name].blank? ? snapshot[:entity_url] : snapshot[:entity_name]
-    sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email] : snapshot[:user][:full_name]
+    sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email].split("@").first : snapshot[:user][:full_name]
     message = snapshot[:message].blank? ? nil : "#{snapshot[:message]}\n"
     gravatar = "https://secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(snapshot[:user][:email])}?s=32&d=mm"
 
@@ -113,6 +113,7 @@ class Service::Slack < Service
       attachments: [
         {
           author_name: sender,
+          author_link: "mailto:#{snapshot[:user][:email]}",
           author_icon: gravatar,
           title: name,
           title_link: snapshot[:entity_url],

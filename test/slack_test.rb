@@ -149,6 +149,32 @@ class SlackTest < Librato::Services::TestCase
     svc.receive_snapshot
   end
 
+  def test_author_name_with_full_name
+    svc = service(:snapshot, @settings, snapshot_payload)
+
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body])
+      assert_equal("Librato User", payload["attachments"][0]["author_name"])
+      [200, {}, '']
+    end
+
+    svc.receive_snapshot
+  end
+
+  def test_author_name_without_full_name
+    snapshot_payload_dup = snapshot_payload.dup
+    snapshot_payload_dup["snapshot"]["user"].reject! { |k,_| k == "full_name" }
+    svc = service(:snapshot, @settings, snapshot_payload_dup)
+
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body])
+      assert_equal("portal-dev", payload["attachments"][0]["author_name"])
+      [200, {}, '']
+    end
+
+    svc.receive_snapshot
+  end
+
   def service(*args)
     super Service::Slack, *args
   end
