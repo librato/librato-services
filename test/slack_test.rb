@@ -168,7 +168,7 @@ class SlackTest < Librato::Services::TestCase
 
     @stubs.post @stub_url do |env|
       payload = JSON.parse(env[:body])
-      assert_equal("portal-dev", payload["attachments"][0]["author_name"])
+      assert_equal("portal-dev@librato.com", payload["attachments"][0]["author_name"])
       [200, {}, '']
     end
 
