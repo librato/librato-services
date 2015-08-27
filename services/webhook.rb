@@ -71,7 +71,8 @@ class Service::Webhook < Service
       http.basic_auth *uri.userinfo.split(":").map{|x| CGI.unescape(x)}
     end
     url = "%s://%s:%d%s" % [uri.scheme, uri.host, uri.port, uri.request_uri]
-    http_post url, {:payload => Yajl::Encoder.encode(hash)}
+    resp = http_post(url, {:payload => Yajl::Encoder.encode(hash)})
+    log("Webhook resp: " + resp.inspect)
   rescue Faraday::Error::ConnectionFailed
     log("Connection failed for url: #{url} for payload: #{payload.inspect}")
   end
