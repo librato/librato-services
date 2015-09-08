@@ -19,6 +19,10 @@ class Service::Mail < Service
         errors[:addresses] = "Must be a comma-separated string"
         return false
       end
+      if address.strip !~ /@/
+        errors[:addresses] = "Not a valid email address"
+        return false
+      end
     end
     true
   end
