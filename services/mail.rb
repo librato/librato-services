@@ -20,7 +20,7 @@ class Service::Mail < Service
         return false
       end
       if address.strip !~ /@/
-        errors[:addresses] = "Not a valid email address"
+        errors[:addresses] = "Not a valid email address: #{address}"
         return false
       end
     end
