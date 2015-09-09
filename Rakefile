@@ -24,7 +24,6 @@ t = Jeweler::Tasks.new do |gem|
   # dependencies defined in Gemfile
 end
 jeweler = t.jeweler
-Jeweler::RubygemsDotOrgTasks.new
 
 #
 # XXX: Rake does not provide a way to remove a task
