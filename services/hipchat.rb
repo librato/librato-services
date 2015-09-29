@@ -137,7 +137,7 @@ class Service::Hipchat < Service
   def send_message(msg, format)
     retries = 0
     begin
-      success = hipchat[settings[:room_id]].send(settings[:from], truncate(msg),
+      success = hipchat[encode(settings[:room_id])].send(settings[:from], truncate(msg),
                                            :notify => settings[:notify].to_i,
                                            :color => 'yellow',
                                            :message_format => format)
@@ -161,5 +161,10 @@ class Service::Hipchat < Service
     else
       message
     end
+  end
+
+  # URI Encodes a given value
+  def encode(val)
+    URI::encode(val)
   end
 end
