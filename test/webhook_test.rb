@@ -22,6 +22,12 @@ class WebhookTest < Librato::Services::TestCase
     assert(!svc.receive_validate(errors))
     assert_equal(1, errors.length)
     assert(!errors[:url].nil?)
+
+    svc = service(:alert, {:url => "example.com/foo"}, alert_payload)
+    errors = {}
+    assert(!svc.receive_validate(errors))
+    assert_equal(1, errors.length)
+    assert(!errors[:url].nil?)
   end
 
   def test_alerts_multiple_measurements
