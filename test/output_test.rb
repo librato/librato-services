@@ -75,6 +75,7 @@ EOF
     assert_equal(expected, output.markdown)
   end
 
+  # use decimals in threshold and value to test the formatting of decimal places
   def test_simple_alert
     payload = {
       alert: {id: 123, name: "Some alert name", version: 2},
@@ -82,10 +83,10 @@ EOF
       service_type: "campfire",
       event_type: "alert",
       trigger_time: 12321123,
-      conditions: [{type: "above", threshold: 10, id: 1}],
+      conditions: [{type: "above", threshold: 10.5, id: 1}],
       violations: {
         "foo.bar" => [{
-          metric: "metric.name", value: 100, recorded_at: 1389391083,
+          metric: "metric.name", value: 100.12345, recorded_at: 1389391083,
           condition_violated: 1
         }]
       }
@@ -97,7 +98,7 @@ EOF
 Link: https://metrics.librato.com/alerts/123
 
 Source `foo.bar`:
-* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `metric.name` was above threshold 10.5 with value 100.123 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
     assert_equal(expected, output.markdown)
   end
