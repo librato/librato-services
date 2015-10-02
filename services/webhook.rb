@@ -18,6 +18,12 @@ class Service::Webhook < Service
       return false
     end
 
+    # Catches bare hostnames or IPs such as www.example.com or 192.0.2.0
+    if !uri.scheme
+      errors[:url] = 'Is missing protocol'
+      return false
+    end
+
     return true
   end
 
