@@ -2,7 +2,6 @@ module Librato
   module Services
     class Numbers
       def self.format_for_threshold(threshold, number, tolerance=2)
-
         threshold_decimals = number_decimal_places(threshold)
         number_decimals = number_decimal_places(number)
 

@@ -1,5 +1,6 @@
 require 'redcarpet'
 require 'helpers/alert_helpers'
+require 'lib/librato-services/numbers'
 
 # TODO
 # This has grown to the point where it may be worth generating an Alert
@@ -107,7 +108,10 @@ module Librato
         if condition[:type] == "absent"
           "absent for #{condition[:duration]} seconds"
         else
-          "#{condition[:type]} threshold #{threshold(condition, measurement)} with value #{measurement[:value]}"
+          threshold_value = condition[:threshold]
+          actual_value = measurement[:value]
+          formatted_value = Librato::Services::Numbers.format_for_threshold(threshold_value, actual_value)
+          "#{condition[:type]} threshold #{threshold(condition,measurement)} with value #{formatted_value}"
         end
       end
 
