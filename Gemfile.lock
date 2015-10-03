@@ -143,3 +143,6 @@ DEPENDENCIES
   tinder (~> 1.9)
   yajl-ruby (~> 1.1)
   yard (~> 0.8)
+
+BUNDLED WITH
+   1.10.5
