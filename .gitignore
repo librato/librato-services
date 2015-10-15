@@ -52,5 +52,4 @@ log/newrelic*
 /payloads
 /*.gem
 
-/.ruby-version
 /.ruby-gemset
