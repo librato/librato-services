@@ -120,6 +120,32 @@ class MailTest < Librato::Services::TestCase
     assert(!message.to.empty?)
   end
 
+  def test_mail_message_alert_test_trigger_v2
+    payload = new_alert_payload.dup
+    payload[:triggered_by_user_test] = true
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    svc.mail_message.perform_deliveries = false
+    message = svc.mail_message
+    assert(!message.to.empty?)
+    assert_equal "[Librato] [Test] Alert Some alert name has triggered!", message.subject
+    assert(message.html_part.body.decoded.include?("This is a test message sent by foo@example.com via metrics.librato.com/alerts. No action is required."))
+    assert(message.text_part.body.decoded.include?("# This is a test message sent by foo@example.com via metrics.librato.com/alerts. No action is required."))
+  end
+
+  def test_mail_message_alert_test_trigger_v1
+    payload = alert_payload.dup
+    payload[:triggered_by_user_test] = true
+    svc = service(:alert, { :addresses => 'fred@barn.com' }, payload)
+    message = svc.mail_message
+    svc.mail_message.perform_deliveries = false
+    message = svc.mail_message
+    assert(!message.to.empty?)
+    assert_equal "[Librato] [Test] Alert  has triggered!", message.subject
+    assert(message.html_part.body.decoded.include?("This is a test message sent via metrics.librato.com/alerts. No action is required."))
+    assert(message.text_part.body.decoded.include?("This is a test message sent via metrics.librato.com/alerts. No action is required."))
+
+  end
+
   def test_blacklist
     save_bl = ENV['BLACKLISTED_EMAILS']
 
