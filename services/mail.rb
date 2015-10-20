@@ -101,7 +101,7 @@ class Service::Mail < Service
   </head>
   <body style="background-color: #ffffff; padding: 20px; margin: 0px;">
     #{test_notice}
-    <div id="headlogo" style="text-align: left;">
+    <div id="headlogo" style="text-align: left; padding-top:20px;">
     <img src="https://s3.amazonaws.com/librato_images/logo-librato-swi/1503_Librato-SolarWindsCloud_600x200.png" width="180" alt="Librato Metrics" />
     </div>
     <div style="background-color: #ffffff; font-family: Arial; font-size: 12px; color: #000000; text-align: left; vertical-align: top;">
@@ -126,7 +126,7 @@ class Service::Mail < Service
   <body style="background-color: #2a2a2a; padding: 0px; margin: 0px;">
     <% if payload[:triggered_by_user_test] %>
     <p>
-    <div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border: 0px solid #FAEBB1;">
+    <div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border: 0px solid #FAEBB1;">
       This is a test message sent via metrics.librato.com/alerts. No action is required.
     </div>
     </p>
