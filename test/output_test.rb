@@ -84,6 +84,7 @@ EOF
       event_type: "alert",
       trigger_time: 12321123,
       conditions: [{type: "above", threshold: 10.5, id: 1}],
+      triggered_by_user_test: false,
       violations: {
         "foo.bar" => [{
           metric: "metric.name", value: 100.12345, recorded_at: 1389391083,
@@ -103,6 +104,41 @@ EOF
     assert_equal(expected, output.markdown)
   end
 
+  def test_alert_triggered_by_user
+    payload = {
+      alert: {id: 123, name: "Some alert name", version: 2},
+      settings: {},
+      service_type: "campfire",
+      event_type: "alert",
+      trigger_time: 12321123,
+      conditions: [{type: "above", threshold: 10.5, id: 1}],
+      triggered_by_user_test: true,
+      violations: {
+        "foo.bar" => [{
+          metric: "metric.name", value: 100.12345, recorded_at: 1389391083,
+          condition_violated: 1
+        }]
+      },
+      auth: {
+        email: "account@email.com"
+      }
+    }
+    output = Librato::Services::Output.new(payload)
+    expected = <<EOF
+# Note! This is a test message sent by account@email.com via metrics.librato.com/alerts. No action is required.
+
+# Alert Some alert name has triggered!
+
+Account: account@email.com
+
+Link: https://metrics.librato.com/alerts/123
+
+Source `foo.bar`:
+* metric `metric.name` was above threshold 10.5 with value 100.123 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+EOF
+    assert_equal(expected, output.markdown)
+  end
+
   def test_complex_alert
     payload = {
       alert: {id: 123, name: "Some alert name", version: 2},
@@ -110,6 +146,7 @@ EOF
       service_type: "campfire",
       event_type: "alert",
       trigger_time: 12321123,
+      triggered_by_user_test: false,
       conditions: [
         {type: "above", threshold: 10, id: 1},
         {type: "below", threshold: 100, id: 2},
@@ -185,6 +222,7 @@ EOF
         service_type: "campfire",
         event_type: "alert",
         trigger_time: 12321123,
+        triggered_by_user_test: false,
         conditions: [{type: "above", threshold: 10, id: 1}],
         violations: {
             "foo.bar" => [{
@@ -212,6 +250,7 @@ EOF
         service_type: "campfire",
         event_type: "alert",
         trigger_time: 12321123,
+        triggered_by_user_test: false,
         conditions: [{type: "above", threshold: 10, id: 1}],
         violations: {
             "foo.bar" => [{

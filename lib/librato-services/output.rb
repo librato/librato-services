@@ -11,7 +11,7 @@ module Librato
       include Helpers::AlertHelpers
 
       attr_reader :violations, :conditions, :alert, :clear, :trigger_time
-      def initialize(payload)
+      def initialize(payload, add_test_notice=true)
         if !payload[:clear]
           # conditions and violations are required for faults
           if !payload[:conditions] || !payload[:violations] && !payload[:clear]
@@ -28,6 +28,7 @@ module Librato
         @clear = payload[:clear]
         @trigger_time = payload[:trigger_time]
         @auth = payload[:auth] || {}
+        @show_test_notice = (add_test_notice and payload[:triggered_by_user_test])
       end
 
       def html
@@ -51,7 +52,11 @@ module Librato
       end
 
       def generate_alert_raised
-        result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
+        result_array = []
+        if @show_test_notice
+          result_array << ["# Note! This is a test message sent by #{@auth[:email]} via metrics.librato.com/alerts. No action is required.\n"]
+        end
+        result_array << ["# Alert #{@alert[:name]} has triggered!\n"]
         if @alert[:description]
           result_array << "Description: #{@alert[:description]}\n"
         end
