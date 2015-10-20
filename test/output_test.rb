@@ -125,7 +125,7 @@ EOF
     }
     output = Librato::Services::Output.new(payload)
     expected = <<EOF
-# Note! This is a test message sent by account@email.com via metrics.librato.com/alerts. No action is required.
+# This is a test message sent by account@email.com via metrics.librato.com/alerts. No action is required.
 
 # Alert Some alert name has triggered!
 
