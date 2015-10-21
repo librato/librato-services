@@ -57,6 +57,9 @@ class Service::Webhook < Service
         :conditions => payload['conditions'],
         :violations => payload['violations']
       }
+      if payload[:triggered_by_user_test]
+        result[:triggered_by_user_test] = true
+      end
     else
       measurements = get_measurements(payload)[0..19]
       result = {
