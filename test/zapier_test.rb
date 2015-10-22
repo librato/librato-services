@@ -26,8 +26,21 @@ class ZapierTest < Librato::Services::TestCase
     assert(@service.receive_alert)
   end
 
+  def test_receive_alert_triggered_by_test
+    payload = new_alert_payload.dup
+    payload[:triggered_by_user_test] = true
+    svc = service(:alert, @settings, payload)
+    @stubs.post URI.parse(@settings[:url]).request_uri do |env|
+      payload = env[:body]
+      assert_equal true, payload[:triggered_by_user_test]
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
   def test_body
-    expected_keys = [:id, :name, :description, :runbook_url, :violations]
+    expected_keys = [:id, :name, :description, :runbook_url, :violations, :triggered_by_user_test]
     assert_equal(expected_keys, @service.body.keys)
   end
 
