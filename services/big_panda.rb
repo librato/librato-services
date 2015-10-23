@@ -31,16 +31,24 @@ class Service::BigPanda < Service
   end
 
   def body
+    check = payload['alert']['name']
+    if payload[:triggered_by_user_test]
+      check = "[Test] " + check
+    end
     body = {
       'app_key' => settings[:app_key],
       'primary_property' => 'check',
-      'check' => payload['alert']['name'],
+      'check' => check,
       'timestamp' => payload['trigger_time']
     }
 
     body['description'] = payload['alert']['description'] if payload['alert']['description']
     body['runbook_url'] = payload['alert']['runbook_url'] if present?(payload['alert']['runbook_url'])
     body['link'] = alert_link(payload['alert']['id'])
+
+    if payload[:triggered_by_user_test]
+      body['note'] = "This is a test message sent by #{payload[:auth][:email]} via metrics.librato.com/alerts. No action is required."
+    end
 
     if payload['violations']
       sources = []
