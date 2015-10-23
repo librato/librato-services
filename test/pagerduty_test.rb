@@ -75,6 +75,25 @@ class PagerdutyTest < Librato::Services::TestCase
       assert_equal "trigger", env[:body][:event_type]
       assert_equal "foo", env[:body][:incident_key]
       assert_equal 'Some alert name', env[:body][:description]
+      assert_nil env[:body][:details]["note"]
+      [200, {}, '']
+    end
+
+    svc.receive_alert
+  end
+
+  def test_alert_trigged_by_user
+    payload = new_alert_payload
+    payload[:triggered_by_user_test] = true
+    svc = service(:alert, {
+                    :service_key => 'k',
+                    :event_type => 't',
+                    :description => 'd'
+                  }, payload)
+
+    @stubs.post '/generic/2010-04-15/create_event.json' do |env|
+      assert_equal '[Test] Some alert name', env[:body][:description]
+      assert_equal 'This is a test message via metrics.librato.com/alerts. No action is required.', env[:body][:details][:note]
       [200, {}, '']
     end
 

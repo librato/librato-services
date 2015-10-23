@@ -36,6 +36,9 @@ class Service::Pagerduty < Service
     end
     alert_name = payload['alert']['name']
     description = alert_name.blank? ? settings[:description] : alert_name
+    if payload[:triggered_by_user_test]
+      description = "[Test] " + description
+    end
     body = {
       :service_key => settings[:service_key],
       :event_type => settings[:event_type],
@@ -45,6 +48,9 @@ class Service::Pagerduty < Service
 
     body[:event_type] = payload[:clear] ? "resolve" : "trigger"
 
+    if payload[:triggered_by_user_test]
+      body[:details][:note] = "This is a test message via metrics.librato.com/alerts. No action is required."
+    end
     if payload[:alert][:version] == 1
       body[:details][:metric_url] = payload_link(payload)
     end
