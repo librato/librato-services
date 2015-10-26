@@ -47,7 +47,7 @@ class Service::BigPanda < Service
     body['link'] = alert_link(payload['alert']['id'])
 
     if payload[:triggered_by_user_test]
-      body['note'] = "This is a test message sent by #{payload[:auth][:email]} via metrics.librato.com/alerts. No action is required."
+      body['note'] = test_alert_message(@auth[:email])
     end
 
     if payload['violations']

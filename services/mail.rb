@@ -127,7 +127,7 @@ class Service::Mail < Service
     <% if payload[:triggered_by_user_test] %>
     <p>
     <div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border: 0px solid #FAEBB1;">
-      This is a test message sent via metrics.librato.com/alerts. No action is required.
+      <%= test_alert_message() %>
     </div>
     </p>
     <% end %>
@@ -182,7 +182,7 @@ EOF
   def text_email
     erb(unindent(<<-EOF), binding)
       <% if payload[:triggered_by_user_test] %>
-        This is a test message sent via metrics.librato.com/alerts. No action is required.
+        <%= test_alert_message() %>
 
       <% end %>
       Metric <%= h payload[:metric][:name] %> has triggered an alert!
@@ -202,14 +202,14 @@ EOF
   end
 
   def create_test_notice_markdown(sender)
-    return %{\# This is a test message sent by #{sender} via metrics.librato.com/alerts. No action is required.\n\n}
+    return %{\# #{test_alert_message(sender)}\n\n}
   end
 
   def create_test_notice_html(sender)
     <<-EOF
 <p>
 <div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border: 0px solid #FAEBB1;">
-    This is a test message sent by #{sender} via metrics.librato.com/alerts. No action is required.
+    #{test_alert_message(sender)}
 </div>
 </p>
     EOF

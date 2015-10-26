@@ -93,7 +93,7 @@ class PagerdutyTest < Librato::Services::TestCase
 
     @stubs.post '/generic/2010-04-15/create_event.json' do |env|
       assert_equal '[Test] Some alert name', env[:body][:description]
-      assert_equal 'This is a test message via metrics.librato.com/alerts. No action is required.', env[:body][:details][:note]
+      assert include_test_alert_message?(env[:body][:details][:note])
       [200, {}, '']
     end
 

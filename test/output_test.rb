@@ -1,6 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 
-class Librato::Services::OutputTestCase < Test::Unit::TestCase
+class Librato::Services::OutputTestCase < Librato::Services::TestCase
   ENV['METRICS_APP_URL'] = 'metrics.librato.com'
   def test_clear
     payload = {
@@ -124,19 +124,7 @@ EOF
       }
     }
     output = Librato::Services::Output.new(payload)
-    expected = <<EOF
-# This is a test message sent by account@email.com via metrics.librato.com/alerts. No action is required.
-
-# Alert Some alert name has triggered!
-
-Account: account@email.com
-
-Link: https://metrics.librato.com/alerts/123
-
-Source `foo.bar`:
-* metric `metric.name` was above threshold 10.5 with value 100.123 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
-EOF
-    assert_equal(expected, output.markdown)
+    assert include_test_alert_message?(output.markdown, "account@email.com")
   end
 
   def test_complex_alert

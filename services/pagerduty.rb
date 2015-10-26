@@ -49,7 +49,7 @@ class Service::Pagerduty < Service
     body[:event_type] = payload[:clear] ? "resolve" : "trigger"
 
     if payload[:triggered_by_user_test]
-      body[:details][:note] = "This is a test message via metrics.librato.com/alerts. No action is required."
+      body[:details][:note] = test_alert_message()
     end
     if payload[:alert][:version] == 1
       body[:details][:metric_url] = payload_link(payload)

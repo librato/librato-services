@@ -54,7 +54,7 @@ module Librato
       def generate_alert_raised
         result_array = []
         if @show_test_notice
-          result_array << ["# This is a test message sent by #{@auth[:email]} via metrics.librato.com/alerts. No action is required.\n"]
+          result_array << ["# #{test_alert_message(@auth[:email])}\n"]
         end
         result_array << ["# Alert #{@alert[:name]} has triggered!\n"]
         if @alert[:description]

@@ -54,7 +54,7 @@ class Service::Slack < Service
     else
       pretext = ''
       if payload[:triggered_by_user_test]
-        pretext << "This is a test message sent by #{payload[:auth][:email]} via metrics.librato.com/alerts. No action is required.\n\n"
+        pretext << "#{test_alert_message(payload[:auth][:email])}\n\n"
       end
       pretext << "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!"
       unless runbook_url.blank?

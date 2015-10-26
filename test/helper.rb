@@ -48,5 +48,9 @@ class Librato::Services::TestCase < Test::Unit::TestCase
   def snapshot_payload
     Librato::Services::Helpers::SnapshotHelpers.sample_snapshot_payload
   end
-end
 
+  def include_test_alert_message?(actual, email=false)
+    email_text = (email ? "by #{email} " : "")
+    actual.include? "This is a test alert notification sent #{email_text}via metrics.librato.com/alerts. No action is required."
+  end
+end
