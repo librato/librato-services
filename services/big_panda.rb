@@ -47,7 +47,7 @@ class Service::BigPanda < Service
     body['link'] = alert_link(payload['alert']['id'])
 
     if payload[:triggered_by_user_test]
-      body['note'] = test_alert_message(payload['auth']['email'])
+      body['note'] = test_alert_message()
     end
 
     if payload['violations']

@@ -124,7 +124,7 @@ EOF
       }
     }
     output = Librato::Services::Output.new(payload)
-    assert include_test_alert_message?(output.markdown, "account@email.com")
+    assert include_test_alert_message?(output.markdown)
   end
 
   def test_complex_alert

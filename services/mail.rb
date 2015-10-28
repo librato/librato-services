@@ -61,9 +61,8 @@ class Service::Mail < Service
 
       if payload[:alert][:version] == 2
         output = Librato::Services::Output.new(payload, add_test_notice=false)
-        text = payload[:triggered_by_user_test] ? create_test_notice_markdown(payload[:auth][:email]) + output.markdown
-                                                : output.markdown
-        html = new_html_email(output.html, payload[:auth][:email], payload[:triggered_by_user_test])
+        text = payload[:triggered_by_user_test] ? create_test_notice_markdown() + output.markdown : output.markdown
+        html = new_html_email(output.html, payload[:triggered_by_user_test])
       else
         text = text_email
         html = html_email
@@ -89,9 +88,9 @@ class Service::Mail < Service
   end
 
   #TODO change when no longer "new"
-  def new_html_email(html, sender, triggered_by_user_test)
+  def new_html_email(html, triggered_by_user_test)
     if triggered_by_user_test
-      test_notice = create_test_notice_html(sender)
+      test_notice = create_test_notice_html()
     end
     <<-EOF
 <html>
@@ -201,15 +200,15 @@ EOF
     EOF
   end
 
-  def create_test_notice_markdown(sender)
-    return %{\# #{test_alert_message(sender)}\n\n}
+  def create_test_notice_markdown()
+    return %{\# #{test_alert_message()}\n\n}
   end
 
-  def create_test_notice_html(sender)
+  def create_test_notice_html()
     <<-EOF
 <p>
 <div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border: 0px solid #FAEBB1;">
-    #{test_alert_message(sender)}
+    #{test_alert_message()}
 </div>
 </p>
     EOF

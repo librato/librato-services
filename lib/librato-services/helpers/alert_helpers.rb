@@ -76,9 +76,8 @@ module Librato
           ERB::Util.h(text)
         end
 
-        def test_alert_message(email=false)
-          email_text = (email ? "by #{email} " : "")
-          "This is a test alert notification sent #{email_text}via metrics.librato.com/alerts. No action is required."
+        def test_alert_message()
+          "This is a test alert notification, no action is required."
         end
 
         def unindent(string)

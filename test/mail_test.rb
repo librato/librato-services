@@ -128,8 +128,8 @@ class MailTest < Librato::Services::TestCase
     message = svc.mail_message
     assert(!message.to.empty?)
     assert_equal "[Librato] [Test] Alert Some alert name has triggered!", message.subject
-    assert include_test_alert_message?(message.html_part.body.decoded, "foo@example.com")
-    assert include_test_alert_message?(message.text_part.body.decoded, "foo@example.com")
+    assert include_test_alert_message?(message.html_part.body.decoded)
+    assert include_test_alert_message?(message.text_part.body.decoded)
   end
 
   def test_mail_message_alert_test_trigger_v1

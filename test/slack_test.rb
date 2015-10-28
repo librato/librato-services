@@ -128,7 +128,7 @@ class SlackTest < Librato::Services::TestCase
       assert_not_nil(attachment["fields"])
       assert_equal(1, attachment["fields"].length)
       assert_not_nil(attachment["mrkdwn_in"])
-      assert (not include_test_alert_message?(attachment["pretext"], "foo@example.com"))
+      assert (not include_test_alert_message?(attachment["pretext"]))
       [200, {}, '']
     end
     svc.receive_alert
@@ -141,7 +141,7 @@ class SlackTest < Librato::Services::TestCase
     @stubs.post @stub_url do |env|
       payload = JSON.parse(env[:body])
       attachment = payload["attachments"][0]
-      assert include_test_alert_message?(attachment["pretext"], "foo@example.com")
+      assert include_test_alert_message?(attachment["pretext"])
       [200, {}, '']
     end
     svc.receive_alert
