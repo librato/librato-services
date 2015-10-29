@@ -130,9 +130,21 @@ class SNSTest < Librato::Services::TestCase
         conditions: [{ type: 'above', threshold: 10, id: 1 }],
         violations: {
           "foo.bar" => [{ metric: 'metric.name', value: 100, recorded_at: 1389391083, condition_violated: 1 }]
-        }
+        },
+        triggered_by_user_test: false
       }))
 
+    svc.receive_alert
+  end
+
+  def test_receive_test_alert_v2
+    payload = new_alert_payload.dup
+    payload[:triggered_by_user_test] = true
+    svc = service(:alert, default_setting, payload)
+    expect(svc).to receive(:publish_message).once.with(hash_including(
+      {
+        triggered_by_user_test: true
+      }))
     svc.receive_alert
   end
 

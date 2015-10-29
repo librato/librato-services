@@ -36,7 +36,8 @@ class Service::Zapier < Service
       :name => payload[:alert][:name],
       :description => "",
       :runbook_url => "",
-      :violations => ""
+      :violations => "",
+      :triggered_by_user_test => payload[:triggered_by_user_test]
     }
 
     outgoing_payload.tap do

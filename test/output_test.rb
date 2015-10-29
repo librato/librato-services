@@ -1,6 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 
-class Librato::Services::OutputTestCase < Test::Unit::TestCase
+class Librato::Services::OutputTestCase < Librato::Services::TestCase
   ENV['METRICS_APP_URL'] = 'metrics.librato.com'
   def test_clear
     payload = {
@@ -84,6 +84,7 @@ EOF
       event_type: "alert",
       trigger_time: 12321123,
       conditions: [{type: "above", threshold: 10.5, id: 1}],
+      triggered_by_user_test: false,
       violations: {
         "foo.bar" => [{
           metric: "metric.name", value: 100.12345, recorded_at: 1389391083,
@@ -103,6 +104,29 @@ EOF
     assert_equal(expected, output.markdown)
   end
 
+  def test_alert_triggered_by_user
+    payload = {
+      alert: {id: 123, name: "Some alert name", version: 2},
+      settings: {},
+      service_type: "campfire",
+      event_type: "alert",
+      trigger_time: 12321123,
+      conditions: [{type: "above", threshold: 10.5, id: 1}],
+      triggered_by_user_test: true,
+      violations: {
+        "foo.bar" => [{
+          metric: "metric.name", value: 100.12345, recorded_at: 1389391083,
+          condition_violated: 1
+        }]
+      },
+      auth: {
+        email: "account@email.com"
+      }
+    }
+    output = Librato::Services::Output.new(payload)
+    assert include_test_alert_message?(output.markdown)
+  end
+
   def test_complex_alert
     payload = {
       alert: {id: 123, name: "Some alert name", version: 2},
@@ -110,6 +134,7 @@ EOF
       service_type: "campfire",
       event_type: "alert",
       trigger_time: 12321123,
+      triggered_by_user_test: false,
       conditions: [
         {type: "above", threshold: 10, id: 1},
         {type: "below", threshold: 100, id: 2},
@@ -185,6 +210,7 @@ EOF
         service_type: "campfire",
         event_type: "alert",
         trigger_time: 12321123,
+        triggered_by_user_test: false,
         conditions: [{type: "above", threshold: 10, id: 1}],
         violations: {
             "foo.bar" => [{
@@ -212,6 +238,7 @@ EOF
         service_type: "campfire",
         event_type: "alert",
         trigger_time: 12321123,
+        triggered_by_user_test: false,
         conditions: [{type: "above", threshold: 10, id: 1}],
         violations: {
             "foo.bar" => [{

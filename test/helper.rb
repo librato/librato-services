@@ -48,5 +48,8 @@ class Librato::Services::TestCase < Test::Unit::TestCase
   def snapshot_payload
     Librato::Services::Helpers::SnapshotHelpers.sample_snapshot_payload
   end
-end
 
+  def include_test_alert_message?(actual)
+    actual.include? "This is a test alert notification, no action is required."
+  end
+end

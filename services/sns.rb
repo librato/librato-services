@@ -45,7 +45,8 @@ class Service::SNS < Service
         :alert => payload['alert'],
         :trigger_time => payload['trigger_time'],
         :conditions => payload['conditions'],
-        :violations => payload['violations']
+        :violations => payload['violations'],
+        :triggered_by_user_test => payload['triggered_by_user_test']
       }
     else
       measurements = get_measurements(payload)[0..19]

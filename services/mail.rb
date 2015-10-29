@@ -55,10 +55,14 @@ class Service::Mail < Service
         mail.subject %{[Librato] Alert #{payload[:alert][:name]} has triggered!}
       end
 
+      if payload[:triggered_by_user_test]
+        mail.subject %{[Librato] [Test] Alert #{payload[:alert][:name]} has triggered!}
+      end
+
       if payload[:alert][:version] == 2
-        output = Librato::Services::Output.new(payload)
-        text = output.markdown
-        html = new_html_email(output.html)
+        output = Librato::Services::Output.new(payload, add_test_notice=false)
+        text = payload[:triggered_by_user_test] ? create_test_notice_markdown() + output.markdown : output.markdown
+        html = new_html_email(output.html, payload[:triggered_by_user_test])
       else
         text = text_email
         html = html_email
@@ -84,7 +88,10 @@ class Service::Mail < Service
   end
 
   #TODO change when no longer "new"
-  def new_html_email(html)
+  def new_html_email(html, triggered_by_user_test)
+    if triggered_by_user_test
+      test_notice = create_test_notice_html()
+    end
     <<-EOF
 <html>
   <head>
@@ -92,7 +99,8 @@ class Service::Mail < Service
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
   <body style="background-color: #ffffff; padding: 20px; margin: 0px;">
-    <div id="headlogo" style="text-align: left;">
+    #{test_notice}
+    <div id="headlogo" style="text-align: left; padding-top:20px;">
     <img src="https://s3.amazonaws.com/librato_images/logo-librato-swi/1503_Librato-SolarWindsCloud_600x200.png" width="180" alt="Librato Metrics" />
     </div>
     <div style="background-color: #ffffff; font-family: Arial; font-size: 12px; color: #000000; text-align: left; vertical-align: top;">
@@ -103,10 +111,10 @@ class Service::Mail < Service
     </div>
   </body>
 </html>
-EOF
+  EOF
   end
 
-  def html_email
+  def html_email()
     erb(unindent(<<-EOF), binding)
 
 <html>
@@ -115,6 +123,13 @@ EOF
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
   <body style="background-color: #2a2a2a; padding: 0px; margin: 0px;">
+    <% if payload[:triggered_by_user_test] %>
+    <p>
+    <div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border: 0px solid #FAEBB1;">
+      <%= test_alert_message() %>
+    </div>
+    </p>
+    <% end %>
     <table width="100%" cellpadding="20" cellspacing="0">
       <tr>
         <td align="center" valign="top">
@@ -165,6 +180,10 @@ EOF
 
   def text_email
     erb(unindent(<<-EOF), binding)
+      <% if payload[:triggered_by_user_test] %>
+        <%= test_alert_message() %>
+
+      <% end %>
       Metric <%= h payload[:metric][:name] %> has triggered an alert!
 
       <%- get_measurements(payload)[0..19].each do |measurement| %>
@@ -180,4 +199,19 @@ EOF
       metrics@librato.com - https://metrics.librato.com/
     EOF
   end
+
+  def create_test_notice_markdown()
+    return %{\# #{test_alert_message()}\n\n}
+  end
+
+  def create_test_notice_html()
+    <<-EOF
+<p>
+<div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border: 0px solid #FAEBB1;">
+    #{test_alert_message()}
+</div>
+</p>
+    EOF
+  end
+
 end
