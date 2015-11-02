@@ -32,7 +32,7 @@ class Service::OpsGenie < Service
         :trigger_time => payload['trigger_time'],
         :clear => "normal"
     }
-    post_it(result)
+    post_it(result, false)
   end
 
   def receive_alert

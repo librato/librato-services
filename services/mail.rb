@@ -60,7 +60,7 @@ class Service::Mail < Service
       end
 
       if payload[:alert][:version] == 2
-        output = Librato::Services::Output.new(payload, add_test_notice=false)
+        output = Librato::Services::Output.new(payload, false)
         text = payload[:triggered_by_user_test] ? create_test_notice_markdown() + output.markdown : output.markdown
         html = new_html_email(output.html, payload[:triggered_by_user_test])
       else
