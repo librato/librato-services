@@ -119,12 +119,12 @@ class SNSTest < Librato::Services::TestCase
   def test_receive_clear_manual
     svc = service(:alert, default_setting, alert_clear_payload('manual'))
     expect(svc).to receive(:publish_message).once.with(hash_including(
-                                                         {
-                                                           alert: { id: 123, name: 'Some alert name' },
-                                                           trigger_time: 12321123,
-                                                           clear: 'manual',
-                                                           incident_key: 'foo'
-                                                         }))
+      {
+        alert: { id: 123, name: 'Some alert name' },
+        trigger_time: 12321123,
+        clear: 'manual',
+        incident_key: 'foo'
+      }))
 
     svc.receive_alert_clear
   end
