@@ -40,7 +40,7 @@ class Service::Webhook < Service
       :alert => payload['alert'],
       :account => account_email,
       :trigger_time => payload['trigger_time'],
-      :clear => "normal"
+      :clear => payload['clear']
     }
     post_it(uri, result)
   end

@@ -45,6 +45,11 @@ class Librato::Services::TestCase < Test::Unit::TestCase
     Librato::Services::Helpers::AlertHelpers.sample_alert_payload
   end
 
+  # Valid clear types : normal, auto, manual, unknown
+  def alert_clear_payload(clear_type = 'normal')
+    Librato::Services::Helpers::AlertHelpers.sample_alert_clear_payload(clear_type)
+  end
+
   def snapshot_payload
     Librato::Services::Helpers::SnapshotHelpers.sample_snapshot_payload
   end

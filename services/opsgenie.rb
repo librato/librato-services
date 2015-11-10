@@ -30,7 +30,7 @@ class Service::OpsGenie < Service
         :alert => payload['alert'],
         :account => account_email,
         :trigger_time => payload['trigger_time'],
-        :clear => "normal"
+        :clear => payload['clear']
     }
     post_it(result, false)
   end
