@@ -64,6 +64,13 @@ module Librato
           result_array << "Account: #{@auth[:email]}\n"
         end
         result_array << "Link: #{alert_link(@alert[:id])}\n"
+
+        puts "alert: #{@alert.inspect}, auth: #{@auth.inspect}"
+        if !@alert[:papertrail_url].blank? && @auth[:papertrail_token]
+          logs = get_papertrail_logs(@alert[:papertrail_url], @auth[:papertrail_token], Time.now.tv_sec - 3600)
+          result_array << "Papertrail Logs:\n" << logs.join("\n")
+        end
+
         @violations.each do |source, measurements|
           result_array << "Source `#{source}`:"
           measurements.each do |measurement|

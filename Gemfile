@@ -3,6 +3,9 @@ source "http://rubygems.org"
 gem 'faraday', '~> 0.8'
 gem 'tilt',  '~> 1'
 
+gem 'excon'
+gem 'papertrail'
+
 gem 'yajl-ruby', '~> 1.1', :require => [ 'yajl', 'yajl/json_gem' ]
 gem 'activesupport', '>= 3.2', :require => 'active_support'
 
