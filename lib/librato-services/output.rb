@@ -10,6 +10,9 @@ module Librato
     class Output
       include Helpers::AlertHelpers
 
+      PT_SAVED_SEARCH_REGEX = Regexp.new(/https:\/\/papertrailapp.com\/searches\/([0-9]+)/)
+      PT_GROUP_SEARCH_REGEX = Regexp.new(/https:\/\/papertrailapp.com\/groups\/([0-9]+)\/events/)
+
       attr_reader :violations, :conditions, :alert, :clear, :trigger_time
       def initialize(payload, add_test_notice=true)
         if !payload[:clear]
@@ -29,6 +32,49 @@ module Librato
         @trigger_time = payload[:trigger_time]
         @auth = payload[:auth] || {}
         @show_test_notice = (add_test_notice and payload[:triggered_by_user_test])
+      end
+
+      def excon_get_url(url, token)
+        conn = Excon.new(url)
+
+        params = {
+          :headers => {"X-Papertrail-Token" => token}
+        }
+
+        r = conn.get(params)
+        if r.status != 200
+          return nil
+        end
+
+        JSON.parse(r.body)
+      end
+
+      def get_papertrail_logs(pt_url, token, time)
+        q = ""
+        group_id = nil
+
+        puts "url #{pt_url}, token: #{token}, time: #{time}"
+        if m = PT_SAVED_SEARCH_REGEX.match(pt_url)
+          # do saved search
+          r = excon_get_url("https://papertrailapp.com/api/v1/searches/#{s[1]}.json", token)
+          return [] unless r
+
+          query = r['query']
+          group_id = r['group']['id']
+        elsif m = PT_GROUP_SEARCH_REGEX.match(pt_url)
+          # group search
+
+          query = ""
+          group_id = m[1].to_i
+        end
+
+        conn = ::Papertrail::Connection.new(:token => token)
+        q = conn.query(query, :min_time => time, :groupd_id => group_id)
+        logs = q.search
+
+        puts "log events: #{logs.events.first}"
+
+        logs.events[0, 10]
       end
 
       def html
