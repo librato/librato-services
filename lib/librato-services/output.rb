@@ -114,7 +114,7 @@ module Librato
         puts "alert: #{@alert.inspect}, auth: #{@auth.inspect}"
         if !@alert[:papertrail_url].blank? && @auth[:papertrail_token]
           logs = get_papertrail_logs(@alert[:papertrail_url], @auth[:papertrail_token], Time.now.tv_sec - 3600)
-          result_array << "Papertrail Logs:\n" << logs.join("\n")
+          result_array << "Papertrail Logs:\n" << logs.map{|line| "    #{line}\n"}
         end
 
         @violations.each do |source, measurements|
@@ -128,10 +128,7 @@ module Librato
         if !runbook_url.nil? && !runbook_url.empty?
           result_array << "Runbook: #{runbook_url}\n"
         end
-        papertrail_url = @alert[:papertrail_url]
-        if !papertrail_url.nil? && !papertrail_url.empty?
-          result_array << "Papertrail Logs: #{papertrail_url}\n"
-        end
+
         result_array.join("\n")
       end
 
