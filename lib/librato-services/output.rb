@@ -77,6 +77,12 @@ module Librato
         logs.events[0, 10]
       end
 
+      # Look back from time of trigger
+      # XXX: be more dynamic here?
+      def time_for_papertrail_logs
+        @trigger_time - 60
+      end
+
       def html
         @html ||= generate_html
       end
@@ -113,7 +119,7 @@ module Librato
 
         puts "alert: #{@alert.inspect}, auth: #{@auth.inspect}"
         if !@alert[:papertrail_url].blank? && @auth[:papertrail_token]
-          logs = get_papertrail_logs(@alert[:papertrail_url], @auth[:papertrail_token], Time.now.tv_sec - 3600)
+          logs = get_papertrail_logs(@alert[:papertrail_url], @auth[:papertrail_token], time_for_papertrail_logs)
           result_array << "Papertrail Logs:\n" << logs.map{|line| "    #{line}\n"}
         end
 
