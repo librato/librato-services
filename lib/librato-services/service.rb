@@ -19,6 +19,8 @@ module Librato
       def self.receive(event, settings, payload, *args)
         svc = new(event, settings, payload)
 
+        puts "settngs: #{settings.inspect}, payload: #{payload.inspect}"
+
         if event.to_s == "alert" && payload[:clear]
           event_method = "receive_alert_clear"
           if !svc.respond_to?(event_method)
