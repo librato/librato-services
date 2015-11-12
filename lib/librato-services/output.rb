@@ -75,6 +75,10 @@ module Librato
         if !runbook_url.nil? && !runbook_url.empty?
           result_array << "Runbook: #{runbook_url}\n"
         end
+        papertrail_url = @alert[:papertrail_url]
+        if !papertrail_url.nil? && !papertrail_url.empty?
+          result_array << "Papertrail Logs: #{papertrail_url}\n"
+        end
         result_array.join("\n")
       end
 
