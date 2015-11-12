@@ -56,7 +56,7 @@ module Librato
         puts "url #{pt_url}, token: #{token}, time: #{time}"
         if m = PT_SAVED_SEARCH_REGEX.match(pt_url)
           # do saved search
-          r = excon_get_url("https://papertrailapp.com/api/v1/searches/#{s[1]}.json", token)
+          r = excon_get_url("https://papertrailapp.com/api/v1/searches/#{m[1]}.json", token)
           return [] unless r
 
           query = r['query']
