@@ -82,10 +82,12 @@ module Librato
       def time_for_papertrail_logs
         if @violations
           time = -1
-          @violations.each do |source, violation|
-            if recorded_at = violation["recorded_at"]
-              if recorded_at.to_i > time
-                time = recorded_at.to_i
+          @violations.each do |source, violations|
+            violations.each do |violation|
+              if recorded_at = violation["recorded_at"]
+                if recorded_at.to_i > time
+                  time = recorded_at.to_i
+                end
               end
             end
           end
