@@ -62,7 +62,7 @@ class Service::Slack < Service
         pretext << " <#{runbook_url}|Runbook>"
       end
       unless papertrail_url.blank?
-        pretext << " <#{papertrail_url}|Papertrail>"
+        pretext << " <#{papertrail_url}|Papertrail Logs>"
       end
       attachments = []
       attachment = {
