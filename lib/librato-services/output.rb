@@ -80,6 +80,19 @@ module Librato
       # Look back from time of trigger
       # XXX: be more dynamic here?
       def time_for_papertrail_logs
+        if @violations
+          time = -1
+          @violations.each do |source, violation|
+            if recorded_at = violation["recorded_at"]
+              if recorded_at.to_i > time
+                time = recorded_at.to_i
+              end
+            end
+          end
+          if time > 0
+            return time
+          end
+        end
         @trigger_time - 60
       end
 
