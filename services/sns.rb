@@ -78,9 +78,11 @@ class Service::SNS < Service
       :default => msg.to_json
     }
 
-    json.tap do
-      json[:sms] = Librato::Services::Output.new(payload).sms_message if payload[:alert][:version] == 2
-    end.to_json
+    if payload[:alert][:version] == 2
+      json[:sms] = Librato::Services::Output.new(payload).sms_message
+    end
+
+    json.to_json
   end
 
   def region
