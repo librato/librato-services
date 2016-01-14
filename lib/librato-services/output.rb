@@ -143,6 +143,12 @@ module Librato
         end
       end
 
+      def sms_message
+        violations.flat_map do |source, measurements|
+          measurements.map { |measurement| format_measurement(measurement, source) }
+        end.join(". ") if violations
+      end
+
       class << self
         def renderer
           @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, lax_spacing: true, no_intra_emphasis: true)
