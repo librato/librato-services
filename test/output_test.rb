@@ -284,4 +284,11 @@ EOF
     assert_match("Alert Some_alert_name", output.generate_html)
   end
 
+  def test_sms_message
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    output = Librato::Services::Output.new(payload)
+
+    assert_match('metric `metric.name` from `foo.bar`', output.sms_message)
+  end
+
 end # class

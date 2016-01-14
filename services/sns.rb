@@ -74,10 +74,13 @@ class Service::SNS < Service
   end
 
   def json_message_generator_for(msg)
-    {
-      :default => msg.to_json,
-      :sms => Librato::Services::Output.new(payload).sms_message
-    }.to_json
+    json = {
+      :default => msg.to_json
+    }
+
+    json.tap do
+      json[:sms] = Librato::Services::Output.new(payload).sms_message if payload[:alert][:version] == 2
+    end.to_json
   end
 
   def region

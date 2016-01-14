@@ -146,7 +146,7 @@ module Librato
       def sms_message
         violations.flat_map do |source, measurements|
           measurements.map { |measurement| format_measurement(measurement, source) }
-        end.join(". ") if violations
+        end.join('. ')
       end
 
       class << self
