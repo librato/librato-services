@@ -144,9 +144,25 @@ module Librato
       end
 
       def sms_message
+        if valid_sms?
+          violations_message
+        else
+          truncated_violations_message
+        end
+      end
+
+      def valid_sms?
+        violations_message.length <= 140
+      end
+
+      def violations_message
         violations.flat_map do |source, measurements|
           measurements.map { |measurement| format_measurement(measurement, source) }
         end.join('. ')
+      end
+
+      def truncated_violations_message
+        "#{violations_message[0..136]}..."
       end
 
       class << self
