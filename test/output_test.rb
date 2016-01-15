@@ -300,7 +300,7 @@ EOF
 
   def test_invalid_sms
     payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
-    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..160-1]
+    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..159]
     output = Librato::Services::Output.new(payload)
 
     assert_equal(false, output.valid_sms?)
@@ -315,7 +315,7 @@ EOF
 
   def test_truncated_sms_message
     payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
-    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..160-1]
+    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..159]
     output = Librato::Services::Output.new(payload)
 
     assert_equal(140, output.sms_message.length)
