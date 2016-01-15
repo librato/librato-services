@@ -63,7 +63,7 @@ class Service::SNS < Service
   end
 
   def publish_message(msg)
-    sns.publish(topic_arn: topic_arn, message: msg.to_json)
+    sns.publish(topic_arn: topic_arn, message: json_message_generator_for(msg), message_structure: 'json')
   rescue Aws::SNS::Errors::SignatureDoesNotMatch
     raise_config_error 'Authentication failed - incorrect access key id or access key secret'
   rescue Aws::SNS::Errors::AuthorizationError
@@ -71,6 +71,18 @@ class Service::SNS < Service
                        'on the topic and that the topic arn is correct'
   rescue Aws::SNS::Errors::ServiceError => e
     raise_error e.message
+  end
+
+  def json_message_generator_for(msg)
+    json = {
+      :default => msg.to_json
+    }
+
+    if payload[:alert][:version] == 2
+      json[:sms] = Librato::Services::Output.new(payload).sms_message
+    end
+
+    json.to_json
   end
 
   def region

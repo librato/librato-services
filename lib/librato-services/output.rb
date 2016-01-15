@@ -1,6 +1,7 @@
 require 'redcarpet'
 require 'helpers/alert_helpers'
 require 'lib/librato-services/numbers'
+require 'active_support/core_ext/string/filters.rb'
 
 # TODO
 # This has grown to the point where it may be worth generating an Alert
@@ -141,6 +142,24 @@ module Librato
         else
           nil
         end
+      end
+
+      def sms_message
+        if valid_sms?
+          violations_message
+        else
+          violations_message.truncate(140)
+        end
+      end
+
+      def valid_sms?
+        violations_message.length <= 140
+      end
+
+      def violations_message
+        violations.flat_map do |source, measurements|
+          measurements.map { |measurement| format_measurement(measurement, source) }
+        end.join('. ')
       end
 
       class << self

@@ -284,4 +284,41 @@ EOF
     assert_match("Alert Some_alert_name", output.generate_html)
   end
 
+  def test_violations_message
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    output = Librato::Services::Output.new(payload)
+
+    assert_match('metric `metric.name` from `foo.bar`', output.sms_message)
+  end
+
+  def test_valid_sms
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(true, output.valid_sms?)
+  end
+
+  def test_invalid_sms
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..159]
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(false, output.valid_sms?)
+  end
+
+  def test_sms_message
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(true, output.sms_message.length <= 140)
+  end
+
+  def test_truncated_sms_message
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..159]
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(140, output.sms_message.length)
+    assert_equal(true, output.sms_message.end_with?('...'))
+  end
 end # class
