@@ -15,8 +15,6 @@ GEM
       multi_json (~> 1.0)
       multi_xml (~> 0.5)
     builder (3.2.2)
-    customerio (0.5.0)
-      httparty (>= 0.5, < 1.0)
     descendants_tracker (0.0.3)
     diff-lcs (1.2.5)
     eventmachine (1.0.3)
@@ -129,7 +127,6 @@ PLATFORMS
 DEPENDENCIES
   activesupport (>= 3.2)
   aws-sdk-core (~> 2.0.18)
-  customerio (~> 0.5)
   faraday (~> 0.8)
   flowdock (~> 0.3)
   hipchat (~> 1.4.0)
