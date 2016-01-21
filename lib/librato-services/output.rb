@@ -145,10 +145,12 @@ module Librato
       end
 
       def sms_message
-        if valid_sms?
-          violations_message
-        else
-          violations_message.truncate(140)
+        unless @clear
+          if valid_sms?
+            violations_message
+          else
+            violations_message.truncate(140)
+          end
         end
       end
 
