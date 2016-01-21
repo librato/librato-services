@@ -78,7 +78,12 @@ class Service::SNS < Service
       :default => msg.to_json
     }
 
-    if payload[:alert][:version] == 2
+    if payload[:clear]
+      trigger_time_utc = DateTime.strptime(payload[:trigger_time].to_s, "%s").strftime("%a, %b %e %Y at %H:%M:%S UTC")
+      cleared_message = "Alert '#{payload[:alert][:name]}' has cleared at #{trigger_time_utc}"
+      json[:default] = cleared_message
+      json[:sms] = cleared_message
+    elsif payload[:alert][:version] == 2
       json[:sms] = Librato::Services::Output.new(payload).sms_message
     end
 
