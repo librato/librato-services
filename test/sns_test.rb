@@ -159,6 +159,14 @@ class SNSTest < Librato::Services::TestCase
     assert_equal(['default', 'sms'], hsh.keys)
   end
 
+  def test_json_message_generator_with_clear
+    payload = new_alert_payload.dup
+    svc = service(:alert, default_setting, payload.merge({clear:'auto'}))
+    hsh = JSON.parse(svc.json_message_generator_for({foo:'bar'}))
+
+    assert_match("Alert 'Some alert name' has cleared at", hsh['sms'])
+  end
+
   def assert_raise_with_message(klass, msg)
     begin
       yield
