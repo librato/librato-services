@@ -32,8 +32,9 @@ class Service::SNS < Service
     msg = {
       :alert => payload['alert'],
       :trigger_time => payload['trigger_time'],
-      :clear => "normal"
+      :clear => payload['clear'],
     }
+    msg[:incident_key] = payload['incident_key'] if payload.key?('incident_key')
     publish_message(msg)
   end
 
@@ -48,6 +49,7 @@ class Service::SNS < Service
         :violations => payload['violations'],
         :triggered_by_user_test => payload['triggered_by_user_test']
       }
+      msg[:incident_key] = payload['incident_key'] if payload.key?('incident_key')
     else
       measurements = get_measurements(payload)[0..19]
       msg = {

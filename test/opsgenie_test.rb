@@ -40,6 +40,17 @@ class OpsGenieTest < Librato::Services::TestCase
     svc.receive_alert
   end
 
+  def test_receive_alert_clear
+    payload = alert_clear_payload
+    svc = service(:alert, @settings, payload)
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body][:payload])
+      assert_equal('normal', payload['clear'])
+      [200, {}, '']
+    end
+    svc.receive_alert_clear
+  end
+
   def service(*args)
     super Service::OpsGenie, *args
   end

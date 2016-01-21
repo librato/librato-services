@@ -106,13 +106,27 @@ class SNSTest < Librato::Services::TestCase
     svc.receive_alert
   end
 
-  def test_receive_clear
-    svc = service(:alert, default_setting, alert_payload)
+  def test_receive_clear_normal
+    svc = service(:alert, default_setting, alert_clear_payload)
     expect(svc).to receive(:publish_message).once.with(hash_including(
       {
-        alert: { id: 12345, name: '' },
-        trigger_time: 1321311840,
-        clear: 'normal'
+        alert: { id: 123, name: 'Some alert name' },
+        trigger_time: 12321123,
+        clear: 'normal',
+        incident_key: 'foo'
+      }))
+
+    svc.receive_alert_clear
+  end
+
+  def test_receive_clear_manual
+    svc = service(:alert, default_setting, alert_clear_payload('manual'))
+    expect(svc).to receive(:publish_message).once.with(hash_including(
+      {
+        alert: { id: 123, name: 'Some alert name' },
+        trigger_time: 12321123,
+        clear: 'manual',
+        incident_key: 'foo'
       }))
 
     svc.receive_alert_clear
@@ -134,7 +148,8 @@ class SNSTest < Librato::Services::TestCase
         violations: {
           "foo.bar" => [{ metric: 'metric.name', value: 100, recorded_at: 1389391083, condition_violated: 1 }]
         },
-        triggered_by_user_test: false
+        triggered_by_user_test: false,
+        incident_key: 'foo'
       }))
 
     svc.receive_alert

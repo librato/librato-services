@@ -62,6 +62,18 @@ module Librato
           })
         end
 
+        def self.sample_alert_clear_payload(clear_type)
+          ::HashWithIndifferentAccess.new(
+            {
+              incident_key: "foo",
+              alert: { id: 123,
+                       name: "Some alert name" },
+              trigger_time: 12321123,
+              :clear => clear_type
+            }
+          )
+        end
+
         def get_measurements(body)
           measurements = body['measurements'] || []
           measurements << body['measurement']
