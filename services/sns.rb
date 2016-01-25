@@ -32,8 +32,9 @@ class Service::SNS < Service
     msg = {
       :alert => payload['alert'],
       :trigger_time => payload['trigger_time'],
-      :clear => payload['clear']
+      :clear => payload.fetch('clear', 'normal')
     }
+
     publish_message(msg)
   end
 

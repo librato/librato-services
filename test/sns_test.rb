@@ -107,7 +107,7 @@ class SNSTest < Librato::Services::TestCase
   end
 
   def test_receive_clear
-    svc = service(:alert, default_setting, alert_payload)
+    svc = service(:alert, default_setting.merge({ clear: 'normal' }), alert_payload)
     expect(svc).to receive(:publish_message).once.with(hash_including(
       {
         alert: { id: 12345, name: '' },
