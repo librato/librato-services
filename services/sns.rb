@@ -32,8 +32,11 @@ class Service::SNS < Service
     msg = {
       :alert => payload['alert'],
       :trigger_time => payload['trigger_time'],
-      :clear => "normal"
+      :clear => payload.fetch('clear', 'normal')
     }
+
+    msg[:incident_key] = payload['incident_key'] if payload['incident_key']
+
     publish_message(msg)
   end
 
@@ -48,6 +51,8 @@ class Service::SNS < Service
         :violations => payload['violations'],
         :triggered_by_user_test => payload['triggered_by_user_test']
       }
+
+      msg[:incident_key] = payload['incident_key'] if payload['incident_key']
     else
       measurements = get_measurements(payload)[0..19]
       msg = {
@@ -80,9 +85,7 @@ class Service::SNS < Service
 
     if payload[:clear]
       trigger_time_utc = DateTime.strptime(payload[:trigger_time].to_s, "%s").strftime("%a, %b %e %Y at %H:%M:%S UTC")
-      cleared_message = "Alert '#{payload[:alert][:name]}' has cleared at #{trigger_time_utc}"
-      json[:default] = cleared_message
-      json[:sms] = cleared_message
+      json[:sms] = "Alert '#{payload[:alert][:name]}' has cleared at #{trigger_time_utc}"
     elsif payload[:alert][:version] == 2
       json[:sms] = Librato::Services::Output.new(payload).sms_message
     end
