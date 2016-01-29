@@ -32,7 +32,7 @@ class Service::OpsGenie < Service
         :trigger_time => payload['trigger_time'],
         :clear => "normal"
     }
-    post_it(result)
+    post_it(result, false)
   end
 
   def receive_alert
@@ -56,18 +56,21 @@ class Service::OpsGenie < Service
           :trigger_time => payload['trigger_time']
       }
     end
-
-    post_it(result)
+    post_it(result, payload[:triggered_by_user_test])
   end
 
-  def post_it(hash)
+  def post_it(hash, triggered_by_user_test)
     url = "https://api.opsgenie.com/v1/json/librato"
+    tags = settings[:tags].nil? ?  "" : settings[:tags].dup
+    if triggered_by_user_test
+        tags += tags.empty? ? "triggered_by_user_test" : ",triggered_by_user_test"
+    end
     http_post url, {
                      :apiKey => settings[:customer_key],
                      :payload => Yajl::Encoder.encode(hash),
                      :recipients => settings[:recipients],
                      :teams => settings[:teams],
-                     :tags => settings[:tags]
+                     :tags => tags
                  }
   rescue Faraday::Error::ConnectionFailed
     log("Connection failed for url: #{url} for payload: #{payload.inspect}")

@@ -52,10 +52,14 @@ class Service::Slack < Service
         ]
       }
     else
-      pretext = "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!"
-        unless runbook_url.blank?
-          pretext << " <#{runbook_url}|Runbook>"
-        end
+      pretext = ''
+      if payload[:triggered_by_user_test]
+        pretext << "#{test_alert_message()}\n\n"
+      end
+      pretext << "Alert <#{alert_link(data.alert[:id])}|#{data.alert[:name]}> has triggered!"
+      unless runbook_url.blank?
+        pretext << " <#{runbook_url}|Runbook>"
+      end
       attachments = []
       attachment = {
         :fallback => format_fallback(data),

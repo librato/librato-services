@@ -50,6 +50,7 @@ module Librato
             auth: {email:"foo@example.com", annotations_token:"lol"},
             service_type: "campfire",
             event_type: "alert",
+            triggered_by_user_test: false,
             trigger_time: 12321123,
             conditions: [{type: "above", threshold: 10, id: 1}],
             violations: {
@@ -73,6 +74,10 @@ module Librato
 
         def h(text)
           ERB::Util.h(text)
+        end
+
+        def test_alert_message()
+          "This is a test alert notification, no action is required."
         end
 
         def unindent(string)

@@ -128,6 +128,20 @@ class SlackTest < Librato::Services::TestCase
       assert_not_nil(attachment["fields"])
       assert_equal(1, attachment["fields"].length)
       assert_not_nil(attachment["mrkdwn_in"])
+      assert (not include_test_alert_message?(attachment["pretext"]))
+      [200, {}, '']
+    end
+    svc.receive_alert
+  end
+
+  def test_v2_test_alert_triggered_by_user
+    alert_payload = new_alert_payload
+    alert_payload[:triggered_by_user_test] = true
+    svc = service(:alert, @settings, alert_payload)
+    @stubs.post @stub_url do |env|
+      payload = JSON.parse(env[:body])
+      attachment = payload["attachments"][0]
+      assert include_test_alert_message?(attachment["pretext"])
       [200, {}, '']
     end
     svc.receive_alert
