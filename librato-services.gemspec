@@ -6,7 +6,7 @@
 
 Gem::Specification.new do |s|
   s.name = "librato-services"
-  s.version = "3.2.9"
+  s.version = "3.2.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
     "services/victorops.rb",
     "services/webhook.rb",
     "services/zapier.rb",
+    "services/neptune.rb",
     "test/big_panda_test.rb",
     "test/campfire_test.rb",
     "test/clearing_test.rb",
@@ -64,7 +65,8 @@ Gem::Specification.new do |s|
     "test/timeout_service_test.rb",
     "test/victorops_test.rb",
     "test/webhook_test.rb",
-    "test/zapier_test.rb"
+    "test/zapier_test.rb",
+    "test/neptune_test.rb"
   ]
   s.homepage = "http://github.com/librato/librato-services"
   s.licenses = ["MIT"]
