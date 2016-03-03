@@ -63,8 +63,8 @@ A sample payload is available at
 }
 ```
 
-Payload for a Clear Alert
--------------------------
+Payload for a Cleared Alert
+---------------------------
 
 ```
 {
