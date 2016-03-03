@@ -107,7 +107,8 @@ module Librato
         else
           metric = "`#{measurement[:metric]}`"
         end
-        "metric #{metric} was #{format_violation_type(condition, measurement)} recorded at #{format_time(measurement[:recorded_at])}"
+        violation_time = measurement[:end] || measurement[:recorded_at]
+        "metric #{metric} was #{format_violation_type(condition, measurement)} recorded at #{format_time(violation_time)}"
       end
 
       def format_violation_type(condition, measurement)
