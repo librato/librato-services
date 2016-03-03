@@ -47,19 +47,19 @@ A sample payload is available at
 
 ```
 'payload' : {
-        'alert' : {
-                'name' : 'Alert name or nil',
-                'id' : 12345,
-        },
-        'metric' : {
-                 'name' : 'Name of the metric that tripped alert',
-                 'type' : 'gauge' or 'counter',
-        },
-        'measurements' : [{
-                 'value' : 4.5 (value that caused exception),
-                 'source' : 'r3.acme.com' (source that caused exception
-                                           or 'unassigned')
-        }]
+  'alert' : {
+    'name' : 'Alert name or nil',
+    'id' : 12345,
+  },
+  'metric' : {
+     'name' : 'Name of the metric that tripped alert',
+     'type' : 'gauge' or 'counter',
+  },
+  'measurements' : [{
+     'value' : 4.5 (value that caused exception),
+     'source' : 'r3.acme.com' (source that caused exception
+                               or 'unassigned')
+  }]
 }
 ```
 
@@ -67,7 +67,7 @@ Payload for a Cleared Alert
 ---------------------------
 
 ```
-{
+'payload': {
    "alert":{
       "id":6268092,
       "name":"a.test.name",
@@ -77,6 +77,7 @@ Payload for a Cleared Alert
    "account":"youremail@yourdomain.com",
    "trigger_time":1457040045,
    "clear":"normal"
+   }
 }
 ```
 
