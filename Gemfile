@@ -22,7 +22,7 @@ gem 'flowdock', '~> 0.3'
 gem 'customerio', '~> 0.5'
 
 # service :aws-sns
-gem 'aws-sdk-core', '~> 2.0.18'
+gem 'aws-sdk-core', '2.1.36'
 
 # markdown generation
 gem 'redcarpet', '~> 2.3'
