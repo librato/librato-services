@@ -39,29 +39,48 @@ the event payload is available as a `Hash` in the instance method `payload`.
 Tests should accompany all services and are located in the [test/][]
 directory.
 
-Payload
--------
+Payload for a Triggered Alert
+-----------------------------
 
 A sample payload is available at
 [lib/librato-services/helpers/alert_helpers.rb] and listed below:
 
 ```
-'payload' : {
-        'alert' : {
-                'name' : 'Alert name or nil',
-                'id' : 12345,
-        },
-        'metric' : {
-                 'name' : 'Name of the metric that tripped alert',
-                 'type' : 'gauge' or 'counter',
-        },
-        'measurements' : [{
-                 'value' : 4.5 (value that caused exception),
-                 'source' : 'r3.acme.com' (source that caused exception
-                                           or 'unassigned')
-        }]
+"payload" : {
+  "alert" : {
+    "name" : "Alert name or nil",
+    "id" : 12345,
+  },
+  "metric" : {
+     "name" : "Name of the metric that tripped alert",
+     "type" : "gauge" or "counter",
+  },
+  "measurements" : [{
+     "value" : 4.5 (value that caused exception),
+     "source" : "r3.acme.com" (source that caused exception
+                               or "unassigned")
+  }]
 }
 ```
+
+Payload for a Cleared Alert
+---------------------------
+
+```
+"payload": {
+   "alert":{
+      "id":6268092,
+      "name":"a.test.name",
+      "runbook_url":"",
+      "version":2
+   },
+   "account":"youremail@yourdomain.com",
+   "trigger_time":1457040045,
+   "clear":"normal"
+   }
+}
+```
+
 
 Sample Service
 --------------
