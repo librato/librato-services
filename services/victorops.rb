@@ -32,6 +32,10 @@ class Service::VictorOps < Service
       else
         body[:message_type] = "CRITICAL"
       end
+      
+      if payload['alert']['name']
+        body['state_message'] = payload['alert']['name']
+      end
 
       # Fire
       uri = uri_for_key(settings[:api_key])
