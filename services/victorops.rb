@@ -25,7 +25,7 @@ class Service::VictorOps < Service
       body.delete :api_key
 
       # Keys that will soon be in the payload
-      body[:entity_id] = payload[:incident_key] || payload['alert']['id']
+      body[:entity_id] = payload['alert']['name'] || payload['alert']['id'] || payload[:incident_key]
       if payload[:clear]
         body[:clear] = payload[:clear]
         body[:message_type] = "RECOVERY"
