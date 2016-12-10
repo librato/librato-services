@@ -1,5 +1,98 @@
 # encoding: utf-8
 
+#
+# AWS Lambda Librato service
+# --------------------------
+#
+# Deliver Librato alert triggers/clears and snapshots to an AWS Lambda
+# function.
+#
+# Configuration
+# =============
+#
+#   function_arn: (required) ARN of function name
+#        Example: arn:aws:lambda:us-west-2:1234567890:function:my-simple-func
+#
+# The function must be given `lambda:InvokeFunction` permission from the
+# Librato AWS Account ID. For example, to add permission to a function
+# name of "my-simple-func" in the "us-west-2" region using the AWS
+# CLI:
+#
+#  $ aws lambda add-permission --function-name my-simple-func \
+#                         --region us-west-2 \
+#                         --action "lambda:InvokeFunction" \
+#                         --principal <Librato AWS Account ID> \
+#                         --statement-id Id-123
+#
+# The following environment variables must be set to the callee
+# account's AWS credentials:
+#
+#  LAMBDA_INVOCATION_ACCESS_ID
+#  LAMBDA_INVOCATION_ACCESS_KEY
+#
+# Description
+# ===========
+#
+# This service will invoke the function asynchronously (invocation
+# type: 'Event) and pass the alert or snapshot JSON payload.
+#
+# The payload will contain the key 'event_type' set to the value of
+# either: 'alert_trigger', 'alert_clear', or 'snapshot' and can be
+# used to identify the type of event.
+#
+# A triggered alert payload looks like (only v2 alerts are supported):
+#
+#  {
+#    "event_type":"alert_trigger",
+#    "trigger_time":12321123,
+#    "alert":{
+#       "runbook_url":"http://runbooks.com/howtodoit",
+#       "description":"Verbose alert explanation",
+#       "version":2,
+#       "id":123,
+#       "name":"Some alert name"
+#    },
+#    "incident_key":"foo",
+#    "violations":{
+#       "foo.bar":[
+#          {
+#             "metric":"metric.name",
+#             "condition_violated":1,
+#             "value":100,
+#             "recorded_at":1389391083
+#          }
+#       ]
+#    },
+#    "conditions":[
+#       {
+#          "threshold":10,
+#          "type":"above",
+#          "id":1
+#       }
+#    ]
+# }
+#
+# A snapshot payload looks like:
+#
+# {
+#    "event_type":"snapshot",
+#    "snapshot":{
+#       "entity_name":"App API Requests",
+#       "entity_url":"https://metrics.librato.com/instruments/1234?duration=3600",
+#       "image_url":"http://snapshots.librato.com/instruments/12345abcd.png",
+#       "user":{
+#          "email":"mike@librato.com",
+#          "full_name":"Librato User"
+#       },
+#       "message":"Explanation of this snapshot",
+#       "subject":"Subject of API Requests"
+#    }
+# }
+
+#
+######
+
+
 require 'aws-sdk-core'
 
 class Service::Lambda < Service
