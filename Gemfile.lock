@@ -9,11 +9,10 @@ GEM
       tzinfo (~> 0.3.37)
     addressable (2.3.6)
     atomic (1.1.14)
-    aws-sdk-core (2.0.18)
-      builder (~> 3.0)
+    aws-sdk-core (2.6.35)
+      aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-      multi_json (~> 1.0)
-      multi_xml (~> 0.5)
+    aws-sigv4 (1.0.0)
     builder (3.2.2)
     customerio (0.5.0)
       httparty (>= 0.5, < 1.0)
@@ -54,8 +53,7 @@ GEM
       nokogiri (>= 1.5.10)
       rake
       rdoc
-    jmespath (1.0.2)
-      multi_json (~> 1.0)
+    jmespath (1.3.1)
     json (1.8.1)
     jwt (1.0.0)
     mail (2.5.4)
@@ -128,7 +126,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (>= 3.2)
-  aws-sdk-core (~> 2.0.18)
+  aws-sdk-core (~> 2.6.35)
   customerio (~> 0.5)
   faraday (~> 0.8)
   flowdock (~> 0.3)
@@ -145,4 +143,4 @@ DEPENDENCIES
   yard (~> 0.8)
 
 BUNDLED WITH
-   1.10.5
+   1.12.5
