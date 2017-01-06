@@ -101,7 +101,7 @@ class Service::Mail < Service
   <body style="background-color: #ffffff; padding: 20px; margin: 0px;">
     #{test_notice}
     <div id="headlogo" style="text-align: left; padding-top:20px;">
-    <img src="https://s3.amazonaws.com/librato_images/logo-librato-swi/1503_Librato-SolarWindsCloud_600x200.png" width="180" alt="Librato Metrics" />
+    <img src="https://s3.amazonaws.com/librato_images/logo-librato-swi/Librato2017@2x.png" width="180" alt="Librato Metrics" />
     </div>
     <div style="background-color: #ffffff; font-family: Arial; font-size: 12px; color: #000000; text-align: left; vertical-align: top;">
     <div id="content">#{html}</div>
