@@ -18,9 +18,6 @@ gem 'hipchat', '~> 1.4.0'
 # service :flowdock
 gem 'flowdock', '~> 0.3'
 
-# service :customerio
-gem 'customerio', '~> 0.5'
-
 # service :aws-sns
 gem 'aws-sdk-core', '~> 2.0.18'
 
