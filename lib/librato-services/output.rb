@@ -1,5 +1,7 @@
 require 'redcarpet'
 require 'helpers/alert_helpers'
+require 'lib/librato-services/numbers'
+require 'active_support/core_ext/string/filters.rb'
 
 # TODO
 # This has grown to the point where it may be worth generating an Alert
@@ -10,7 +12,7 @@ module Librato
       include Helpers::AlertHelpers
 
       attr_reader :violations, :conditions, :alert, :clear, :trigger_time
-      def initialize(payload)
+      def initialize(payload, add_test_notice=true)
         if !payload[:clear]
           # conditions and violations are required for faults
           if !payload[:conditions] || !payload[:violations] && !payload[:clear]
@@ -27,6 +29,7 @@ module Librato
         @clear = payload[:clear]
         @trigger_time = payload[:trigger_time]
         @auth = payload[:auth] || {}
+        @show_test_notice = (add_test_notice and payload[:triggered_by_user_test])
       end
 
       def html
@@ -50,7 +53,11 @@ module Librato
       end
 
       def generate_alert_raised
-        result_array = ["# Alert #{@alert[:name]} has triggered!\n"]
+        result_array = []
+        if @show_test_notice
+          result_array << ["# #{test_alert_message()}\n"]
+        end
+        result_array << ["# Alert #{@alert[:name]} has triggered!\n"]
         if @alert[:description]
           result_array << "Description: #{@alert[:description]}\n"
         end
@@ -100,14 +107,18 @@ module Librato
         else
           metric = "`#{measurement[:metric]}`"
         end
-        "metric #{metric} was #{format_violation_type(condition, measurement)} recorded at #{format_time(measurement[:recorded_at])}"
+        violation_time = measurement[:end] || measurement[:recorded_at]
+        "metric #{metric} was #{format_violation_type(condition, measurement)} recorded at #{format_time(violation_time)}"
       end
 
       def format_violation_type(condition, measurement)
         if condition[:type] == "absent"
           "absent for #{condition[:duration]} seconds"
         else
-          "#{condition[:type]} threshold #{threshold(condition, measurement)} with value #{measurement[:value]}"
+          threshold_value = condition[:threshold]
+          actual_value = measurement[:value]
+          formatted_value = Librato::Services::Numbers.format_for_threshold(threshold_value, actual_value)
+          "#{condition[:type]} threshold #{threshold(condition,measurement)} with value #{formatted_value}"
         end
       end
 
@@ -132,6 +143,26 @@ module Librato
         else
           nil
         end
+      end
+
+      def sms_message
+        unless @clear
+          if valid_sms?
+            violations_message
+          else
+            violations_message.truncate(140)
+          end
+        end
+      end
+
+      def valid_sms?
+        violations_message.length <= 140
+      end
+
+      def violations_message
+        violations.flat_map do |source, measurements|
+          measurements.map { |measurement| format_measurement(measurement, source) }
+        end.join('. ')
       end
 
       class << self

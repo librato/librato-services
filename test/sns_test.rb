@@ -65,8 +65,11 @@ class SNSTest < Librato::Services::TestCase
 
     expect(aws_stub).to receive(:publish).with(
       {
-        :topic_arn=>"arn:aws:sns:us-east-1:123456789012:test_topic-123",
-        :message=>"{\"alert\":\"some_alert\"}"
+        :topic_arn => 'arn:aws:sns:us-east-1:123456789012:test_topic-123',
+        :message => {
+          :default => { :alert => 'some_alert' }.to_json,
+        }.to_json,
+        :message_structure => 'json'
       }
     )
 
@@ -104,7 +107,7 @@ class SNSTest < Librato::Services::TestCase
   end
 
   def test_receive_clear
-    svc = service(:alert, default_setting, alert_payload)
+    svc = service(:alert, default_setting.merge({ clear: 'normal' }), alert_payload)
     expect(svc).to receive(:publish_message).once.with(hash_including(
       {
         alert: { id: 12345, name: '' },
@@ -130,10 +133,38 @@ class SNSTest < Librato::Services::TestCase
         conditions: [{ type: 'above', threshold: 10, id: 1 }],
         violations: {
           "foo.bar" => [{ metric: 'metric.name', value: 100, recorded_at: 1389391083, condition_violated: 1 }]
-        }
+        },
+        triggered_by_user_test: false
       }))
 
     svc.receive_alert
+  end
+
+  def test_receive_test_alert_v2
+    payload = new_alert_payload.dup
+    payload[:triggered_by_user_test] = true
+    svc = service(:alert, default_setting, payload)
+    expect(svc).to receive(:publish_message).once.with(hash_including(
+      {
+        triggered_by_user_test: true
+      }))
+    svc.receive_alert
+  end
+
+  def test_json_message_generator
+    payload = new_alert_payload.dup
+    svc = service(:alert, default_setting, payload)
+    hsh = JSON.parse(svc.json_message_generator_for({foo:'bar'}))
+
+    assert_equal(['default', 'sms'], hsh.keys)
+  end
+
+  def test_json_message_generator_with_clear
+    payload = new_alert_payload.dup
+    svc = service(:alert, default_setting, payload.merge({clear:'auto'}))
+    hsh = JSON.parse(svc.json_message_generator_for({foo:'bar'}))
+
+    assert_match("Alert 'Some alert name' has cleared at", hsh['sms'])
   end
 
   def assert_raise_with_message(klass, msg)

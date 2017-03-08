@@ -1,6 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 
-class Librato::Services::OutputTestCase < Test::Unit::TestCase
+class Librato::Services::OutputTestCase < Librato::Services::TestCase
   ENV['METRICS_APP_URL'] = 'metrics.librato.com'
   def test_clear
     payload = {
@@ -75,6 +75,7 @@ EOF
     assert_equal(expected, output.markdown)
   end
 
+  # use decimals in threshold and value to test the formatting of decimal places
   def test_simple_alert
     payload = {
       alert: {id: 123, name: "Some alert name", version: 2},
@@ -82,10 +83,11 @@ EOF
       service_type: "campfire",
       event_type: "alert",
       trigger_time: 12321123,
-      conditions: [{type: "above", threshold: 10, id: 1}],
+      conditions: [{type: "above", threshold: 10.5, id: 1}],
+      triggered_by_user_test: false,
       violations: {
         "foo.bar" => [{
-          metric: "metric.name", value: 100, recorded_at: 1389391083,
+          metric: "metric.name", value: 100.12345, recorded_at: 1389391083,
           condition_violated: 1
         }]
       }
@@ -97,9 +99,32 @@ EOF
 Link: https://metrics.librato.com/alerts/123
 
 Source `foo.bar`:
-* metric `metric.name` was above threshold 10 with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `metric.name` was above threshold 10.5 with value 100.123 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
 EOF
     assert_equal(expected, output.markdown)
+  end
+
+  def test_alert_triggered_by_user
+    payload = {
+      alert: {id: 123, name: "Some alert name", version: 2},
+      settings: {},
+      service_type: "campfire",
+      event_type: "alert",
+      trigger_time: 12321123,
+      conditions: [{type: "above", threshold: 10.5, id: 1}],
+      triggered_by_user_test: true,
+      violations: {
+        "foo.bar" => [{
+          metric: "metric.name", value: 100.12345, recorded_at: 1389391083,
+          condition_violated: 1
+        }]
+      },
+      auth: {
+        email: "account@email.com"
+      }
+    }
+    output = Librato::Services::Output.new(payload)
+    assert include_test_alert_message?(output.markdown)
   end
 
   def test_complex_alert
@@ -109,6 +134,7 @@ EOF
       service_type: "campfire",
       event_type: "alert",
       trigger_time: 12321123,
+      triggered_by_user_test: false,
       conditions: [
         {type: "above", threshold: 10, id: 1},
         {type: "below", threshold: 100, id: 2},
@@ -184,11 +210,12 @@ EOF
         service_type: "campfire",
         event_type: "alert",
         trigger_time: 12321123,
+        triggered_by_user_test: false,
         conditions: [{type: "above", threshold: 10, id: 1}],
         violations: {
             "foo.bar" => [{
                               metric: "metric.name", value: 100, recorded_at: 1389391083,
-                              condition_violated: 1, count: 10, begin: 12321123, end: 12321183
+                              condition_violated: 1, count: 10, begin: 1389390903, end: 1389390993
                           }]
         }
     }
@@ -199,7 +226,7 @@ EOF
 Link: https://metrics.librato.com/alerts/123
 
 Source `foo.bar`:
-* metric `metric.name` was above threshold 10 over 60 seconds with value 100 recorded at Fri, Jan 10 2014 at 21:58:03 UTC
+* metric `metric.name` was above threshold 10 over 90 seconds with value 100 recorded at Fri, Jan 10 2014 at 21:56:33 UTC
 EOF
     assert_equal(expected, output.markdown)
   end
@@ -211,6 +238,7 @@ EOF
         service_type: "campfire",
         event_type: "alert",
         trigger_time: 12321123,
+        triggered_by_user_test: false,
         conditions: [{type: "above", threshold: 10, id: 1}],
         violations: {
             "foo.bar" => [{
@@ -256,4 +284,41 @@ EOF
     assert_match("Alert Some_alert_name", output.generate_html)
   end
 
+  def test_violations_message
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    output = Librato::Services::Output.new(payload)
+
+    assert_match('metric `metric.name` from `foo.bar`', output.sms_message)
+  end
+
+  def test_valid_sms
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(true, output.valid_sms?)
+  end
+
+  def test_invalid_sms
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..159]
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(false, output.valid_sms?)
+  end
+
+  def test_sms_message
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(true, output.sms_message.length <= 140)
+  end
+
+  def test_truncated_sms_message
+    payload = Librato::Services::Helpers::AlertHelpers.sample_new_alert_payload
+    payload['violations']['foo.bar'][0]['metric'] = SecureRandom.urlsafe_base64(160)[0..159]
+    output = Librato::Services::Output.new(payload)
+
+    assert_equal(140, output.sms_message.length)
+    assert_equal(true, output.sms_message.end_with?('...'))
+  end
 end # class
