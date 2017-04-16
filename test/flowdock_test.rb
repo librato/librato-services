@@ -55,10 +55,10 @@ class FlowdockTest < Librato::Services::TestCase
     svc.flowdock = MockFlowdock.new
     svc.receive_snapshot
 
-    assert_equal 3, svc.flowdock.chats.count
+    assert_equal 1, svc.flowdock.chats.count
     assert_equal 0, svc.flowdock.inbox.count
     assert_equal true, !!(svc.flowdock.chats[0][:content] =~ /#{snapshot_payload[:snapshot][:entity_name]}/)
-    assert_equal true, !!(svc.flowdock.chats[2][:content] =~ /http/)
+    assert_equal true, !!(svc.flowdock.chats[0][:content] =~ /http/)
   end
 
   def service(*args)

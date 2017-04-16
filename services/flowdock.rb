@@ -36,11 +36,11 @@ class Service::Flowdock < Service::Mail
     name = snapshot[:entity_name].blank? ? '' : "#{snapshot[:entity_name]}: "
     sender = snapshot[:user][:full_name].blank? ? snapshot[:user][:email] : snapshot[:user][:full_name]
 
-    [
+    [[
       "#{name}#{snapshot[:entity_url]} by #{sender}",
       snapshot[:message],
       snapshot[:image_url]
-    ].compact
+    ].compact.join("\n")]
   end
 
   def receive_alert
