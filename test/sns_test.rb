@@ -43,8 +43,8 @@ class SNSTest < Librato::Services::TestCase
     aws_stub = Aws::SNS::Client.new(stub_responses: true, credentials: Aws::Credentials.new("key","secret"))
     expect(Aws::SNS::Client).to receive(:new).and_return aws_stub
     aws_stub.stub_responses(:publish,
-                            Aws::SNS::Errors::SignatureDoesNotMatch,
-                            Aws::SNS::Errors::AuthorizationError,
+                            Aws::SNS::Errors::SignatureDoesNotMatch.new(nil, ''),
+                            Aws::SNS::Errors::AuthorizationErrorException.new(nil, ''),
                             Aws::SNS::Errors::ServiceError.new(nil, 'Some horrible AWS Error'))
 
     svc = service(:alert, default_setting, alert_payload)
