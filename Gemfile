@@ -35,6 +35,6 @@ gem 'rake', '>= 0.9'
 group :development do
   gem "rspec", "~>3.1"
   gem "shoulda", "~> 3.5"
-  gem "jeweler", "~> 2.0"
+  gem "jeweler", "~> 2.1"
   gem 'yard', "~> 0.8"
 end
