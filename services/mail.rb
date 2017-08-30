@@ -3,7 +3,7 @@ require 'erb'
 require 'mail'
 
 class Service::Mail < Service
-  EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+/
+  @@email_regex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+/
 
   def receive_validate(errors)
     addresses = settings[:addresses]
@@ -87,7 +87,7 @@ class Service::Mail < Service
 
   def filter_addresses(addresses)
     addresses.reject {|a| email_blacklist.include?(a.downcase) }
-             .reject {|a| !EMAIL_REGEX.match(a) }
+             .reject {|a| !@@email_regex.match(a) }
   end
 
   #TODO change when no longer "new"
