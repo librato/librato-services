@@ -71,7 +71,7 @@ class Service::SNS < Service
     sns.publish(topic_arn: topic_arn, message: json_message_generator_for(msg), message_structure: 'json')
   rescue Aws::SNS::Errors::SignatureDoesNotMatch
     raise_config_error 'Authentication failed - incorrect access key id or access key secret'
-  rescue Aws::SNS::Errors::AuthorizationError
+  rescue Aws::SNS::Errors::AuthorizationErrorException
     raise_config_error 'Authorization failed - ensure that the user is allowed to perform SNS:Publish action '\
                        'on the topic and that the topic arn is correct'
   rescue Aws::SNS::Errors::ServiceError => e
