@@ -1,7 +1,8 @@
 require 'redcarpet'
-require 'helpers/alert_helpers'
-require 'lib/librato-services/numbers'
 require 'active_support/core_ext/string/filters.rb'
+
+require_relative 'helpers/alert_helpers'
+require_relative 'numbers'
 
 # TODO
 # This has grown to the point where it may be worth generating an Alert

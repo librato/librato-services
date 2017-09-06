@@ -1,6 +1,6 @@
 class TimeoutServiceTest < Librato::Services::TestCase
 
-  class TimeoutService < Service
+  class TimeoutService < Librato::Services::Service
     @timeout_seconds = 0.1
     def receive_alert_clear
     end

@@ -1,6 +1,5 @@
 class ClearingTest < Librato::Services::TestCase
-
-  class ClearingService < Service
+  class ClearingService < Librato::Services::Service
     def receive_alert_clear
     end
     def sample_payload
@@ -8,7 +7,7 @@ class ClearingTest < Librato::Services::TestCase
     end
   end
 
-  class NotClearingService < Service
+  class NotClearingService < Librato::Services::Service
     def sample_payload
       {}
     end
@@ -27,5 +26,4 @@ class ClearingTest < Librato::Services::TestCase
     payload = { clear: true }
     assert !NotClearingService.receive(event, settings, payload)
   end
-
 end

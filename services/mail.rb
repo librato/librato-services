@@ -2,100 +2,101 @@
 require 'erb'
 require 'mail'
 
-class Service::Mail < Service
-  @@email_regex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+/
+module Librato::Services
+  class Service::Mail < Librato::Services::Service
+    @@email_regex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+/
 
-  def receive_validate(errors)
-    addresses = settings[:addresses]
-    if addresses.to_s.empty?
-      errors[:addresses] = "Is required"
-      return false
-    end
-    if addresses.class != String
-      errors[:addresses] = "Must be a comma-separated string"
-      return false
-    end
-    addresses = addresses.to_s.strip
-    addresses.split(/,/).each do |address|
-      if address.strip =~ /\s/
+    def receive_validate(errors)
+      addresses = settings[:addresses]
+      if addresses.to_s.empty?
+        errors[:addresses] = "Is required"
+        return false
+      end
+      if addresses.class != String
         errors[:addresses] = "Must be a comma-separated string"
         return false
       end
-      if address.strip !~ /@/
-        errors[:addresses] = "Not a valid email address: #{address}"
-        return false
+      addresses = addresses.to_s.strip
+      addresses.split(/,/).each do |address|
+        if address.strip =~ /\s/
+          errors[:addresses] = "Must be a comma-separated string"
+          return false
+        end
+        if address.strip !~ /@/
+          errors[:addresses] = "Not a valid email address: #{address}"
+          return false
+        end
       end
+      true
     end
-    true
-  end
 
-  def receive_alert_clear
-    receive_alert
-  end
-
-  def receive_alert
-    raise_config_error unless receive_validate({})
-    mm = mail_message
-    mm.deliver unless mm.to.empty?
-  end
-
-  def mail_addresses
-    @addresses ||=
-      filter_addresses(settings[:addresses].to_s.split(/,/).map { |a| a.strip })
-  end
-
-  def mail_message
-    @mail_message ||= begin
-      mail = ::Mail.new
-      mail.from    'Librato <metrics@librato.com>'
-      mail.to      mail_addresses
-      mail.header['X-Mailgun-Tag'] = 'alerts'
-      trigger_time_utc = Time.at(payload[:trigger_time]).utc
-      if payload[:clear]
-        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has cleared.}
-      else
-        mail.subject %{[Librato] Alert #{payload[:alert][:name]} has triggered!}
-      end
-
-      if payload[:triggered_by_user_test]
-        mail.subject %{[Librato] [Test] Alert #{payload[:alert][:name]} has triggered!}
-      end
-
-      if payload[:alert][:version] == 2
-        output = Librato::Services::Output.new(payload, false)
-        text = payload[:triggered_by_user_test] ? create_test_notice_markdown() + output.markdown : output.markdown
-        html = new_html_email(output.html, payload[:triggered_by_user_test])
-      else
-        text = text_email
-        html = html_email
-      end
-
-      mail.text_part do
-        body text
-      end
-
-      mail.html_part do
-        content_type 'text/html; charset=UTF-8'
-        body html
-      end
-
-      mail.delivery_method :smtp, smtp_settings
-
-      mail
+    def receive_alert_clear
+      receive_alert
     end
-  end
 
-  def filter_addresses(addresses)
-    addresses.reject {|a| email_blacklist.include?(a.downcase) }
-             .reject {|a| !@@email_regex.match(a) }
-  end
-
-  #TODO change when no longer "new"
-  def new_html_email(html, triggered_by_user_test)
-    if triggered_by_user_test
-      test_notice = create_test_notice_html()
+    def receive_alert
+      raise_config_error unless receive_validate({})
+      mm = mail_message
+      mm.deliver unless mm.to.empty?
     end
-    <<-EOF
+
+    def mail_addresses
+      @addresses ||=
+        filter_addresses(settings[:addresses].to_s.split(/,/).map { |a| a.strip })
+    end
+
+    def mail_message
+      @mail_message ||= begin
+                          mail = ::Mail.new
+                          mail.from    'Librato <metrics@librato.com>'
+                          mail.to      mail_addresses
+                          mail.header['X-Mailgun-Tag'] = 'alerts'
+                          trigger_time_utc = Time.at(payload[:trigger_time]).utc
+                          if payload[:clear]
+                            mail.subject %{[Librato] Alert #{payload[:alert][:name]} has cleared.}
+                          else
+                            mail.subject %{[Librato] Alert #{payload[:alert][:name]} has triggered!}
+                          end
+
+                          if payload[:triggered_by_user_test]
+                            mail.subject %{[Librato] [Test] Alert #{payload[:alert][:name]} has triggered!}
+                          end
+
+                          if payload[:alert][:version] == 2
+                            output = Librato::Services::Output.new(payload, false)
+                            text = payload[:triggered_by_user_test] ? create_test_notice_markdown() + output.markdown : output.markdown
+                            html = new_html_email(output.html, payload[:triggered_by_user_test])
+                          else
+                            text = text_email
+                            html = html_email
+                          end
+
+                          mail.text_part do
+          body text
+        end
+
+                          mail.html_part do
+          content_type 'text/html; charset=UTF-8'
+          body html
+        end
+
+                          mail.delivery_method :smtp, smtp_settings
+
+                          mail
+                        end
+    end
+
+    def filter_addresses(addresses)
+      addresses.reject {|a| email_blacklist.include?(a.downcase) }
+        .reject {|a| !@@email_regex.match(a) }
+    end
+
+    #TODO change when no longer "new"
+    def new_html_email(html, triggered_by_user_test)
+      if triggered_by_user_test
+        test_notice = create_test_notice_html()
+      end
+      <<-EOF
 <html>
   <head>
     <title>Librato Alert</title>
@@ -115,10 +116,10 @@ class Service::Mail < Service
   </body>
 </html>
   EOF
-  end
+    end
 
-  def html_email()
-    erb(unindent(<<-EOF), binding)
+    def html_email()
+      erb(unindent(<<-EOF), binding)
 
 <html>
   <head>
@@ -179,10 +180,10 @@ class Service::Mail < Service
   </body>
 </html>
 EOF
-  end
+    end
 
-  def text_email
-    erb(unindent(<<-EOF), binding)
+    def text_email
+      erb(unindent(<<-EOF), binding)
       <% if payload[:triggered_by_user_test] %>
         <%= test_alert_message() %>
 
@@ -201,20 +202,21 @@ EOF
       Librato Metrics
       metrics@librato.com - https://metrics.librato.com/
     EOF
-  end
+    end
 
-  def create_test_notice_markdown()
-    return %{\# #{test_alert_message()}\n\n}
-  end
+    def create_test_notice_markdown()
+      return %{\# #{test_alert_message()}\n\n}
+    end
 
-  def create_test_notice_html()
-    <<-EOF
+    def create_test_notice_html()
+      <<-EOF
 <p>
 <div id="testing" style="background-color: #FAEBB1; padding: 20px; font-family: Arial; font-size: 14px; line-height: 150%; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border: 0px solid #FAEBB1;">
     #{test_alert_message()}
 </div>
 </p>
     EOF
-  end
+    end
 
+  end
 end

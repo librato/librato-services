@@ -1,11 +1,13 @@
+
+require 'faraday'
+require 'timeout'
+
 Dir[File.join(File.dirname(__FILE__), 'helpers/*helpers*')].each { |helper|
-  require helper
+  require_relative helper
 }
 
-require 'helpers/alert_helpers'
-require 'faraday'
-require 'output'
-require 'timeout'
+require_relative 'helpers/alert_helpers'
+require_relative 'output'
 
 module Librato
   module Services
@@ -170,8 +172,6 @@ module Librato
     end
   end
 end
-
-::Service = Librato::Services::Service
 
 Dir[File.join(File.dirname(__FILE__), '../../services/*.rb')].each { |service|
   load service

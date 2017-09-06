@@ -1,5 +1,4 @@
-require File.expand_path('../helper', __FILE__)
-require 'lib/librato-services/numbers'
+require_relative '../lib/librato-services/numbers'
 
 class NumbersTest < Test::Unit::TestCase
   Numbers = Librato::Services::Numbers

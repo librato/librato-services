@@ -17,6 +17,6 @@ class BigPandaTest < Librato::Services::TestCase
   end
 
   def service(*args)
-    super Service::BigPanda, *args
+    super Librato::Services::Service::BigPanda, *args
   end
 end
