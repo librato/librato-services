@@ -62,7 +62,7 @@ class FlowdockTest < Librato::Services::TestCase
   end
 
   def service(*args)
-    super Service::Flowdock, *args
+    super Librato::Services::Service::Flowdock, *args
   end
 end
 

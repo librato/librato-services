@@ -87,7 +87,7 @@ class CampfireTest < Librato::Services::TestCase
   end
 
   def service(*args)
-    super Service::Campfire, *args
+    super Librato::Services::Service::Campfire, *args
   end
 end
 

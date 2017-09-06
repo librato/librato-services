@@ -1,8 +1,5 @@
 
-$:.unshift File.join(File.dirname(__FILE__), 'librato-services')
-$:.unshift File.expand_path('../..', __FILE__)
-
-require 'service'
+require_relative 'librato-services/service'
 
 require 'active_support/core_ext/hash/indifferent_access'
 
