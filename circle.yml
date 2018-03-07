@@ -1,6 +1,6 @@
 machine:
   ruby:
-    version: 1.9.3
+    version: 2.4.3
 test:
   override:
     - bundle exec rake test
