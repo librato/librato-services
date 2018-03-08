@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'faraday', '~> 0.8'
+gem 'faraday', '~> 0.9'
 gem 'tilt',  '~> 2'
 
 gem 'yajl-ruby', '~> 1.3.1', :require => [ 'yajl', 'yajl/json_gem' ]
