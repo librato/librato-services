@@ -104,7 +104,10 @@ module Librato
 
       def faraday_options
         options = {
-          :timeout => 6,
+          :request => {
+            :open_timeout => 2,
+            :timeout => 6,
+          }
         }
       end
 
