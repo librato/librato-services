@@ -134,7 +134,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (>= 3.2)
   aws-sdk-sns (~> 1)
-  faraday (~> 0.8)
+  faraday (~> 0.9)
   flowdock (~> 0.3)
   hipchat (~> 1.4.0)
   jeweler (~> 2.1)
