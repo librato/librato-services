@@ -41,7 +41,8 @@ module Librato::Services
         :alert => payload['alert'],
         :account => account_email,
         :trigger_time => payload['trigger_time'],
-        :clear => "normal"
+        :clear => "normal",
+        :incident_key => payload['incident_key']
       }
       post_it(uri, result)
     end
@@ -55,6 +56,7 @@ module Librato::Services
           :alert => payload['alert'],
           :account => account_email,
           :trigger_time => payload['trigger_time'],
+          :incident_key => payload['incident_key'],
           :conditions => payload['conditions'],
           :violations => payload['violations'],
           :triggered_by_user_test => payload['triggered_by_user_test']
