@@ -62,12 +62,13 @@ module Librato::Services
 
       @stubs.post "#{path}" do |env|
         payload = JSON.parse(env[:body][:payload])
-        assert_equal ["account", "alert", "conditions", "trigger_time", "triggered_by_user_test", "violations"], payload.keys.sort
+        assert_equal ["account", "alert", "conditions", "incident_key", "trigger_time", "triggered_by_user_test", "violations"], payload.keys.sort
         assert_equal 123, payload['alert']['id']
         assert_equal 'Some alert name', payload['alert']['name']
         assert_equal 1, payload['conditions'].length
         assert_equal "foo@example.com", payload['account']
         assert_equal false, payload['triggered_by_user_test']
+        assert_equal 'foo', payload['incident_key']
         violations = payload['violations']
         foo_bar_violations = violations['foo.bar']
         assert_equal 1, foo_bar_violations.length

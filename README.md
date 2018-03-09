@@ -51,6 +51,7 @@ A sample payload is available at
     "name" : "Alert name or nil",
     "id" : 12345,
   },
+  "incident_key": "<key that uniquely identifies this alert incident>",
   "metric" : {
      "name" : "Name of the metric that tripped alert",
      "type" : "gauge" or "counter",
@@ -74,6 +75,7 @@ Payload for a Cleared Alert
       "runbook_url":"",
       "version":2
    },
+   "incident_key": "<key that uniquely identifies this alert incident>",
    "account":"youremail@yourdomain.com",
    "trigger_time":1457040045,
    "clear":"normal"
