@@ -83,6 +83,7 @@ Payload for a Cleared Alert
 }
 ```
 
+Note that the `trigger_time` in this payload is the timestamp when the alert cleared, not when the alert originally fired.
 
 Sample Service
 --------------
