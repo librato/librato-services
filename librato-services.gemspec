@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Mike Heffner".freeze]
-  s.date = "2018-03-09"
+  s.date = "2018-06-25"
   s.description = "Provides service notifications for alerts".freeze
   s.email = "mike@librato.com".freeze
   s.extra_rdoc_files = [
