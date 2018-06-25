@@ -61,7 +61,6 @@ module Librato::Services
     end
 
     def post_it(hash, triggered_by_user_test)
-      url = "https://api.opsgenie.com/v1/json/librato"
       tags = settings[:tags].nil? ?  "" : settings[:tags].dup
       if triggered_by_user_test
         tags += tags.empty? ? "triggered_by_user_test" : ",triggered_by_user_test"
@@ -82,6 +81,19 @@ module Librato::Services
         Rails.logger.info(msg)
       else
         puts(msg)
+      end
+    end
+
+    def url
+      begin
+        uri = URI.parse("https://api.opsgenie.com/v1/json/librato")
+        if hostname = settings[:hostname]
+          uri.host = hostname
+        end
+
+        uri.to_s
+      rescue StandardError => e
+        raise_config_error(e.message)
       end
     end
   end
