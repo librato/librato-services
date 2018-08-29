@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ruby:2.4.3
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-deps-{{ checksum "Gemfile.lock" }}
+            - v1-deps-
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: v1-deps-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run: bundle exec rake test
