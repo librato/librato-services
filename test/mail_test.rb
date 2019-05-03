@@ -45,6 +45,13 @@ module Librato::Services
       assert(!svc.receive_validate(errors))
       assert_equal(1, errors.length)
       assert(errors[:addresses])
+
+      # address field must be all lowercase
+      svc = service(:alert, { :addresses => 'fred@BARN.com' }, alert_payload)
+      errors = {}
+      assert(!svc.receive_validate(errors))
+      assert_equal(1, errors.length)
+      assert(errors[:addresses])
     end
 
     def test_new_alerts
