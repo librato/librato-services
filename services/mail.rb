@@ -22,7 +22,7 @@ module Librato::Services
           errors[:addresses] = "Must be a comma-separated string"
           return false
         end
-        if address.strip !~ /@/
+        if !@@email_regex.match(address.strip)
           errors[:addresses] = "Not a valid email address: #{address}"
           return false
         end

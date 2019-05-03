@@ -53,3 +53,6 @@ log/newrelic*
 /*.gem
 
 /.ruby-gemset
+
+.idea
+vendor
