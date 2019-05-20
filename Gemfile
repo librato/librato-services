@@ -22,7 +22,7 @@ gem 'flowdock', '~> 0.3'
 gem 'aws-sdk-sns', '~> 1'
 
 # markdown generation
-gem 'redcarpet', '~> 2.3'
+gem 'redcarpet', '~> 3.0'
 
 # Ensure everyone plays nice with SSL
 #
