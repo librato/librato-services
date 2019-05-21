@@ -45,7 +45,7 @@ module Librato::Services
 
       body['description'] = payload['alert']['description'] if payload['alert']['description']
       body['runbook_url'] = payload['alert']['runbook_url'] if present?(payload['alert']['runbook_url'])
-      body['link'] = alert_link(payload['alert']['id'])
+      body['link'] = alert_link(payload)
 
       if payload[:triggered_by_user_test]
         body['note'] = test_alert_message()

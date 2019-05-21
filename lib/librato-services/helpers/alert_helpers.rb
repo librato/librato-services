@@ -93,8 +93,14 @@ module Librato
           "https://#{ENV['METRICS_APP_URL']}/metrics/#{name}"
         end
 
-        def alert_link(id)
-          "https://#{ENV['METRICS_APP_URL']}/alerts/#{id}"
+        def alert_link(payload)
+          alert_id = payload['alert']['id']
+          if ENV['ALERTS_V3_LINK'] && payload['user_id']
+            path = "#{payload['user_id']}/details/#{alert_id}"
+          else
+            path = alert_id
+          end
+          "https://#{ENV['METRICS_APP_URL']}/alerts/#{path}"
         end
 
         # TODO: fix for specific alert id?

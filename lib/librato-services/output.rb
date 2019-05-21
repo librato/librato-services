@@ -12,7 +12,7 @@ module Librato
     class Output
       include Helpers::AlertHelpers
 
-      attr_reader :violations, :conditions, :alert, :clear, :trigger_time
+      attr_reader :violations, :conditions, :alert, :clear, :trigger_time, :alert_url
       def initialize(payload, add_test_notice=true)
         if !payload[:clear]
           # conditions and violations are required for faults
@@ -31,6 +31,7 @@ module Librato
         @trigger_time = payload[:trigger_time]
         @auth = payload[:auth] || {}
         @show_test_notice = (add_test_notice and payload[:triggered_by_user_test])
+        @alert_url = alert_link(payload.with_indifferent_access)
       end
 
       def html
@@ -65,7 +66,7 @@ module Librato
         if @auth[:email]
           result_array << "Account: #{@auth[:email]}\n"
         end
-        result_array << "Link: #{alert_link(@alert[:id])}\n"
+        result_array << "Link: #{@alert_url}\n"
         @violations.each do |source, measurements|
           result_array << "Source `#{source}`:"
           measurements.each do |measurement|
@@ -97,7 +98,7 @@ module Librato
         if @auth[:email]
           lines << "Account: #{@auth[:email]}\n"
         end
-        lines << "Link: #{alert_link(@alert[:id])}\n"
+        lines << "Link: #{@alert_url}\n"
         lines.join("\n")
       end
 

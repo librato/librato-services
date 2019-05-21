@@ -55,7 +55,7 @@ module Librato::Services
       if payload[:alert][:version] == 1
         body[:details][:metric_url] = payload_link(payload)
       end
-      body[:details][:alert_url] = alert_link(payload['alert']['id'])
+      body[:details][:alert_url] = alert_link(payload)
       unless payload['alert']['runbook_url'].blank?
         body[:details][:runbook_url] = payload['alert']['runbook_url']
       end
